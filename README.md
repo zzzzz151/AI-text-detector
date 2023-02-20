@@ -6,5 +6,3 @@
 # Daniel Ferreira (102885)
 # Ricardo Pinto (103078)
 # João Matos (103182)
-
-teste
