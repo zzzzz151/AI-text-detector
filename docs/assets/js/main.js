@@ -176,6 +176,19 @@
    /* Back to Top
     * ------------------------------------------------------ */
     var clBackToTop = function() {
+
+        const $backTop = $(".back-to-top");
+        if ($backTop) {
+            let e = function () {
+                $WIN.scrollTop() > 750 ? $backTop.addClass("active") : $backTop.removeClass("active")
+            };
+            $WIN.on("load", e)
+            $WIN.on("scroll", e)
+            $backTop.on("click", () => {
+                $('html, body').animate({scrollTop: 0}, 1000, 'easeInOutExpo');
+                return false;
+            })
+        }
     };
 
 

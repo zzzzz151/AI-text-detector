@@ -23,6 +23,7 @@
  *    ## alert box
  *    ## additional typo styles
  *    ## skillbars
+ *    ## back to top
  *  # reusable and common theme styles
  *    ## display headings
  *  # header styles
@@ -1131,6 +1132,43 @@ input::-moz-focus-inner {
     width: 95%;
 }
 
+/* ------------------------------------------------------------------- 
+ * ## back to top
+ * ------------------------------------------------------------------- */
+
+.back-to-top.opaque {
+    background-color: #000000;
+}
+
+.back-to-top {
+    display: none;
+    position: fixed;
+    right: 110px;
+    bottom: 22px;
+    height: 4.8rem;
+    width: 4.8rem;
+    line-height: 45px;
+    font-size: 24px;
+    color: #ffffff;
+    text-align: center;
+    background-color: #000000;
+    background-image: url(../imgs/icons/icon-arrow-up.svg);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 10px 15px;
+    cursor: pointer;
+}
+
+.back-to-top.active {
+    display: block;
+}
+
+@media only screen and (max-width: 1600px) {
+    .back-to-top {
+        right: 60px;
+    }
+}
+
 /* ===================================================================
  * # reusable and common theme styles
  *
@@ -1813,7 +1851,6 @@ input::-moz-focus-inner {
     background-position: center center;
     background-repeat: no-repeat;
     background-size: 10px 15px;
-    border-radius: 50%;
     -webkit-transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
     position: absolute;
@@ -2647,3 +2684,4 @@ html.cl-loaded .home-content__main {
 .team .social a:hover {
     color: #fa1e59;
 }
+
