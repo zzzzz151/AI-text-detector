@@ -2617,9 +2617,8 @@ html.cl-loaded .home-content__main {
     border: 1px solid #efefef;
 }
 
-.team .social {
-    display: flex;
-    justify-content: space-evenly;
+.team .social a {
+    padding: 0 6px;
 }
 
 .team img {
