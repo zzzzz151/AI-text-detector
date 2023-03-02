@@ -43,6 +43,7 @@
  *  # works
  *  # testimonials
  *  # team
+ *  # additional styles
  * =================================================================== */
 
 /* ===================================================================
@@ -1888,10 +1889,6 @@ input::-moz-focus-inner {
     border-bottom: 1px solid #ffffff;
 }
 
-.home-social i {
-    display: none;
-}
-
 .home-social .home-social-title {
     font-family: "metropolis-semibold", sans-serif;
     padding-right: 4rem;
@@ -2685,3 +2682,15 @@ html.cl-loaded .home-content__main {
     color: #fa1e59;
 }
 
+/* ===================================================================
+ * # additional style
+ *
+ * ------------------------------------------------------------------- */
+
+.unused {
+    display: none!important;
+}
+
+.pr-1px {
+    padding-right: 1px;
+}
