@@ -1,0 +1,18 @@
+High priority funcional requirements:
+· The extension must be downloadable via the web and work in at least 1 browser (Chrome).
+· The extension must display (for example, in a notification, modal or symbol) the overall analysis of the current web page, i.e., whether it is all AI generated, mostly, moderately, slightly or no AI generated text at all.
+· The extension must underline and/or highlight parts of the current web page that it deems is probably AI generated text.
+· The extension must display (for example, in a notification, modal or symbol) the overall analysis of the currently opened PDF file (in the browser), i.e., whether it is all AI generated, mostly, moderately, slightly or no AI generated text at all.
+· The extension must underline and/or highlight parts of the currently opened PDF file (in the browser) that it deems is probably AI generated text.
+· The extension must be customizable by the user through an intuitive UI
+	· Set threshold(s) for AI generated text probability
+	· Turn overall evaluation off/on
+	· Turn text/content evaluation (underlining/highlighting) off/on
+
+Low priority functional requirements:
+· The extension must have a text input to evaluate whichever text the user wants/inputs.
+· The extension UI must allow the user to customize the colors of underlined/highlighted text (color palette).
+· The extension must allow the user to customize the metrics.
+
+
+
