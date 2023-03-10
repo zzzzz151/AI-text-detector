@@ -9,7 +9,7 @@ High priority funcional requirements:
 	· Set threshold(s) probability(ies) for text highlighting
 	· Select which language models to use
 	· Select which metrics to use
-· The architecture must allow external developers to easily add their language models or metrics to our AI.
+· The architecture must allow language model developers to easily add their language models or metrics to our AI.
 · The AI must be very flexible to easily accept, refuse, enable and disable language models and metrics (this may also be done manually).
 
 Low priority functional requirements:
