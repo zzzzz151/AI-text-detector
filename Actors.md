@@ -6,15 +6,11 @@ With our extension they will be able to, in regards to the currently opened web 
 
 A less important feature is to allow the user to analyze any text he wants by inputting it (indenpendent of the current page/PDF).
 
-**AI** 
+**Admin** 
 
-Our AI is located in our server.
+Admins (initially our team of 4) have maximum/all permissions.
 
-It will answer to the user's requests and needs as well as API requests.
-
-It shall analyze any given text, url or html and return relevant output, such as probabilities of AI generated text, language models and metrics used, etc.
-
-It can also learn a language model and accept/refuse language models. This acceptance/refusal can also be done manually by our dev team.
+They can accept, refuse, enable and disable language models, as well as metrics. This may also be done automatically by our AI.
 
 **LM Developer**
 
