@@ -2472,7 +2472,7 @@ html.cl-loaded .home-content__main {
     cursor: pointer;
 }
 
-.presentation-thumbnail:hover::after {
+.presentation-thumbnail.presentation-on:hover::after {
     opacity: 1;
     animation: fadeIn .2s;
 }
