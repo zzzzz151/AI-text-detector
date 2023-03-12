@@ -83,20 +83,15 @@ body {
  * ## links
  * ------------------------------------------------------------------- */
 
-a {
-    color: #cc147f;
-    -webkit-transition: all 0.3s ease-in-out;
-    transition: all 0.3s ease-in-out;
+ a {
+    color: inherit;
+    text-decoration: none;
 }
 
 a:hover,
 a:focus,
 a:active {
-    color: #26bfb5;
-}
-
-a:hover,
-a:active {
+    color: #cc147f;
     outline: 0;
 }
 
@@ -2477,7 +2472,7 @@ html.cl-loaded .home-content__main {
     cursor: pointer;
 }
 
-.presentation-thumbnail:hover::after {
+.presentation-thumbnail.presentation-on:hover::after {
     opacity: 1;
     animation: fadeIn .2s;
 }
@@ -2719,6 +2714,12 @@ html.cl-loaded .home-content__main {
     color: #fa1e59;
 }
 
+@media screen and (max-width: 992px) {
+    .s-team .col-lg-3:not(:last-child) {
+        margin-bottom: 1rem;
+    }
+}
+
 /* ===================================================================
  * # additional style
  *
@@ -2732,3 +2733,10 @@ html.cl-loaded .home-content__main {
     padding-right: 1px;
 }
 
+.link-dashed {
+    border-bottom: 1px dashed rgb(197 197 197);
+}
+
+.text-white-ni {
+    color: white;
+}

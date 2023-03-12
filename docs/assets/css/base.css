@@ -51,6 +51,11 @@ html {
 
 body {
     margin: 0;
+    caret-color: transparent;
+}
+  
+input, textarea, [contenteditable] {
+    caret-color: auto;
 }
 
 aside,
