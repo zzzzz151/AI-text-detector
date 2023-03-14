@@ -40,7 +40,8 @@
  *    ## planning process
  *  # services
  *    ## services list
- *  # presentations
+ *  # presentations and documents
+ *  # architecture
  *  # works
  *  # testimonials
  *  # team
@@ -2459,39 +2460,84 @@ html.cl-loaded .home-content__main {
 }
 
 /* ===================================================================
- * # presentations
+ * # presentations and documents
  *
  * ------------------------------------------------------------------- */
+
  .s-presentations {
     background: #ffffff;
+ }
+
+ .s-presentations, .s-documents {
     padding: 18rem 0 24rem;
     position: relative;
+}
+
+.document-thumbnail {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+}
+
+.document-thumbnail img {
+    height: auto;
+    width: 120px;
+}
+
+.document-thumbnail:hover::after {
+    opacity: 1;
+    animation: fadeIn .2s;
 }
 
 .presentation-thumbnail {
     cursor: pointer;
 }
 
+
 .presentation-thumbnail.presentation-on:hover::after {
     opacity: 1;
     animation: fadeIn .2s;
 }
 
-.presentation-thumbnail::after {
+
+.presentation-thumbnail::after, .document-thumbnail::after {
     font-family: "bootstrap-icons";
     content: "\f30a";
     position: absolute;
     font-size: 24px;
     top: 2px;
-    right: 32px;
-    background-color: white;
+    background-color: transparent;
     border-radius: 2px;
     opacity: 0;
+}
+
+.presentation-thumbnail::after {
+    right: 32px;
+}
+
+.document-thumbnail::after {
+    right: 100px;
 }
 
 @keyframes fadeIn {
     0% { opacity: 0; }
     100% { opacity: 1; }
+}
+
+/* ===================================================================
+ * # architecture
+ *
+ * ------------------------------------------------------------------- */
+
+ .s-architecture {
+    background: #ffffff;
+ }
+
+ .s-architecture {
+    padding: 18rem 0 24rem;
+    position: relative;
 }
 
 /* ===================================================================

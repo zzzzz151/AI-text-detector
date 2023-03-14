@@ -28,6 +28,8 @@
                     <li class="current"><a class="smoothscroll" href="#home" title="home">Home</a></li>
                     <li><a class="smoothscroll" href="#services" title="services">Product</a></li>
                     <li><a class="smoothscroll" href="#presentations" title="presentations">Presentations</a></li>
+                    <li><a class="smoothscroll" href="#documents" title="presentations">Documents</a></li>
+                    <li><a class="smoothscroll" href="#architecture" title="architecture">Architecture</a></li>
                     <li><a class="smoothscroll" href="#team" title="about">Team</a></li>
                     <li><a class="smoothscroll" href="#contact" title="contact">Contact</a></li>
                 </ul>
@@ -181,8 +183,8 @@
                     <p class="card-text text-center">Inception</p>
                 </div>
             </div>
-            <div class="col-md-3 col-sm-6 presentation-thumbnail">
-                <img src="assets/imgs/thumbnail_nf.png" class="card-img-top border" alt="Thumbnail Elaboration">
+            <div onclick="window.open('assets/presentations/presentation-elaboration.pptx')" class="col-md-3 col-sm-6 presentation-thumbnail presentation-on">
+                <img src="assets/imgs/thumbnail_elaboration.jpg" class="card-img-top border" alt="Thumbnail Elaboration">
                 <div class="card-body">
                     <p class="card-text text-center">Elaboration</p>
                 </div>
@@ -198,6 +200,45 @@
                 <div class="card-body">
                     <p class="card-text text-center">Transition</p>
                 </div>
+            </div>
+        </div>
+    </section>
+    <section id='documents' class="s-documents light-gray">
+        <div class="row section-header" data-aos="fade-up">
+            <div class="col-full">
+                <h3 class="subhead">Documents</h3>
+            </div>
+        </div>
+        <div class="row" data-aos="fade-up">
+            <div class="col-full">
+                <p class="lead"> Report and other documents available for download, documenting and detailing the work flow of the project. </p>
+            </div>
+        </div>
+        <div class="row" data-aos="fade-up">
+            <div onclick="window.open('assets/documents/report_14-03-23.docx')" class="col-md-3 col-sm-6 document-thumbnail">
+                <img src="assets/imgs/icons/docx_icon.svg.png" class="card-img-top border" alt="Thumbnail Report 1">
+                <div class="card-body">
+                    <p class="card-text text-center">Report 14/03/23</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id='architecture' class="s-architecture">
+        <div class="row">
+            <div class="col-lg-5">
+                <div class="row section-header" data-aos="fade-up">
+                    <div class="col-full">
+                        <h3 class="subhead">Architecture</h3>
+                    </div>
+                </div>
+                <div class="row" data-aos="fade-up">
+                    <div class="col-full">
+                        <p class="lead">  Architecture of our AI text detection Chrome extension, designed for seamless integration. </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7">
+                <img data-aos="fade-up" class="img-fluid border" src="assets/imgs/Extension Architecture.png">
             </div>
         </div>
     </section>
