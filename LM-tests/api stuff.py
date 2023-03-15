@@ -1,11 +1,18 @@
 import socket
-
+import json
+import base64
 
 # Note: Class created to be flexible. If we have user-specific requests, we can just easily add self.user to it
 class API_message:
 
 	def __init__(self, message_type:str):
 		self.argument_dictionary = {'message_type': message_type}
+
+	@classmethod
+	def decode(cls, encoded_message:bytes):
+		message = cls("")
+		message.argument_dictionary = json.loads(base64.standard_b64decode(encoded_message))
+		return message
 
 	def type(self)->str:
 		return self.argument_dictionary['message_type']
@@ -20,7 +27,8 @@ class API_message:
 		for i in range(len(names)):
 			self.add(names[i], objs[i])
 
-
+	def encode(self)->bytes:
+		return base64.standard_b64encode(json.dumps(self.argument_dictionary).encode())
 
 
 	# The requests
