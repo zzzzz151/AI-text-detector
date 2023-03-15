@@ -60,6 +60,13 @@ class API_message:
 		response.add_multiple(['starting_index', 'ending_index'], [starting_index, ending_index])
 		return response
 
+# Can django handle this for us?
+def create_socket(ip)->socket.socket:
+	test_socket = socket.socket()
+	test_socket.bind(ip)
+	test_socket.connect(ip)
+	return test_socket
 
-
-
+# How the server sends messages to the users
+def send_message(message:API_message):
+	connection_socket = create_socket("localhost")
