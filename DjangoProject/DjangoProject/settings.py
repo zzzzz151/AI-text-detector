@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     "http://zzzzz151.pythonanywhere.com",
+    "zzzzz151.pythonanywhere.com"
 ]
 
 
