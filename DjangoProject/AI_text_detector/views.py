@@ -11,6 +11,12 @@ def handle_request(request):
     # 500 means an internal server error
     # Function tested and working with application/json requests
 
+    if not request.body:
+        return JsonResponse(
+            {'message': "No 'type' field found in request"},
+            status=400,
+            json_dumps_params={'indent': 2})
+
     requestData = json.loads(request.body.decode()) # {'type': 'text'}
 
     if "type" not in requestData:
