@@ -1,6 +1,6 @@
 # TextSpotAI - AI Text Detector
 
-# Project for Projeto em Informática 2022/2023
+# Project for Projeto em Informática 2023
 
 # Team
 
