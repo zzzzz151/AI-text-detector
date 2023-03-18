@@ -1,0 +1,13 @@
+body {
+    margin: 0;
+}
+
+* {
+    font-family: Roboto, Inter,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Helvetica Neue,sans-serif,Arial;
+}
+
+*:not(input, textarea, [contenteditable]) {
+    caret-color: transparent;
+    -webkit-caret-color: transparent; /* Safari */
+    -moz-caret-color: transparent; /* Firefox */
+  }

@@ -1,0 +1,14 @@
+.all-settings {
+    color: #4a6ee0;
+    font-size: 15px;
+    line-height: 21px;
+    font-family: Inter,sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    padding-right: 5;
+}
+
+.all-settings-wrapper {
+    padding-right: 2px;
+    cursor: pointer;
+}
