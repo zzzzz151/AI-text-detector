@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, List
 
 from chatgpt_detector_roberta import ChatGPTRobertaDetectorModel
 
@@ -9,7 +9,7 @@ class Model:
         # Takes some time to load
         self.model = ChatGPTRobertaDetectorModel()
 
-    def get_probability(self, text:Union[str, list])->list:
+    def get_probability(self, text:Union[str, List[str]])->List[int]:
         return [round(prob*100) for prob in self.model(text)]
 
 
