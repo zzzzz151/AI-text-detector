@@ -28,7 +28,6 @@
   "response of url": {
     "type": "request_url",
 
-    "status": "OK",
     "analysis": {
       "1": {
         "selector": "h1 div nth-child(2)",
@@ -54,14 +53,12 @@
   "response of text": {
     "type": "request_text",
 
-    "status": "OK",
     "probability": 100
   },
 
   "response of pdf": {
     "type": "request_pdf",
 
-    "status": "OK",
     "analysis": {
       "1": {
         "start": 0,
@@ -83,23 +80,14 @@
 
   "bad response 1": {
     "type": "request_pdf",
-
-    "status": "NO_AUTH",
-    "message": "User requested premium features without premium access"
   },
 
   "bad response 2": {
     "type": "request_url",
-
-    "status": "BAD_URL",
-    "message": "Requested website does not exist, could not be accessed or could not be analyzed"
   },
 
   "bad response 3": {
     "type": "request_pdf",
-
-    "status": "NO_FILE",
-    "message": "File does not exist or failed to download"
   }
 }
 
