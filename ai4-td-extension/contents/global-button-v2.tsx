@@ -78,7 +78,8 @@ function GlobalButtonV2() {
               sx={{
                 height: "60px",
                 width: "60px",
-                bgcolor: '#e1e1e1', // Set the background color of the Fab component
+                bgcolor: '#f1f1f1', // Set the background color of the Fab component
+                boxShadow: "0px 6px 6px -3px rgba(0, 0, 0, 0.2), 0px 10px 14px 1px rgba(0, 0, 0, 0.14), 0px 4px 18px 3px rgba(0, 0, 0, 0.12), 0px -4px 4px -3px rgba(0, 0, 0, 0.1)",
                 ...buttonSx // Include any other styles from the buttonSx object
               }}
           >

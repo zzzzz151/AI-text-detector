@@ -11,3 +11,8 @@ body {
     -webkit-caret-color: transparent; /* Safari */
     -moz-caret-color: transparent; /* Firefox */
   }
+
+.MuiListItem-root {
+    padding-top: 12px!important;
+    padding-bottom: 12px!important;
+}

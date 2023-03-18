@@ -1,7 +1,9 @@
 import { Box, Divider, List, ListSubheader } from "@mui/material";
 import React from "react";
 import "~popup/base.css";
+import Footer from "~popup/footer";
 import ListItemColorPicker from "~popup/list-item/list-item-colorpicker";
+import ListItemMessage from "~popup/list-item/list-item-message";
 import ListItemSettings from "~popup/list-item/list-item-settings";
 import ListItemSwitcher from "~popup/list-item/list-item-switcher";
 
@@ -9,7 +11,7 @@ function IndexPopupV2() {
 
     return (
         <List
-            sx={{ width: 348, bgcolor: 'background.paper' }}
+            sx={{ width: 348, bgcolor: 'background.paper', padding: 0 }}
             subheader={
                 <ListSubheader sx={{
                     textAlign: "center",
@@ -31,8 +33,12 @@ function IndexPopupV2() {
                     <ListItemSwitcher />
                     <Divider light variant="middle" sx={{width: "100%"}}/>
                     <ListItemColorPicker />
+                    <Divider light variant="middle" sx={{width: "100%"}}/>
                 </Box>
+                <ListItemMessage />
             </Box>
+            <Divider />
+            <Footer />
         </List>
     )
 }; 

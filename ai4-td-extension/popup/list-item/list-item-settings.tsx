@@ -1,6 +1,5 @@
 import { ListItem, ListItemText } from "@mui/material";
 import AllSettingsButton from "~popup/buttons/all-settings-button";
-import "~popup/color-picker/style.css"
 
 function ListItemSettings() {
     return (
