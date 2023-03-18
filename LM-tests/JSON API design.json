@@ -76,18 +76,6 @@
         "probability": 94
       }
     }
-  },
-
-  "bad response 1": {
-    "type": "request_pdf",
-  },
-
-  "bad response 2": {
-    "type": "request_url",
-  },
-
-  "bad response 3": {
-    "type": "request_pdf",
   }
 }
 
