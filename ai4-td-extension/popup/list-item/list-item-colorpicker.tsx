@@ -1,9 +1,8 @@
 import { ListItem, ListItemText } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
-import ColorPicker from "~popup/color-picker";
-import "~popup/color-picker/style.css"
+import ColorPickerV2 from "~popup/color-picker/color-picker-v2";
 
-function ListItemColorPicker() {
+function ListItemColorPicker(props) {
     const colorPickerRef = useRef<HTMLInputElement>(null);
     const [focused, setFocused] = useState(false);
   
@@ -25,14 +24,14 @@ function ListItemColorPicker() {
     return (
       <ListItem sx={{cursor: "pointer"}} onClick={handleListItemClick}>
         <ListItemText
-          id="switch-list-label-bluetooth"
-          primary="Bluetooth"
+          id={props.id}
+          primary={props.text}
           primaryTypographyProps={{
             fontSize: 14,
             fontWeight: "medium"
           }}
         />
-        <ColorPicker onColorChange={handleColorChange} ref={colorPickerRef} />
+        <ColorPickerV2 onColorChange={handleColorChange} ref={colorPickerRef} />
       </ListItem>
     );
 }

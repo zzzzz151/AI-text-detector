@@ -28,11 +28,11 @@ function IndexPopupV2() {
             <Box flexDirection="column" display="flex" alignItems="center" justifyContent="center" padding="18px" maxHeight="485px" overflow="auto">
                 <ListItemSettings />
                 <Box width="100%">
-                    <ListItemSwitcher />
+                    <ListItemSwitcher id="list-item-option1" text="option1" />
                     <Divider light variant="middle" sx={{width: "100%"}}/>
-                    <ListItemSwitcher />
+                    <ListItemSwitcher id="list-item-option2" text="option2" />
                     <Divider light variant="middle" sx={{width: "100%"}}/>
-                    <ListItemColorPicker />
+                    <ListItemColorPicker id="list-item-option3" text="option3" />
                     <Divider light variant="middle" sx={{width: "100%"}}/>
                 </Box>
                 <ListItemMessage />

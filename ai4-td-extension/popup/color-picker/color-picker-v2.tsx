@@ -1,32 +1,33 @@
 import { forwardRef, useState } from "react";
-import "~popup/color-picker/style.css"
+import "~popup/color-picker/color-picker-v2.css"
 
 interface ColorPickerProps {
     onColorChange: (color: string) => void;
   }
 
-const ColorPicker = forwardRef<HTMLInputElement, ColorPickerProps>((props, ref) => {
+const ColorPickerV2 = forwardRef<HTMLInputElement, ColorPickerProps>((props, ref) => {
     const [color, setColor] = useState("FF0000");
   
     function handleColorChange(e: React.ChangeEvent<HTMLInputElement>) {
-      const newColor = e.target.value;
+      let newColor = e.target.value.replace(/[^A-Fa-f0-9]/g, ""); // remove non-hex characters
       setColor(newColor);
       props.onColorChange(newColor);
     }
   
     return (
       <div className="color-picker-wrapper">
-        <div className="hex">#</div>
-        <input
+        <div className="color" style={{ backgroundColor: `#${color}` }}></div>
+        <span className="hex">#</span>
+        <input 
           maxLength={6}
+          pattern="[A-Fa-f0-9]{6}"
           type="text"
           value={color}
           onChange={handleColorChange}
           ref={ref}
         />
-        <div className="color" style={{ backgroundColor: `#${color}` }}></div>
       </div>
     );
   });
   
-  export default ColorPicker;
+  export default ColorPickerV2;
