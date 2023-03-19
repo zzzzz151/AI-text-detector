@@ -1,8 +1,14 @@
+from typing import List
+
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import random
 import json
+
+from LMs.server_model import Language_Model
+
+model = Language_Model()
 
 @csrf_exempt
 def handle_request(request):
@@ -72,3 +78,6 @@ def handle_pdf_request(request):
         responseData,
         status=200,
         json_dumps_params={'indent': 2})
+
+def get_probability(text:str)->List[int]:
+    return model.get_probability(text)

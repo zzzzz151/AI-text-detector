@@ -1,3 +1,0 @@
-# python version is 3.8 btw lmao
-transformers==4.27.1
-torch==1.13.1
