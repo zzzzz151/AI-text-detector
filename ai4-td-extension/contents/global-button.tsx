@@ -22,7 +22,7 @@ const styleCache = createCache({
 
 export const getStyle = () => styleElement
 
-function GlobalButtonV2() {
+function GlobalButton() {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const timer = useRef() as MutableRefObject<number>;
@@ -107,7 +107,7 @@ function GlobalButtonV2() {
 }
 
 
-export default GlobalButtonV2
+export default GlobalButton
 
 
 /*
