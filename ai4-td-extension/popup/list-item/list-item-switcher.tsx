@@ -8,10 +8,9 @@ function ListItemSwitcher(props) {
 
   function handleClick(e) {
     e.preventDefault;
-    console.log(switcherRef)
     let animation = checked? "pulseOFF" : "pulseON"
     setChecked((prevChecked) => !prevChecked); // toggle checked state
-    switcherRef.current.classList.remove("pulseON", "pulseOFF"); // FIX ME: Uncaught TypeError: Cannot read properties of null (reading 'classList')
+    switcherRef.current.classList.remove("pulseON", "pulseOFF"); 
     void switcherRef.current.offsetWidth;
     switcherRef.current.classList.add(animation);
   }
@@ -23,7 +22,9 @@ function ListItemSwitcher(props) {
         primary={props.text}
         primaryTypographyProps={{
           fontSize: 14,
-          fontWeight: "medium",
+          color: '#1f243c',
+          fontFamily: 'Inter,sans-serif',
+          lineHeight: '20px'
         }}
       />
       <Switcher checked={checked} ref={switcherRef} />

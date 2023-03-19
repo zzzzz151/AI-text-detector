@@ -1,0 +1,7 @@
+.color {height: 30px; width: 30px; margin-right: 5px}
+
+.color-picker-wrapper {display: flex; justify-content: center; align-items: center;}
+
+.without-padding input {
+    padding: 0
+}

@@ -1,6 +1,6 @@
 import { ListItem, ListItemText } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
-import ColorPickerV2 from "~popup/color-picker/color-picker-v2";
+import ColorPickerV3 from "~popup/color-picker/color-picker-v3";
 
 function ListItemColorPicker(props) {
     const colorPickerRef = useRef<HTMLInputElement>(null);
@@ -31,7 +31,7 @@ function ListItemColorPicker(props) {
             fontWeight: "medium"
           }}
         />
-        <ColorPickerV2 onColorChange={handleColorChange} ref={colorPickerRef} />
+        <ColorPickerV3 onColorChange={handleColorChange} ref={colorPickerRef} />
       </ListItem>
     );
 }

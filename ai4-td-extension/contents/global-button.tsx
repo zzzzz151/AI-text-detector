@@ -7,7 +7,7 @@ import Fab from '@mui/material/Fab';
 import { AiFillSecurityScan } from 'react-icons/ai';
 import createCache from "@emotion/cache"
 import { CacheProvider } from "@emotion/react"
-import { callApi } from './utils';
+import { callApi } from '../resources/utils';
 
 export const config: PlasmoCSConfig = {
     matches: ["<all_urls>"]

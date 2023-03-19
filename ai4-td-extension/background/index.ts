@@ -1,5 +1,5 @@
 import highlightSelection from "./highlight";
-import { executeInCurrentTab, generateRandomColor } from "./utils";
+import { executeInCurrentTab } from "../resources/utils";
 import { Storage } from "@plasmohq/storage";
 
 const storage = new Storage()

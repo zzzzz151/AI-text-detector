@@ -41,10 +41,28 @@ function wrapResponse(promise, sendResponse) {
     }));
 }
 
+/* API */
+
+function callApi(url, bodyObject) {
+    return fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(bodyObject)
+    })
+    .then(response => response.json())
+    .catch(error => {
+        console.error('Error fetching data:', error);
+        throw error;
+    });
+}
+    
+
 /* Other */
 
 const generateRandomColor = () => {
     return '#' + Math.floor(Math.random() * 16777215).toString(16);
 }
 
-export { executeInCurrentTab, executeInTab, wrapResponse, generateRandomColor };
+export { executeInCurrentTab, executeInTab, wrapResponse, callApi, generateRandomColor };
