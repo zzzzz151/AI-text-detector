@@ -1,4 +1,4 @@
-from LMs.language_models.core import BaseHFRobertaDetectorModel
+from .core import BaseHFRobertaDetectorModel
 
 class OpenAIBaseRobertaGPT2DetectorModel(BaseHFRobertaDetectorModel):
     """
