@@ -43,7 +43,7 @@ def getSelectorsAndTextFromHtml(html : str):
         if text == "" or numWords <= 5:
             continue
 
-        selectorAndText = {"selector": getCompleteSelector(element), "text": text[0:85]}
+        selectorAndText = {"selector": getCompleteSelector(element), "text": text}
         selectorsAndText.append(selectorAndText)
 
     return selectorsAndText
