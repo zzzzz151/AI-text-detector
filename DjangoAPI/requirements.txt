@@ -3,3 +3,9 @@ djangorestframework
 markdown
 django-filter
 django-cors-headers
+transformers
+torch
+requests
+bs4
+re
+datetime
