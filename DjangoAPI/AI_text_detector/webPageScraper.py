@@ -40,7 +40,7 @@ def getSelectorsAndTextFromHtml(html : str):
 
         text = element.text.strip()
         numWords = len(re.split("\s+", text))
-        if text == "" or numWords <= 5:
+        if text == "" or numWords < 10:
             continue
 
         selectorAndText = {"selector": getCompleteSelector(element), "text": text}
