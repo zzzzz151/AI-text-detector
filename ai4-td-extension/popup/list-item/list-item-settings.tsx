@@ -5,7 +5,6 @@ function ListItemSettings() {
     return (
         <ListItem>
             <ListItemText primary="Quick Settings" primaryTypographyProps={{
-                fontFamily: "Roboto, Inter,sans-serif",
                 fontStyle: "normal",
                 fontWeight: 700,
                 fontSize: "16px",

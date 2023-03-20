@@ -2,7 +2,7 @@ import { ListItem, ListItemText } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import ColorPickerV3 from "~popup/color-picker/color-picker-v3";
 
-function ListItemColorPicker({ props }) {
+function ListItemColorPicker(props) {
     const colorPickerRef = useRef<HTMLInputElement>(null);
     const [focused, setFocused] = useState(false);
   
@@ -28,7 +28,8 @@ function ListItemColorPicker({ props }) {
           primary={props.text}
           primaryTypographyProps={{
             fontSize: 14,
-            fontWeight: "medium"
+            color: '#1f243c',
+            lineHeight: '20px'
           }}
         />
         <ColorPickerV3 onColorChange={handleColorChange} ref={colorPickerRef} />

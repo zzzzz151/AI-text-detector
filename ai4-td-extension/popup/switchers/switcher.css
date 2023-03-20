@@ -1,7 +1,7 @@
 .ui-switcher {
     background-color: #bdc1c2;
     display: inline-block;
-    height: 22px;
+    height: 21px;
     width: 48px;
     border-radius: 10px;
     box-sizing: border-box;
@@ -9,7 +9,6 @@
     position: relative;
     cursor: pointer;
     transition: border-color 0.25s;
-    margin-top: -2px;
 }
 
 .ui-switcher[aria-checked=true] {
@@ -22,11 +21,11 @@
     font-weight: 700;
     color: #ffffff;
     line-height: 1;
-    display: inline-block;
+    display: flex;
     position: absolute;
-    top: 6px;
-    height: 12px;
     width: 20px;
+    top: calc(50% + 1px);
+    transform: translateY(-50%);
     text-align: center;
 }
 
@@ -42,13 +41,14 @@
 
 .ui-switcher:after {
     background-color: #ffffff;
-    content: '\0020';
+    content: '';
     display: inline-block;
     position: absolute;
-    top: 3px;
     height: 16px;
     width: 16px;
     border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
     transition: left 0.25s;
 }
 
@@ -57,7 +57,7 @@
 }
 
 .ui-switcher[aria-checked=true]:after {
-    left: 30px;
+    left: 31px;
 }
 
 .ui-switcher:hover {
