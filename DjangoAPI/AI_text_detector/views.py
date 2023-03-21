@@ -21,9 +21,6 @@ def handle_request(request):
     # 500 means an internal server error
     # Function tested and working with application/json requests
 
-    print()
-    dateTimeNow = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-
     if not request.body:
         print(dateTimeNow() + " Received invalid request")
         return JsonResponse(
@@ -87,6 +84,8 @@ def handle_text_request(requestData):
         json_dumps_params={'indent': 2})
 
 def handle_web_page_request(requestData):
+    responseData = {}
+
     if "url" in requestData:
         print(dateTimeNow() + " Processing url request for " + requestData["url"])
         selectorsAndText = getSelectorsAndTextFromURL(requestData["url"])
@@ -98,8 +97,8 @@ def handle_web_page_request(requestData):
         else:
             print(dateTimeNow() + " Processing html request")
         selectorsAndText = getSelectorsAndTextFromHtml(requestData["html"])
+        responseData["checksum"] = hash(str(requestData["html"]))
 
-    responseData = {}
     responseData["overall_evaluation"] = random.choice(["good","moderate","bad"])
 
     responseData["analysis"] = selectorsAndText
@@ -108,7 +107,7 @@ def handle_web_page_request(requestData):
         text = selectorsAndText[i]["text"]
         probability_AI_generated = model.probability_AI_generated_text(text)
         responseData["analysis"][i]["probability_AI_generated"] = probability_AI_generated
-        print(str(i+1) + "/" + str(length) + " calculated")
+        #print(str(i+1) + "/" + str(length) + " calculated")
 
     return JsonResponse(
         responseData,
@@ -125,3 +124,10 @@ def handle_pdf_request(requestData):
         responseData,
         status=200,
         json_dumps_params={'indent': 2})
+
+
+def hash(myStr):
+    sum = 0
+    for letter in myStr:
+        sum += ord(letter)
+    return sum
