@@ -108,7 +108,7 @@ def handle_web_page_request(requestData):
         text = selectorsAndText[i]["text"]
         probability_AI_generated = model.probability_AI_generated_text(text)
         responseData["analysis"][i]["probability_AI_generated"] = probability_AI_generated
-        #print(str(i+1) + "/" + str(length) + " calculated")
+        print(str(i+1) + "/" + str(length) + " calculated")
 
     return JsonResponse(
         responseData,
