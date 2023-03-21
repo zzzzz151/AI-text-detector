@@ -1,4 +1,3 @@
-import time
 from typing import List
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -107,7 +106,7 @@ def handle_web_page_request(requestData):
     length = len(selectorsAndText)
     for i in range(length):
         text = selectorsAndText[i]["text"]
-        probability_AI_generated = model.probability_AI_generated_text(text, lm)
+        probability_AI_generated = model.probability_AI_generated_text(text, "openAIBase")
         responseData["analysis"][i]["probability_AI_generated"] = probability_AI_generated
         #print(str(i+1) + "/" + str(length) + " calculated")
 
