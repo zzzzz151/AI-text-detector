@@ -1,5 +1,5 @@
 django
-djangorestframework
+django_rest_framework
 markdown
 django-filter
 django-cors-headers
