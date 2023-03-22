@@ -1,13 +1,12 @@
 import { Box, Divider, List, ListSubheader } from "@mui/material";
 import React from "react";
-import "~popup/base.css";
-import Footer from "~popup/footer";
-import ListItemColorPicker from "~popup/list-item/list-item-colorpicker";
-import ListItemMessage from "~popup/list-item/list-item-message";
-import ListItemSettings from "~popup/list-item/list-item-settings";
-import ListItemSwitcher from "~popup/list-item/list-item-switcher";
+import PopupFooter from "~components/popup-footer";
+import ListItemColorPicker from "~components/list-item/list-item-colorpicker";
+import ListItemMessage from "~components/list-item/list-item-message";
+import ListItemSettings from "~components/list-item/list-item-settings";
+import ListItemSwitcher from "~components/list-item/list-item-switcher";
 
-function IndexPopupV2() {
+function Popup() {
 
     return (
         <List
@@ -38,9 +37,9 @@ function IndexPopupV2() {
                 <ListItemMessage />
             </Box>
             <Divider />
-            <Footer />
+            <PopupFooter />
         </List>
     )
 }; 
 
-export default IndexPopupV2
+export default Popup

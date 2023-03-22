@@ -1,5 +1,5 @@
 import { forwardRef, useState } from 'react';
-import "~popup/switchers/switcher.css"
+import "~components/switchers/switcher.css"
 
 function Switcher({checked}, ref) {
 
@@ -10,7 +10,6 @@ function Switcher({checked}, ref) {
         role="switch"
         ref={ref}
       >
-        <span className="ui-switcher-thumb"></span>
       </div>
   );
 }

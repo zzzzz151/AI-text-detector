@@ -1,5 +1,5 @@
 import { forwardRef, useState } from "react";
-import "~popup/color-picker/color-picker-v2.css"
+import "~components/color-picker/color-picker-v2.css"
 
 interface ColorPickerProps {
     onColorChange: (color: string) => void;

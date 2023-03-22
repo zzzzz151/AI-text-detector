@@ -1,7 +1,7 @@
 import { Button, ButtonGroup } from "@mui/material";
 import RadarIcon from '@mui/icons-material/Radar';
 
-function Footer() {
+function PopupFooter() {
     return (
         <ButtonGroup
             disableElevation
@@ -22,4 +22,4 @@ function Footer() {
     );
 }
 
-export default Footer
+export default PopupFooter

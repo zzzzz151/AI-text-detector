@@ -1,5 +1,5 @@
 import { ListItem, ListItemText } from "@mui/material";
-import AllSettingsButton from "~popup/buttons/all-settings-button";
+import AllSettingsButton from "~components/buttons/all-settings-button";
 
 function ListItemSettings() {
     return (

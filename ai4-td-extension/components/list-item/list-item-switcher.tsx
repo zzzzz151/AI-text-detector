@@ -1,6 +1,6 @@
 import { ListItem, ListItemText } from "@mui/material";
 import { useRef, useState } from "react";
-import Switcher from "~popup/switchers/switcher";
+import Switcher from "~components/switchers/switcher";
 
 function ListItemSwitcher(props) {
   const [checked, setChecked] = useState(false);

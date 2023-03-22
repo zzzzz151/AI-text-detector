@@ -1,6 +1,6 @@
 import { InputAdornment, TextField } from "@mui/material";
 import { forwardRef, useState } from "react";
-import "~popup/color-picker/color-picker-v3.css"
+import "~components/color-picker/color-picker-v3.css"
 
 interface ColorPickerProps {
     onColorChange: (color: string) => void;
