@@ -2567,8 +2567,12 @@ html.cl-loaded .home-content__main {
     border-bottom: 1px solid #dddddd;
 }
 
+.calendar-table tbody tr:nth-of-type(odd) {
+    background-color: #fcfcfc;
+}
+
 .calendar-table tbody tr:nth-of-type(even) {
-    background-color: #f3f3f3;
+    background-color: #fff;
 }
 
 .calendar-table tbody tr:last-of-type {
