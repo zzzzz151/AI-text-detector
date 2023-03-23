@@ -88,6 +88,63 @@
 
     };
 
+    /* Calendar table logic
+     * ------------------------------------------------------ */
+    var clTableLogic = function() {
+            
+        // Set up pagination
+        var rowsPerPage = 10;
+        var totalRows = $(".calendar-table tbody tr").length;
+        var numPages = Math.ceil(totalRows / rowsPerPage);
+        var currentPage = 1;
+        
+        // Set up tablesorter
+        $(".calendar-table").tablesorter();
+
+        // add a callback function to update the display property after sorting
+        // this function is called after each sorting event
+        // it shows all the rows, and then hides the ones that should be hidden because of pagination
+        $(".calendar-table")
+        .bind("sortEnd",function(e, table) {
+            $(".calendar-table tbody tr").hide();
+            $(".calendar-table tbody tr").slice(0, rowsPerPage).show();
+        });
+
+        for (var i = 1; i <= numPages; i++) {
+            $(".pagination").append('<a href="#" class="page-link">' + i + '</a>');
+        }
+
+        $(".pagination a:first").addClass("active");
+
+        $(".calendar-table tbody tr").hide();
+        $(".calendar-table tbody tr").slice(0, rowsPerPage).show();
+
+        $(".pagination a").click(function () {
+            var clickedPage = $(this).text();
+
+            if (clickedPage != currentPage) {
+                $(".pagination a").removeClass("active");
+                $(this).addClass("active");
+
+                var startRow = (clickedPage - 1) * rowsPerPage;
+                var endRow = startRow + rowsPerPage;
+
+                $(".calendar-table tbody tr").hide();
+                $(".calendar-table tbody tr").slice(startRow, endRow).show();
+
+                // update the currentPage variable and hide the rows that should be hidden because of pagination
+                currentPage = clickedPage;
+                $(".calendar-table tbody tr").each(function(index) {
+                    if (index < (currentPage-1) * rowsPerPage || index >= currentPage * rowsPerPage) {
+                        $(this).hide();
+                    }
+                });
+            }
+
+            return false;
+        });
+    };
+
     /* slick slider
      * ------------------------------------------------------ */
     var clSlickSlider = function() {
@@ -199,6 +256,7 @@
         clPreloader();
         clMenuOnScrolldown();
         clOffCanvas();
+        clTableLogic();
         clSlickSlider();
         clSmoothScroll();
         clPlaceholder();

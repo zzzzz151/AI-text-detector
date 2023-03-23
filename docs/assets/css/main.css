@@ -41,6 +41,7 @@
  *  # services
  *    ## services list
  *  # presentations and documents
+ *  # calendar
  *  # architecture
  *  # works
  *  # testimonials
@@ -2527,6 +2528,91 @@ html.cl-loaded .home-content__main {
 }
 
 /* ===================================================================
+ * # presentations and documents
+ *
+ * ------------------------------------------------------------------- */
+
+ .s-calendar {
+    padding: 18rem 0 24rem;
+    position: relative;
+}
+
+.calendar-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.calendar-table thead tr {
+    background-color: #cc1445;
+    color: #ffffff;
+    text-align: left;
+}
+
+.calendar-table th {
+    cursor: pointer;
+    color: #fff;
+}
+
+.calendar-table th,
+.calendar-table td {
+    padding: 12px 15px;
+}
+
+.calendar-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.calendar-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.calendar-table tbody tr:last-of-type {
+    border-bottom: 2px solid #cc1445;
+}
+
+.s-calendar  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.s-calendar .pagination a {
+    color: #cc1445;
+    font-size: 1.2em;
+    font-weight: bold;
+    padding: 0;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 2px solid #cc1445;
+    margin: 0 10px;
+    width: 45px;
+    height: 45px;
+    text-align: center;
+    line-height: 45px;
+}
+
+.s-calendar .pagination a:hover {
+    background-color: rgb(204, 20, 69);
+    color: #ffffff;
+}
+
+.s-calendar .pagination a.active {
+    background-color: rgb(204, 20, 69);
+    color: #ffffff;
+}
+
+.s-calendar .pagination a:focus {
+    z-index: 3;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(204, 20, 69, .25);
+}
+
+/* ===================================================================
  * # architecture
  *
  * ------------------------------------------------------------------- */
@@ -2715,17 +2801,20 @@ html.cl-loaded .home-content__main {
  *
  * ------------------------------------------------------------------- */
 
+ /* TEMP */
+
 .s-team {
     padding-top: 18rem;
     padding-bottom: 18rem;
     color: #555555;
     position: relative;
+    background-color: white!important; /* TO REMOVE */
 }
 
 .team {
     padding: 30px;
     text-align: center;
-    background: #fff;
+    background-color: #f6f6f6f6; /* background: #fff; */
     border: 1px solid #efefef;
 }
 
