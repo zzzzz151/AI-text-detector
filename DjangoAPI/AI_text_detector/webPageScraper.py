@@ -28,7 +28,7 @@ def getSelectorsAndTextFromHtml(html : str):
         selector = argElement.name
         if not argElement.parent:
             return selector
-        while argElement.parent.name != "[document]":
+        while argElement.parent.name != "[document]" and argElement.parent:
             selector = argElement.parent.name + " > " + selector
             argElement = argElement.parent
         return selector
@@ -46,34 +46,25 @@ def getSelectorsAndTextFromHtml(html : str):
         selectorAndText = {"selector": getCompleteSelector(element), "text": text}
         selectorsAndText.append(selectorAndText)
 
-    return selectorsAndText
+    return selectorsAndText, myHash(html)
 
 def getSelectorsAndTextFromURL(url : str):
     response = requests.get(url) # send a GET request to the URL
     html = response.content
-    return getSelectorsAndTextFromHtml(html)
+    return getSelectorsAndTextFromHtml(str(html))
 
+def myHash(string):
+    hash_val = 0
+    prime1 = 31
+    prime2 = 37
+    for char in string:
+        hash_val = (hash_val * prime1 + ord(char)) % prime2
+    return hash_val
 
 def test():
-    html = """
-    <html>
-    <head>
-      <title>Example Document</title>
-    </head>
-    <body>
-    <h1>Welcome to my website</h1>
-    <div>
-        <p>before span <span style="color:blue">inside span</span> after span </p>
-        <a href="https://www.example.com">Click here pls its my independent a</a>
-        <p>This is my complex p <span>oh look a span</span> and a link next <a href="mylink.com">click here</a></p>
-        <h1>Text in h1 <h2>Text inside h2</h2></h1>
-    </div>
-    <span> Normal indepndent span with some text </span>
-    <span>Hello<span> World, I love programming :D</span></span>
-    <p>Artificial intelligence (AI) has revolutionized the way we interact with technology and has become an integral part of our daily lives. AI-powered virtual assistants like Siri and Alexa have made it easier for us to access information and manage our daily tasks. Machine learning algorithms are helping businesses improve their products and services by analyzing customer data and predicting future trends. AI is also being used in healthcare to develop more accurate diagnostic tools and personalized treatment plans. As AI continues to advance, it has the potential to create even more opportunities and solve complex problems in fields like climate change and energy conservation.</p>
-    </body>
-    </html>
-    """
+    f = open("testHtml.html","r")
+    html = f.read()
+    f.close()
 
     def printResultFormatted(res):
         if len(res) <= 1:
@@ -86,11 +77,11 @@ def test():
     newsUrl = "https://www.jn.pt/nacional/rui-nabeiro-partiu-o-homem-que-vivia-para-as-pessoas-e-para-a-sua-terra-16031690.html"
     articleUrl = "https://www.theguardian.com/commentisfree/2023/mar/11/users-advertisers-we-are-all-trapped-in-the-enshittification-of-the-internet"
     print()
-    res = getSelectorsAndTextFromURL(newsUrl)
-    printResultFormatted(res)
+    selectorsAndText = getSelectorsAndTextFromURL(newsUrl)
+    printResultFormatted(selectorsAndText)
     print()
-    res = getSelectorsAndTextFromHtml(html)
-    printResultFormatted(res)
+    selectorsAndText= getSelectorsAndTextFromHtml(html)
+    printResultFormatted(selectorsAndText)
 
 if __name__ == "__main__":
     test()

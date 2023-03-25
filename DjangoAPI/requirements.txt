@@ -7,5 +7,6 @@ transformers
 torch
 requests
 bs4
-re
+regex
 datetime
+pandas

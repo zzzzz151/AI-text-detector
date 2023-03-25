@@ -2,8 +2,8 @@ import time
 from typing import Union, List
 import pandas as pd
 
-from language_models.chatgpt_detector_roberta import ChatGPTRobertaDetectorModel
-from language_models.roberta_openai_detector import OpenAIBaseRobertaGPT2DetectorModel, OpenAILargeRobertaGPT2DetectorModel
+from .language_models.chatgpt_detector_roberta import ChatGPTRobertaDetectorModel
+from .language_models.roberta_openai_detector import OpenAIBaseRobertaGPT2DetectorModel, OpenAILargeRobertaGPT2DetectorModel
 
 language_models = {
         "chatGPT": ChatGPTRobertaDetectorModel,
