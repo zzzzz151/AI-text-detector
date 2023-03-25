@@ -28,7 +28,7 @@ def getSelectorsAndTextFromHtml(html : str):
         selector = argElement.name
         if not argElement.parent:
             return selector
-        while argElement.parent.name != "[document]":
+        while argElement.parent.name != "[document]" and argElement.parent:
             selector = argElement.parent.name + " > " + selector
             argElement = argElement.parent
         return selector
@@ -46,12 +46,20 @@ def getSelectorsAndTextFromHtml(html : str):
         selectorAndText = {"selector": getCompleteSelector(element), "text": text}
         selectorsAndText.append(selectorAndText)
 
-    return selectorsAndText
+    return selectorsAndText, myHash(html)
 
 def getSelectorsAndTextFromURL(url : str):
     response = requests.get(url) # send a GET request to the URL
     html = response.content
-    return getSelectorsAndTextFromHtml(html)
+    return getSelectorsAndTextFromHtml(str(html))
+
+def myHash(string):
+    hash_val = 0
+    prime1 = 31
+    prime2 = 37
+    for char in string:
+        hash_val = (hash_val * prime1 + ord(char)) % prime2
+    return hash_val
 
 def test():
     f = open("testHtml.html","r")
