@@ -1,10 +1,11 @@
 import React from "react";
-import IndexPopupV2 from "./popup-v2";
+import Popup from "../components/popup";
+import "~popup/base.css";
 
 function IndexPopup() {
 
     return (
-        <IndexPopupV2 />
+        <Popup />
     )
 }; 
 
