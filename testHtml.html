@@ -14,10 +14,10 @@
          <span> A wild span appears in the middle of it! </span>
          Got rid of the span but an 'a' tag. next<a href='http://www.example.com'> Click. here to go to my website where youll find all my work</a>
       </p>
-      <h1>This is my text inside my h1 tag</h1>
+      <h1>This is my text. inside my h1 tag</h1>
    </div>
    <br />
-   <span id="mySpan"> Normal independent span with some. text <span id="nestedSpan">But a wild nested span appears</span> Got rid of the
+   <span id="mySpan"> Normal independent span with some. text <span id="nestedSpan">But a wild nested span! appears</span> Got rid of the
       nested span,
       thankfully!</span>
    <br />
@@ -29,31 +29,62 @@
       potential to create even more opportunities and solve complex problems in fields like climate change and energy
       conservation.</p>
    <br />
-   <p id="turtles">I like turtles. Do you? Awesome! hahaha. lol!!! What's going on????</p>
+   <p id="turtles">I like turtles. Do you? Awesome! hahaha. lol!!! Whats going on???? I"m fine and you!!!</p>
+   <br />
+
+   <div id="breakingLines">
+      before break
+      <br />
+      after break. Hahaha i love. Love this!?!!. Some more text
+      and continuing
+      <br />
+      my ip is 1.2.3.4 xd
+      real
+
+      ye
+   </div>
+
+
 
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
    <script src="analyser.js"></script>
    <script>
       $(document).ready(function () {
-         //analysePage(); // from analyser.js
-         
          /*
-         $.each($('#badWar').findText({ query: ['W2 was a bad war.', ] }), function () {
-            $(this).css("background-color", "red")
-         });
-
-         
-         $.each($('#myDiv').findText({ query: ['next Click.', 'plex p tag A wild', ] }), function () {
-            $(this).css("background-color", "red")
-         });
+         analysePage().then((overallEvaluation) => {
+              // do something with overallEvaluation
+            }).catch((err) => {
+              // handle error
+            });
          */
+
+         console.log(btextToSentences($("#breakingLines").text()));
          
-         
-      
       });
 
+      function btextToSentences(text) {
+  // replace new line characters with spaces
+  text = text.replace(/\n/g, ' ');
+
+  // split the text into sentences using regular expressions
+  var sentences = text.match(/[^\.!\?]+[\.!\?]+/g);
+
+  // split the sentences that have no space between them
+  for (var i = 0; i < sentences.length - 1; i++) {
+    if (!/\s/.test(sentences[i].slice(-1)) && !/^[A-Z]/.test(sentences[i + 1])) {
+      sentences[i] += sentences[i + 1];
+      sentences.splice(i + 1, 1);
+      i--;
+    }
+  }
+
+  // trim whitespace and return the sentences
+  return sentences.map(function(sentence) {
+    return sentence.trim();
+  });
+      }
+
       //console.log(myHash(document.documentElement.outerHTML));
-      //console.log(document.documentElement.outerHTML);
 
       function myHash(string) {
          let hash_val = 0;

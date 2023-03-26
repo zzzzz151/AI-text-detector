@@ -1,3 +1,10 @@
+const DEBUG = true;
+function logDebug(msg)
+{
+   if (DEBUG)
+      console.log(msg);
+}
+
 function analysePage() {
    const relevantTags = ["div", "p", "span", "h1", "h2", "h3", "h4", "h5", "h6"];
    const jquerySearch = relevantTags.join(", "); // "div, p, span, h1, h2, h3, h4, h5, h6"
@@ -10,18 +17,6 @@ function analysePage() {
    // Iterate elements with relevant tag
    $(jquerySearch).each(function () {
       //console.log("tag: " + $(this)[0].tagName + " text: " + $(this).text());
-
-      if ($(this).text().startsWith("Artificial")) {
-         /*
-         console.log("---");
-         let x = $(this).text().replace(/(\r\n|\n|\r)/gm, "");
-         console.log(x);
-         console.log("---");
-         console.log("*******");
-         console.log("Artificial intelligence (AI) has revolutionized the way we interact with technology and has become an integral part of our daily lives. AI-powered virtual assistants like Siri and Alexa have made it easier for us to access information and manage our daily tasks. Machine learning algorithms are helping businesses improve their products and services by analyzing customer data and predicting future trends. AI is also being used in healthcare to develop more accurate diagnostic tools and personalized treatment plans. As AI continues to advance, it has the potential to create even more opportunities and solve complex problems in fields like climate change and energy conservation.");
-         console.log("*******");
-         */
-      }
 
       // Skip elements without text
       var hasText = $(this).text().length != 0;
@@ -42,11 +37,13 @@ function analysePage() {
       }
 
       let txt = $(this).text().replace(/ +/g, ' ').trim(); // text in this element, replace many spaces with 1 space
-      txt = txt.replace(/(\r\n|\n|\r)/gm, "").trim(); // remove all line breaks
+      //txt = txt.replace(/(\r\n|\n|\r)/gm, "").trim(); // remove all line breaks
+      //txt = $(this).text().replace(/ +/g, ' ').trim(); // text in this element, replace many spaces with 1 space
       let sentences = textToSentences(txt);
 
       if (sentences == null || sentences == undefined) {
          // If failed to split into sentences, then treat the text as a whole
+         txt = txt.replace(/(\r\n|\n|\r)/gm, "").trim(); // remove all line breaks
          myFetch($(this)[0], txt);
       }
       else {
@@ -56,16 +53,26 @@ function analysePage() {
       }
    });
 
-   function textToSentences(txt) {
-      let sentences = txt.match(/[^\.!\?]+[\.!\?]+[\s]*/g) || [];
-      if (txt.match(/[^\.!\?]+$/)) {
-         let newLen = sentences.push(txt.match(/[^\.!\?]+$/)[0]);
-         sentences[newLen - 1] = sentences[newLen - 1].trim();
-      }
-      sentences = sentences.map(sentence => sentence.trim());
-      return sentences;
-   }
+function textToSentences(txt) {
+   // Considers all line breaks except for enter key line breaks
 
+  // Replace enter breaks with a space
+  txt = txt.replace(/\n/g, ' ');
+  
+  // Match sentences with sentence-ending punctuation or <br> tags
+  let sentences = txt.match(/[^\.!\?]+[\.!\?]+(<br\s*\/?>)?\s*/g) || [];
+  
+  // If input text does not end with sentence-ending punctuation, add last sentence
+  if (txt.match(/[^\.!\?]+\s*$/)) {
+    let lastSentence = txt.match(/[^\.!\?]+\s*$/)[0];
+    sentences.push(lastSentence);
+  }
+  
+  // Trim whitespace from each sentence
+  sentences = sentences.map(sentence => sentence.trim());
+  
+  return sentences;
+}
    function myFetch(elem, text) {
       let promise = fetch(URL, {
          method: "POST",
@@ -76,9 +83,11 @@ function analysePage() {
       })
          .then(response => response.json())
          .then(data => {
-            if (text.startsWith("Got rid"))
-               console.log("Analyzing " + text);
-            if (data.probability_AI_generated > HIGHLIGHT_THRESHOLD_PROBABILITY) {
+            if (data.probability_AI_generated < HIGHLIGHT_THRESHOLD_PROBABILITY)
+               logDebug("Not AI: '" + text + "'");
+            else {
+               logDebug("AI: '" + text + "'");
+
                /*
                elem.innerHTML = elem.innerHTML.replace(/ +/g, ' ').trim(); // replace many spaces with 1 space
                elem.innerHTML = elem.innerHTML.replace(/(\r\n|\n|\r)/gm, "").trim(); // remove line beraks
@@ -91,9 +100,15 @@ function analysePage() {
                   elem.innerHTML = repl;
                }
                */
+
+               /*
                $.each($(elem).findText({ query: [text] }), function () {
                   $(this).css("background-color", "red")
                });
+               */
+
+               highlightText(text);
+
                sumCharacters += text.length;
                weightedSum += text.length * data.probability_AI_generated;
             }
@@ -103,33 +118,60 @@ function analysePage() {
       promises.push(promise);
    }
 
-   Promise.all(promises).then(() => {
+   return new Promise((resolve, reject) => {
+    Promise.all(promises).then(() => {
       // all fetches done
       let weightedAvg = weightedSum / sumCharacters;
       weightedAvg = Math.round(weightedAvg); // round to nearest int
       console.log("Overall evaluation: " + weightedAvg + "%");
       //alert("Overall evaluation: " + weightedAvg + "%");
+      resolve(weightedAvg); // resolve the new Promise with the value of weightedAvg
+    }).catch((err) => {
+      reject(err); // if any of the Promises in the Promise.all() chain reject, reject the new Promise with the same error
+    });
+  });
+}
+
+// https://stackoverflow.com/questions/49565116/javascript-need-help-in-highlight-across-tags-text-in-html
+function highlightText(text)
+{
+   //text = text.replace(/(\s+)/,"(<[^>]+>|[\\r\\n\\s]+)*");
+   text = text.split(' ').join('(<[^>]+>|[\\r\\n\\s]+)*')
+   //alert(text);
+   text = text.replace(/\?/g, "\\?");
+   var pattern = new RegExp("("+text+")", "gi");
+
+   document.body.innerHTML = document.body.innerHTML.replace(pattern, function(match){
+   var re = /(^|[>])(?![^<]*?<\/y)(.*?)([<]|$)/gi; 
+   match = match.replace(/(\r\n\t|\n|\r\t)/gm,"");
+
+   match = match.replace(re, function (m,g1,g2,g3) {
+     return g1+"<span style='background-color:red'>"+g2+"</span>"+g3;
+   });
+   //alert(match);
+   return match;
    });
 }
 
-// https://stackoverflow.com/questions/19710158/jquery-highlight-pieces-of-text-in-an-element-across-tags
 
-function doSearch(text) {
+// https://stackoverflow.com/questions/19710158/jquery-highlight-pieces-of-text-in-an-element-across-tags
+function highlightText2(text) {
    if (window.find && window.getSelection) {
        document.designMode = "on";
        var sel = window.getSelection();
        sel.collapse(document.body, 0);
-       
        while (window.find(text)) {
-           document.getElementById("button").blur();
-           document.execCommand("HiliteColor", false, "yellow");
+            console.log("found txt");
+           //document.getElementById("button").blur();
+           document.execCommand("HiliteColor", false, "red");
            sel.collapseToEnd();
        }
        document.designMode = "off";
    } else if (document.body.createTextRange) {
+      console.log("haha");
        var textRange = document.body.createTextRange();
        while (textRange.findText(text)) {
-           textRange.execCommand("BackColor", false, "yellow");
+           textRange.execCommand("BackColor", false, "red");
            textRange.collapse(false);
        }
    }
