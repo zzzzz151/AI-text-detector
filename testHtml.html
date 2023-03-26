@@ -1,0 +1,61 @@
+<html>
+
+<head>
+   <title>Example Document</title>
+</head>
+
+<body>
+   <p>WW<b>2</b>was a bad war. Yea</p>
+   <h1>Welcome to my website</h1>
+   <div id="myDiv">
+      This text is inside a simple div, it should be detected by the web scraper!
+      <p>
+         This is my complex p tag
+         <span> A wild span appears in the middle of it! </span>
+         Got rid of the span but an 'a' tag next
+         <a href='http://www.example.com'>Click here to go to my website where youll find all my work</a>
+      </p>
+      <h1>This is my text inside my h1 tag</h1>
+   </div>
+   <br />
+   <span id="mySpan"> Normal independent span with some. text <span id="nestedSpan">But a wild nested span appears</span> Got rid of the
+      nested span,
+      thankfully!</span>
+   <br />
+   <p>Artificial intelligence (AI) has revolutionized the way we interact with technology and has become an integral
+      part of our daily lives. AI-powered virtual assistants like Siri and Alexa have made it easier for us to access
+      information and manage our daily tasks. Machine learning algorithms are helping businesses improve their products
+      and services by analyzing customer data and predicting future trends. AI is also being used in healthcare to
+      develop more accurate diagnostic tools and personalized treatment plans. As AI continues to advance, it has the
+      potential to create even more opportunities and solve complex problems in fields like climate change and energy
+      conservation.</p>
+   <br />
+   <p>I like turtles. Do you? Awesome! hahaha. lol!!! What's going on????</p>
+
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+   <script src="analyser.js"></script>
+   <script>
+      $(document).ready(function () {
+         //analysePage(); // from analyser.js
+         $.each($('#myDiv').findText({ query: ['next a'] }), function () {
+            $(this).css("background-color", "red")
+         });
+      });
+
+      //console.log(myHash(document.documentElement.outerHTML));
+      //console.log(document.documentElement.outerHTML);
+
+      function myHash(string) {
+         let hash_val = 0;
+         const prime1 = 31;
+         const prime2 = 37;
+         for (let i = 0; i < string.length; i++) {
+            hash_val = (hash_val * prime1 + string.charCodeAt(i)) % prime2;
+         }
+         return hash_val;
+      }
+
+   </script>
+</body>
+
+</html>

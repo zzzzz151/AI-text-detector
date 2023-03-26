@@ -62,7 +62,7 @@ def myHash(string):
     return hash_val
 
 def test():
-    f = open("testHtml.html","r")
+    f = open("../../testHtml.html", "r")
     html = f.read()
     f.close()
 
