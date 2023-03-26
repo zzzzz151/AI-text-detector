@@ -5,15 +5,14 @@
 </head>
 
 <body>
-   <p>WW<b>2</b>was a bad war. Yea</p>
+   <p id ="badWar">WW<b>2</b> was a bad war. Yea</p>
    <h1>Welcome to my website</h1>
    <div id="myDiv">
       This text is inside a simple div, it should be detected by the web scraper!
-      <p>
+      <p id="complexPTag">
          This is my complex p tag
          <span> A wild span appears in the middle of it! </span>
-         Got rid of the span but an 'a' tag next
-         <a href='http://www.example.com'>Click here to go to my website where youll find all my work</a>
+         Got rid of the span but an 'a' tag. next<a href='http://www.example.com'> Click. here to go to my website where youll find all my work</a>
       </p>
       <h1>This is my text inside my h1 tag</h1>
    </div>
@@ -30,16 +29,21 @@
       potential to create even more opportunities and solve complex problems in fields like climate change and energy
       conservation.</p>
    <br />
-   <p>I like turtles. Do you? Awesome! hahaha. lol!!! What's going on????</p>
+   <p id="turtles">I like turtles. Do you? Awesome! hahaha. lol!!! What's going on????</p>
 
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
    <script src="analyser.js"></script>
    <script>
       $(document).ready(function () {
          //analysePage(); // from analyser.js
-         $.each($('#myDiv').findText({ query: ['next a'] }), function () {
+         
+         
+         $.each($('#myDiv').findText({ query: ['next Click.', 'plex p tag A wild'] }), function () {
             $(this).css("background-color", "red")
          });
+
+         
+      
       });
 
       //console.log(myHash(document.documentElement.outerHTML));
@@ -56,6 +60,7 @@
       }
 
    </script>
+   
 </body>
 
 </html>

@@ -91,8 +91,6 @@ function analysePage() {
                   elem.innerHTML = repl;
                }
                */
-               if (text.startsWith("Got rid"))
-                  console.log("AI " + text);
                $.each($(elem).findText({ query: [text] }), function () {
                   $(this).css("background-color", "red")
                });
@@ -141,13 +139,21 @@ $.fn.findText = function (params) {
 };
 
 
-
+/* before
 function makeRegexp(s) {
    var space = '( )?(<span[^>]*>)?(</span[^>]*>)?( )?';
    var result = s.replace(/\s/gi, space);
    result = new RegExp(space + result + space, "gi");
    return (result);
 }
+*/
+// with 'a' tag
+function makeRegexp(s) {
+   var space = '(\\s|<[^>]*>)*';
+   var result = s.replace(/\s+/gi, space);
+   result = new RegExp(space + result + space, 'gi');
+   return result;
+ }
 
 function emulateSelection(htmlPiece) {
    htmlPiece = htmlPiece.replace(/(?!=>)[^><]+(?=<)/g, function (w) {
