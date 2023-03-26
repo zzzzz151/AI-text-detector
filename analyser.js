@@ -112,6 +112,29 @@ function analysePage() {
    });
 }
 
+// https://stackoverflow.com/questions/19710158/jquery-highlight-pieces-of-text-in-an-element-across-tags
+
+function doSearch(text) {
+   if (window.find && window.getSelection) {
+       document.designMode = "on";
+       var sel = window.getSelection();
+       sel.collapse(document.body, 0);
+       
+       while (window.find(text)) {
+           document.getElementById("button").blur();
+           document.execCommand("HiliteColor", false, "yellow");
+           sel.collapseToEnd();
+       }
+       document.designMode = "off";
+   } else if (document.body.createTextRange) {
+       var textRange = document.body.createTextRange();
+       while (textRange.findText(text)) {
+           textRange.execCommand("BackColor", false, "yellow");
+           textRange.collapse(false);
+       }
+   }
+}
+
 
 $.fn.findText = function (params) {
    var phrases = params.query,
@@ -139,15 +162,7 @@ $.fn.findText = function (params) {
 };
 
 
-/* before
-function makeRegexp(s) {
-   var space = '( )?(<span[^>]*>)?(</span[^>]*>)?( )?';
-   var result = s.replace(/\s/gi, space);
-   result = new RegExp(space + result + space, "gi");
-   return (result);
-}
-*/
-// with 'a' tag
+
 function makeRegexp(s) {
    var space = '(\\s|<[^>]*>)*';
    var result = s.replace(/\s+/gi, space);
@@ -177,10 +192,21 @@ function emulateSelection(htmlPiece) {
 }
 
 function wrapWords(plainPiece) {
-   //console.log("plain: " + plainPiece);
-   var start = '<span search="xxxxx">',
+  var start = '<span search="xxxxx">',
       stop = '</span>';
-   return (start + plainPiece + stop);
-}
 
+  var regex = /<[^>]*>|[^<]+/gi;
+  var matches = plainPiece.match(regex);
+  var result = '';
+  for (var i = 0; i < matches.length; i++) {
+    var match = matches[i];
+    if (match.charAt(0) === '<') {
+      result += match;
+    } else {
+      result += start + match + stop;
+    }
+  }
+
+  return result;
+}
 
