@@ -66,7 +66,7 @@ const analysePage = () => {
     const relevantTags = ["div", "p", "span", "h1", "h2", "h3", "h4", "h5", "h6", "b"];
     const search = relevantTags.join(", "); // "div, p, span, h1, h2, h3, h4, h5, h6"
  
-    const URL = "http://localhost:8000/api/v1";
+    const URL = process.env.PLASMO_PUBLIC_API_URL;
     const HIGHLIGHT_THRESHOLD_PROBABILITY = 50;
     let promises = []; // array to save fetch promises
  
@@ -75,7 +75,7 @@ const analysePage = () => {
         //console.log("tag: " + $(this)[0].tagName + " text: " + $(this).text());
  
         // Skip elements without text
-        let hasText = el.textContent.length != 0;
+        let hasText = el.textContent.trim().length >= 10;
         if (!hasText)
             return;
  
@@ -99,13 +99,17 @@ const analysePage = () => {
         if (sentences == null || sentences == undefined) {
             // If failed to split into sentences, then treat the text as a whole
             txt = txt.replace(/(\r\n|\n|\r)/gm, "").trim(); // remove all line breaks
-            const promise = analyseText(URL, txt, el, HIGHLIGHT_THRESHOLD_PROBABILITY);
-            promises.push(promise)
+            if (txt.length >= 10) {
+                const promise = analyseText(URL, txt, el, HIGHLIGHT_THRESHOLD_PROBABILITY);
+                promises.push(promise)
+            }
         }
         else {
             for (let i = 0; i < sentences.length; i++) {
-                let promise = analyseText(URL, sentences[i], el, HIGHLIGHT_THRESHOLD_PROBABILITY);
-                promises.push(promise)
+                if (sentences[i].length >= 10) {
+                    let promise = analyseText(URL, sentences[i], el, HIGHLIGHT_THRESHOLD_PROBABILITY);
+                    promises.push(promise)
+                }
             }
         }
     });
@@ -121,10 +125,8 @@ const analysePage = () => {
 
         let weightedAvg = weightedSum / sumCharacters;
         weightedAvg = Math.round(weightedAvg); // round to nearest int
+        console.log(weightedAvg)
         return weightedAvg; // return the weightedAvg value
-    })
-    .then((weightedAvg) => {
-        console.log("Overall evaluation: " + weightedAvg + "%");
     })
     .catch((err) => {
         console.error(err);
@@ -135,6 +137,7 @@ const analyseText = (url, text, elem, threshold) => {
     return new Promise((resolve, reject) => {
         callApi(url, text, 'text/plain')
         .then(data => {
+            console.log(data)
             if (data.probability_AI_generated < threshold) {
                 // console.log("Not AI: '" + text + "'");
             } else {
@@ -147,16 +150,14 @@ const analyseText = (url, text, elem, threshold) => {
  
                 findAndReplaceDOMText(elem, {
                     find: pattern,
-                    wrap: 'span',
-                    wrapClass: 'myMark',
+                    wrap: 'mark',
                 });
  
                 if (elem.innerHTML == before) {
                     pattern = RegExp(newText);
                     findAndReplaceDOMText(elem, {
                         find: pattern,
-                        wrap: 'span',
-                        wrapClass: 'myMark',
+                        wrap: 'mark',
                     });
                 }
             }
@@ -199,4 +200,4 @@ const generateRandomColor = () => {
     return '#' + Math.floor(Math.random() * 16777215).toString(16);
 }
 
-export { executeInCurrentTab, executeInTab, wrapResponse, callApi, generateRandomColor };
+export { executeInCurrentTab, executeInTab, wrapResponse, callApi, analysePage, generateRandomColor };

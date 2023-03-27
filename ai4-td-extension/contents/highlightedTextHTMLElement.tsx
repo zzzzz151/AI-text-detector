@@ -15,10 +15,21 @@ class HighlightedTextHTMLElement extends HTMLElement {
    * to prevent - Uncaught DOMException: Failed to construct 'CustomElement'
    */
   connectedCallback() {
-    this.addEventListener("click", (event) => {
-      alert("hello")
-    });
+    if (this.isConnected) {
+      this.style.backgroundColor = "yellow";
+      this.addEventListener("click", (event) => {
+        alert("hello")
+      });
+    }
   }
 }
 
 window.customElements.define('highlighted-text', HighlightedTextHTMLElement);
+
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      'highlighted-text': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;
+    }
+  }
+}
