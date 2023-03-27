@@ -2,22 +2,30 @@
 
 <head>
    <title>Example Document</title>
+   <style>
+      .myMark {
+         background-color: red;
+      }
+   </style>
+   
 </head>
 
 <body>
-   <p id ="badWar">WW<b>2</b> was a bad war. Yea</p>
+   <p id="badWar">WW<b>2</b> was a bad war. Yea</p>
    <h1>Welcome to my website</h1>
    <div id="myDiv">
       This text is inside a simple div, it should be detected by the web scraper!
       <p id="complexPTag">
          This is my complex p tag
          <span> A wild span appears in the middle of it! </span>
-         Got rid of the span but an 'a' tag. next<a href='http://www.example.com'> Click. here to go to my website where youll find all my work</a>
+         Got rid of the span but an 'a' tag. next<a href='http://www.example.com'> Click. here to go to my website where
+            youll find all my work</a>
       </p>
       <h1>This is my text. inside my h1 tag</h1>
    </div>
    <br />
-   <span id="mySpan"> Normal independent span with some. text <span id="nestedSpan">But a wild nested span! appears</span> Got rid of the
+   <span id="mySpan"> Normal independent span with some. text <span id="nestedSpan">But a wild nested span!
+         appears</span> Got rid of the
       nested span,
       thankfully!</span>
    <br />
@@ -29,60 +37,46 @@
       potential to create even more opportunities and solve complex problems in fields like climate change and energy
       conservation.</p>
    <br />
-   <p id="turtles">I like turtles. Do you? Awesome! hahaha. lol!!! Whats going on???? I"m fine and you!!!</p>
+   <p id="turtles">I like turtles. Do you? Awesome! hahaha. lol!!! What's going on???? I"m fine and you!!!</p>
    <br />
 
    <div id="breakingLines">
       before break
       <br />
-      after break. Hahaha i love. Love this!?!!. Some more text
-      and continuing
+      after break. Hahaha i love! Love this!?!! Some more text
+      This is enter key break
       <br />
       my ip is 1.2.3.4 xd
       real
 
       ye
+      <br />
+      ab. zadama
+      <br />
+      cd.
+      dam
+      <br />
+      I went there and listened
+      <br />
+      You went there and listened
+      <br />
+      He went there and liste.ned
+      She went there and listened
    </div>
 
 
 
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-   <script src="analyser.js"></script>
+   <script type="text/javascript" src="findAndReplaceDOMText.js"></script>
+   <script type="text/javascript" src="analyser.js"></script>
    <script>
       $(document).ready(function () {
-         /*
          analysePage().then((overallEvaluation) => {
-              // do something with overallEvaluation
-            }).catch((err) => {
-              // handle error
-            });
-         */
-
-         console.log(btextToSentences($("#breakingLines").text()));
-         
+            // do something with overallEvaluation
+         }).catch((err) => {
+            // handle error
+         });
       });
-
-      function btextToSentences(text) {
-  // replace new line characters with spaces
-  text = text.replace(/\n/g, ' ');
-
-  // split the text into sentences using regular expressions
-  var sentences = text.match(/[^\.!\?]+[\.!\?]+/g);
-
-  // split the sentences that have no space between them
-  for (var i = 0; i < sentences.length - 1; i++) {
-    if (!/\s/.test(sentences[i].slice(-1)) && !/^[A-Z]/.test(sentences[i + 1])) {
-      sentences[i] += sentences[i + 1];
-      sentences.splice(i + 1, 1);
-      i--;
-    }
-  }
-
-  // trim whitespace and return the sentences
-  return sentences.map(function(sentence) {
-    return sentence.trim();
-  });
-      }
 
       //console.log(myHash(document.documentElement.outerHTML));
 
@@ -97,7 +91,7 @@
       }
 
    </script>
-   
+
 </body>
 
 </html>
