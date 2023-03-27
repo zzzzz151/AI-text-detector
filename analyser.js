@@ -48,6 +48,7 @@ function analysePage() {
       }
       else {
          for (let i = 0; i < sentences.length; i++) {
+            console.log($(this)[0])
             myFetch(sentences[i], $(this)[0]);
          }
       }
@@ -120,6 +121,7 @@ function analysePage() {
                newText = newText.replace(/\s+/g, '\\s+');  // replace whitespace with \s+ pattern, this matches even with many spaces or line breaks between words
                let pattern = RegExp("\\b" + newText + "\\b");
                let before = elem.innerHTML;
+               
                findAndReplaceDOMText(elem, {
                   find: pattern,
                   wrap: 'span',

@@ -1,4 +1,3 @@
-django
 django_rest_framework
 markdown
 django-filter
