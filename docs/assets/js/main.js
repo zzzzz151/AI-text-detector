@@ -107,9 +107,7 @@
         $(".calendar-table")
         .bind("sortEnd",function(e, table) {
 
-            var activePage = $(".pagination a.active").text();
-
-            var startRow = (activePage - 1) * rowsPerPage;
+            var startRow = (currentPage - 1) * rowsPerPage;
             var endRow = startRow + rowsPerPage;
 
             $(".calendar-table tbody tr").hide();
