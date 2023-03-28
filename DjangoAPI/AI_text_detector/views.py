@@ -9,7 +9,7 @@ from .webPageScraper import *
 from datetime import datetime
 from bs4 import BeautifulSoup
 
-#model = LanguageModel()
+model = LanguageModel()
 
 def log(msg):
     strDateTimeNow = str(datetime.now().strftime("%d/%m/%Y %H:%M:%S"))

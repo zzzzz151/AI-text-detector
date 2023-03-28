@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  database:
+    build: .
+    ports:
+      - "3306:3306"
+    command: --init-file /MySQL/data.sql
+    #volumes:
+    #  - ./data.sql:/MySQL/data.sql
+    environment:
+      MYSQL_ROOT_USER: root
+      MY_SQL_ROOT_PASSWORD: ai_text
+      MYSQL_DATABASE: ai_text_detector_DB
+      MYSQL_USER: root
+      MYSQL_PASSWORD: ai_text
