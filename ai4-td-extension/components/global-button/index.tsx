@@ -1,7 +1,7 @@
 import { Box, CircularProgress, Fab } from "@mui/material";
 import { green, purple, red } from "@mui/material/colors";
 import { AiFillSecurityScan } from "react-icons/ai";
-import { callApi } from "~resources/utils";
+import { analysePage } from "~resources/utils";
 
 function GlobalButton({setData, success, setSuccess, error, setError, loading, setLoading, setAnchor}) {
 
@@ -9,7 +9,7 @@ function GlobalButton({setData, success, setSuccess, error, setError, loading, s
         setAnchor(prevState => !prevState);
         if (!(loading || success)) {
           setLoading(true);
-          callApi(process.env.PLASMO_PUBLIC_API_URL, { "type": "text", "text": "hello" })
+          analysePage()
           .then(data => {
             setSuccess(true);
             setLoading(false);

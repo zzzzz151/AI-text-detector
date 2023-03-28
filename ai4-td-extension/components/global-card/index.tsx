@@ -18,7 +18,7 @@ function GlobalCard({data, success, anchor, setAnchor}) {
             padding: '16px',
             fontSize: '14px',
         }}>
-            The probability is {data.probability_AI_generated}%
+            The probability is {data}%
         </Box>
     )
 }
