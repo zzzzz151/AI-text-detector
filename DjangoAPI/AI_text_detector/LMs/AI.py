@@ -7,8 +7,8 @@ from .language_models.roberta_openai_detector import OpenAIBaseRobertaGPT2Detect
 
 language_models = {
         "chatGPT": ChatGPTRobertaDetectorModel,
-        "openAIBase": OpenAIBaseRobertaGPT2DetectorModel,
-        "openAILarge": OpenAILargeRobertaGPT2DetectorModel
+        #"openAIBase": OpenAIBaseRobertaGPT2DetectorModel,
+        #"openAILarge": OpenAILargeRobertaGPT2DetectorModel
     }
 class LanguageModel:
     def __init__(self):
