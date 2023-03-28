@@ -1,7 +1,30 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 function NavBar() {
-    const [navbar, setNavbar] = useState(false);
+    const [navbar, setNavbar] = useState(false);    
+    const [selectedOption, setSelectedOption] = useState(null);
+    const [showLinkInput, setShowLinkInput] = useState(false);
+    const [showScriptInput, setShowScriptInput] = useState(false);
+    const [file, setFile] = useState(null);
+    const fileInputRef = useRef(null);
+
+    const handleFileChange = (event) => {
+        setFile(event.target.files[0]);
+      }
+    
+    const handleOptionChange = (event) => {
+        setSelectedOption(event.target.value);
+        setShowLinkInput(event.target.value === 'link');
+        setShowScriptInput(event.target.value === 'script');
+    }
+    
+    const handleNextButtonClick = () => {
+        // Handle "Next" button click if necessary
+    }
+
+    const handleBrowseButtonClick = () => {
+        fileInputRef.current.click();
+    }
 
     return (
         <div className="navbar bg-base-100 border-slate-400">
@@ -26,7 +49,7 @@ function NavBar() {
 
                 {/* Put this part before </body> tag */}
                 <input type="checkbox" id="my-modal" className="modal-toggle" />
-                <div className="modal">
+                <div className="modal pr-3">
                     <div className="modal-box">
                         <h3 className="font-bold text-lg">Add Language Modal</h3>
                         <div className="form-control w-full max-w-xs">
@@ -45,9 +68,31 @@ function NavBar() {
                             <label className="label">
                             </label>
                         </div>
-                        <div className="btn btn-outline btn-primary">Upload Language Model</div>
+                        <label htmlFor="option-select">Language Model Type:</label>
+                        <select className=" select w-full max-w-xs" id="option-select" value={selectedOption} onChange={handleOptionChange}>
+                            <option value="">-- Select an option --</option>
+                            <option value="link">API Link</option>
+                            <option value="script">Python script</option>
+                        </select>
+                        
+                        {showLinkInput && (
+                            <div className="pb-5 pt-5">
+                                <input type="text" placeholder="API Link" className="input input-bordered w-full max-w-xs" />
+                            </div>
+                        )}
+                        
+                        {showScriptInput && (
+                            <div className="pt-5">
+                                <label htmlFor="script-input">Script:</label>
+                                <div>
+                                    <input type="file" id="script-input" accept=".py" onChange={handleFileChange} ref={fileInputRef} />
+                                    <label htmlFor="script-input" className="button" onClick={handleBrowseButtonClick}></label>
+                                    {file && <span>{file.name}</span>}
+                                </div>
+                            </div>
+                        )}
                         <div className="modal-action">
-                            <label htmlFor="my-modal" className="btn">Add</label>
+                            <label htmlFor="my-modal" className="btn">Add!</label>
                         </div>
                     </div>
                 </div>
