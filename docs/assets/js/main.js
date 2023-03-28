@@ -106,8 +106,14 @@
         // it shows all the rows, and then hides the ones that should be hidden because of pagination
         $(".calendar-table")
         .bind("sortEnd",function(e, table) {
+
+            var activePage = $(".pagination a.active").text();
+
+            var startRow = (activePage - 1) * rowsPerPage;
+            var endRow = startRow + rowsPerPage;
+
             $(".calendar-table tbody tr").hide();
-            $(".calendar-table tbody tr").slice(0, rowsPerPage).show();
+            $(".calendar-table tbody tr").slice(startRow, endRow).show();
         });
 
         for (var i = 1; i <= numPages; i++) {
