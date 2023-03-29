@@ -76,7 +76,7 @@ function callApi(url, bodyObject, type = 'application/json') {
 import findAndReplaceDOMText from './findAndReplaceDOMText'
 
 function analysePage() {
-    const exclude = ['head', 'meta', 'title', 'link', 'style',
+    const exclude = ['base', 'head', 'meta', 'title', 'link', 'style',
         'script', 'noscript', 'audio', 'video', 'source',
         'track', 'canvas', 'svg', 'img', 'iframe',
         'embed', 'object', 'param', 'map', 'area',
@@ -188,51 +188,9 @@ function analyseText(url, text, elem, threshold) {
     });
 };
 
-function getParents(elem, selector) {
-    // Element.matches() polyfill
-    if (!Element.prototype.matches) {
-        Element.prototype.matches =
-            Element.prototype.matchesSelector ||
-            Element.prototype.mozMatchesSelector ||
-            Element.prototype.msMatchesSelector ||
-            Element.prototype.oMatchesSelector ||
-            Element.prototype.webkitMatchesSelector ||
-            function (s) {
-                var matches = (this.document || this.ownerDocument).querySelectorAll(s),
-                    i = matches.length;
-                while (--i >= 0 && matches.item(i) !== this) { }
-                return i > -1;
-            };
-    }
-
-    // Set up a parent array
-    var parents = [];
-
-    // Push each parent element to the array
-    for (; elem && elem !== document; elem = elem.parentNode) {
-        if (selector) {
-            if (elem.matches(selector)) {
-                parents.push(elem);
-            }
-            continue;
-        }
-        parents.push(elem);
-    }
-
-    // Return our parent array
-    return parents;
-
-}
-
 (<any>$.fn).ignore = function (sel) {
     return this.clone().find(sel || ">*").remove().end();
 };
-
-function getTextExcludingChildren(elem) {
-    $(elem).contents().filter(function () {
-        return this.nodeType == 3;
-    }).text()
-}
 
 function splitByLines(text) {
     text = text.trim();
@@ -246,7 +204,6 @@ function splitByLines(text) {
     }
     return ret;
 }
-
 
 function textToSentences(text) {
     let sentences = text.replace(/(\.+|\:|\!|\?)(\"*|\'*|\)*|}*|]*)(\s|\n|\r|\r\n)/gm, "$1$2|").split("|");
