@@ -114,7 +114,7 @@ function analysePage() {
         */
 
         let newElem = $(elem).ignore("*:not(a, span, strong, b, i, s, u, tt, sup, sub)")[0];
-        clone = newElem.cloneNode(true);
+        let clone = newElem.cloneNode(true);
         clone.querySelectorAll(strExclude).forEach(function (v) {
             v.remove();
         });
