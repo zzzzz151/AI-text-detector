@@ -1,7 +1,11 @@
-/* Scripting */
+import * as $ from 'jquery';
 
+/* Scripting */
 async function getCurrentTab() {
-    const queryOptions = { active: true, lastFocusedWindow: true };
+    const queryOptions = {
+        active: true,
+        lastFocusedWindow: true
+    };
     const [tab] = await chrome.tabs.query(queryOptions);
     return tab;
 }
@@ -12,13 +16,22 @@ async function executeInCurrentTab(opts) {
     return executeInTab(tab.id, opts);
 }
 
-async function executeInTab(tabId, { file, func, args }) {
+async function executeInTab(tabId, {
+    file,
+    func,
+    args
+}) {
     if (process.env.DEBUG)
-    console.log("INFO: Calling executeInTab")
+        console.log("INFO: Calling executeInTab")
     const executions = await chrome.scripting.executeScript({
         world: "MAIN", // MAIN in order to access the window object
-        target: { tabId, allFrames: true },
-        ...(file && { files: [file] }),
+        target: {
+            tabId,
+            allFrames: true
+        },
+        ...(file && {
+            files: [file]
+        }),
         func,
         args,
     });
@@ -43,154 +56,225 @@ function wrapResponse(promise, sendResponse) {
 
 /* API */
 
-function callApi(url, bodyObject, type='application/json') {
+function callApi(url, bodyObject, type = 'application/json') {
     return fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': type
-        },
-        body: type == 'application/json'? JSON.stringify(bodyObject) : bodyObject
-    })
-    .then(response => response.json())
-    .catch(error => {
-        console.error('Error fetching data:', error);
-        throw error;
-    });
- }
- 
- /* Analyzer */
+            method: 'POST',
+            headers: {
+                'Content-Type': type
+            },
+            body: type == 'application/json' ? JSON.stringify(bodyObject) : bodyObject
+        })
+        .then(response => response.json())
+        .catch(error => {
+            console.error('Error fetching data: ', error);
+            throw error;
+        });
+}
+
+/* Analyzer */
 
 import findAndReplaceDOMText from './findAndReplaceDOMText'
- 
-const analysePage = () => {
-    const relevantTags = ["div", "p", "span", "h1", "h2", "h3", "h4", "h5", "h6", "b"];
+
+function analysePage() {
+    const relevantTags = ["div", "p", "h1", "h2", "h3", "h4", "h5", "h6"];
     const search = relevantTags.join(", "); // "div, p, span, h1, h2, h3, h4, h5, h6"
- 
-    const URL = process.env.PLASMO_PUBLIC_API_URL;
+
+    const exclude = ['head', 'meta', 'title', 'link', 'style',
+        'script', 'noscript', 'audio', 'video', 'source',
+        'track', 'canvas', 'svg', 'img', 'iframe',
+        'embed', 'object', 'param', 'map', 'area',
+        'menu', 'menuitem'
+    ];
+    const strExclude = exclude.join(", ")
+
+    const URL = "http://127.0.0.1:8000/api/v1";
     const HIGHLIGHT_THRESHOLD_PROBABILITY = 50;
+    const MIN_WORDS = 7;
     let promises = []; // array to save fetch promises
- 
+
     // Iterate elements with relevant tag
-   document.querySelectorAll(search).forEach((el) => {
-        //console.log("tag: " + $(this)[0].tagName + " text: " + $(this).text());
- 
-        // Skip elements without text
-        let hasText = el.textContent.trim().length >= 10;
-        if (!hasText)
-            return;
- 
-        // If any of this element's ancestors are a relevant tag, skip this element 
-        // since that ancestor element contains this element's text
-        let elem = el;
-        while (elem.parentElement != null) {
-            elem = elem.parentElement;
-            let thisTag = elem.tagName;
-            if (thisTag == null || thisTag == undefined)
+    document.querySelectorAll("body, div, p, h1, h2, h3, h4, h5, h6").forEach((elem) => {
+
+        /*
+        // If this elem has a relevant ancestor elem, skip this elem 
+        for (relevantTag of relevantTags) {
+            let relevantRoots = getParents(elem, relevantTag);
+            if (relevantRoots.length == 0)
                 continue;
-            thisTag = thisTag.toLowerCase();
-            if (relevantTags.includes(thisTag))
+            let relevantRoot = relevantRoots[relevantRoots.length - 1];
+            if (relevantRoot != elem)
                 return;
         }
- 
-        let txt = el.textContent.replace(/ +/g, ' ').trim(); // text in this element, replace many spaces with 1 space
-        //txt = txt.replace(/(\r\n|\n|\r)/gm, "").trim(); // remove all line breaks
-        let sentences = textToSentences(txt);
- 
-        if (sentences == null || sentences == undefined) {
-            // If failed to split into sentences, then treat the text as a whole
-            txt = txt.replace(/(\r\n|\n|\r)/gm, "").trim(); // remove all line breaks
-            if (txt.length >= 10) {
-                const promise = analyseText(URL, txt, el, HIGHLIGHT_THRESHOLD_PROBABILITY);
-                promises.push(promise)
-            }
-        }
-        else {
-            for (let i = 0; i < sentences.length; i++) {
-                if (sentences[i].length >= 10) {
-                    let promise = analyseText(URL, sentences[i], el, HIGHLIGHT_THRESHOLD_PROBABILITY);
-                    promises.push(promise)
-                }
+
+        clone = elem.cloneNode(true);
+        clone.querySelectorAll(strExclude).forEach(function(v) {
+            v.remove()
+        });
+        let text = clone.textContent;
+        */
+
+        let newElem = $(elem).ignore("*:not(a, span, strong, b, i, s, u, tt, sup, sub)")[0];
+        clone = newElem.cloneNode(true);
+        clone.querySelectorAll(strExclude).forEach(function(v) {
+            v.remove();
+        });
+        let text = clone.textContent;
+
+        let lines = splitByLines(text);
+        for (let line of lines) {
+            let sentences = textToSentences(line);
+            for (let sentence of sentences) {
+                sentence = sentence.trim();
+                if (sentence.length == 0)
+                    continue;
+                if (sentence.split(" ").length < MIN_WORDS)
+                    continue;
+
+                let promise = analyseText(URL, sentence, elem, HIGHLIGHT_THRESHOLD_PROBABILITY);
+                promises.push(promise);
             }
         }
     });
- 
+
     return Promise.all(promises).then((results) => {
-        let sumCharacters = 0;
-        let weightedSum = 0;
+            let sumCharacters = 0;
+            let weightedSum = 0;
 
-        for (let i = 0; i < results.length; i++) {
-            sumCharacters += results[i].length;
-            weightedSum += results[i].weight;
-        }
+            for (let i = 0; i < results.length; i++) {
+                sumCharacters += results[i].length;
+                weightedSum += results[i].weight;
+            }
 
-        let weightedAvg = weightedSum / sumCharacters;
-        weightedAvg = Math.round(weightedAvg); // round to nearest int
-        console.log(weightedAvg)
-        return weightedAvg; // return the weightedAvg value
-    })
-    .catch((err) => {
-        console.error(err);
-    });
+            let weightedAvg = weightedSum / sumCharacters;
+            weightedAvg = Math.round(weightedAvg); // round to nearest int
+            console.log("Overall evaluation: " + weightedAvg + "%");
+            return weightedAvg;
+        })
+        .catch((err) => {
+            console.error(err);
+        });
 }
- 
-const analyseText = (url, text, elem, threshold) => {
+
+function analyseText(url, text, elem, threshold) {
     return new Promise((resolve, reject) => {
         callApi(url, text, 'text/plain')
-        .then(data => {
-            console.log(data)
-            if (data.probability_AI_generated < threshold) {
-                // console.log("Not AI: '" + text + "'");
-            } else {
-                // console.log("AI: '" + text + "'");
- 
-                let newText = text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // ignore special chars
-                newText = newText.replace(/\s+/g, '\\s+');  // replace whitespace with \s+ pattern, this matches even with many spaces or line breaks between words
-                let pattern = RegExp("\\b" + newText + "\\b");
-                let before = elem.innerHTML;
- 
-                findAndReplaceDOMText(elem, {
-                    find: pattern,
-                    wrap: 'mark',
-                });
- 
-                if (elem.innerHTML == before) {
-                    pattern = RegExp(newText);
+            .then(data => {
+                if (data.probability_AI_generated < threshold) {
+                    console.log("Not AI: '" + text + "'");
+                } else {
+                    console.log("AI: '" + text + "'");
+
+                    let newText = text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // ignore special chars
+                    newText = newText.replace(/\s+/g, '\\s+'); // replace whitespace with \s+ pattern, this matches even with many spaces or line breaks between words
+                    let pattern = RegExp("\\b" + newText + "\\b");
+                    let before = elem.innerHTML;
+
                     findAndReplaceDOMText(elem, {
                         find: pattern,
                         wrap: 'mark',
                     });
+
+                    if (elem.innerHTML == before) {
+                        pattern = RegExp(newText);
+                        findAndReplaceDOMText(elem, {
+                            find: pattern,
+                            wrap: 'mark',
+                        });
+                    }
                 }
-            }
-            resolve({"length": text.length, "weight": text.length * data.probability_AI_generated});
-         })
-         .catch(error => reject(error));
+                resolve({
+                    "length": text.length,
+                    "weight": text.length * data.probability_AI_generated
+                });
+            })
+            .catch(error => reject(error));
     });
 };
 
- 
-const textToSentences = text => {
+function getParents(elem, selector) {
+    // Element.matches() polyfill
+    if (!Element.prototype.matches) {
+        Element.prototype.matches =
+            Element.prototype.matchesSelector ||
+            Element.prototype.mozMatchesSelector ||
+            Element.prototype.msMatchesSelector ||
+            Element.prototype.oMatchesSelector ||
+            Element.prototype.webkitMatchesSelector ||
+            function(s) {
+                var matches = (this.document || this.ownerDocument).querySelectorAll(s),
+                    i = matches.length;
+                while (--i >= 0 && matches.item(i) !== this) {}
+                return i > -1;
+            };
+    }
+
+    // Set up a parent array
+    var parents = [];
+
+    // Push each parent element to the array
+    for (; elem && elem !== document; elem = elem.parentNode) {
+        if (selector) {
+            if (elem.matches(selector)) {
+                parents.push(elem);
+            }
+            continue;
+        }
+        parents.push(elem);
+    }
+
+    // Return our parent array
+    return parents;
+
+}
+
+$.fn.ignore = function(sel) {
+  return this.clone().find(sel || ">*").remove().end();
+};
+
+function getTextExcludingChildren(elem)
+{
+    $(elem).contents().filter(function() {
+        return this.nodeType == 3;
+    }).text()
+}
+
+function splitByLines(text) {
+    text = text.trim();
+    text = text.replace(/ +/g, ' ').trim();
+    let lines = text.split("\n \n") // <br />
+    let ret = [];
+    for (let i = 0; i < lines.length; i++) {
+        lines[i] = lines[i].replaceAll("\n", "").trim();
+        if (lines[i].length > 0)
+            ret.push(lines[i]);
+    }
+    return ret;
+}
+
+
+function textToSentences(text) {
     let sentences = text.replace(/(\.+|\:|\!|\?)(\"*|\'*|\)*|}*|]*)(\s|\n|\r|\r\n)/gm, "$1$2|").split("|");
     let indexToList = new Map();
     for (let i = 0; i < sentences.length; i++) {
-       sentences[i] = sentences[i].trim();
-       sentences[i] = sentences[i].replace(/ +/g, ' ').trim(); // replace many spaces with 1 space
-       let splitBrBreaks = sentences[i].split("\n \n");
-       if (splitBrBreaks.length > 1) {
-          sentences[i] = splitBrBreaks[0];
-          indexToList.set(i + 1, splitBrBreaks.slice(1));
-       }
+        sentences[i] = sentences[i].trim();
+        sentences[i] = sentences[i].replace(/ +/g, ' ').trim(); // replace many spaces with 1 space
+        let splitBrBreaks = sentences[i].split("\n \n");
+        if (splitBrBreaks.length > 1) {
+            sentences[i] = splitBrBreaks[0];
+            indexToList.set(i + 1, splitBrBreaks.slice(1));
+        }
     }
     let x = 0;
     for (let idx of indexToList.keys()) {
-       sentences.splice(idx + x, 0, ...indexToList.get(idx));
-       x += indexToList.get(idx).length;
+        sentences.splice(idx + x, 0, ...indexToList.get(idx));
+        x += indexToList.get(idx).length;
     }
     for (let i = 0; i < sentences.length; i++) {
-       sentences[i] = sentences[i].trim();
-       sentences[i] = sentences[i].replace(/ +/g, ' ').trim(); // replace many spaces with 1 space
-       sentences[i] = sentences[i].replaceAll("\n", "");
+        sentences[i] = sentences[i].trim();
+        sentences[i] = sentences[i].replace(/ +/g, ' ').trim(); // replace many spaces with 1 space
+        sentences[i] = sentences[i].replaceAll("\n", "");
     }
- 
+
     return sentences;
 }
 
@@ -200,4 +284,11 @@ const generateRandomColor = () => {
     return '#' + Math.floor(Math.random() * 16777215).toString(16);
 }
 
-export { executeInCurrentTab, executeInTab, wrapResponse, callApi, analysePage, generateRandomColor };
+export {
+    executeInCurrentTab,
+    executeInTab,
+    wrapResponse,
+    callApi,
+    analysePage,
+    generateRandomColor
+};
