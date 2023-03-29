@@ -1,59 +1,5 @@
 import $ from 'jquery';
 
-/* Scripting */
-async function getCurrentTab() {
-    const queryOptions = {
-        active: true,
-        lastFocusedWindow: true
-    };
-    const [tab] = await chrome.tabs.query(queryOptions);
-    return tab;
-}
-
-async function executeInCurrentTab(opts) {
-    console.log(opts);
-    const tab = await getCurrentTab();
-    return executeInTab(tab.id, opts);
-}
-
-async function executeInTab(tabId, {
-    file,
-    func,
-    args
-}) {
-    if (process.env.DEBUG)
-        console.log("INFO: Calling executeInTab")
-    const executions = await chrome.scripting.executeScript({
-        world: "MAIN", // MAIN in order to access the window object
-        target: {
-            tabId,
-            allFrames: true
-        },
-        ...(file && {
-            files: [file]
-        }),
-        func,
-        args,
-    });
-
-    if (executions.length === 1) {
-        return executions[0].result;
-    }
-
-    // If there are many frames, concatenate the results
-    return executions.flatMap((execution) => execution.result);
-}
-
-function wrapResponse(promise, sendResponse) {
-    promise.then((response) => sendResponse({
-        success: true,
-        response,
-    })).catch((error) => sendResponse({
-        success: false,
-        error: error.message,
-    }));
-}
-
 /* API */
 
 function callApi(url, bodyObject, type = 'application/json') {
@@ -168,14 +114,14 @@ function analyseText(url, text, elem, threshold) {
 
                     findAndReplaceDOMText(elem, {
                         find: pattern,
-                        wrap: 'mark',
+                        wrap: 'highlighted-text',
                     });
 
                     if (elem.innerHTML == before) {
                         pattern = RegExp(newText);
                         findAndReplaceDOMText(elem, {
                             find: pattern,
-                            wrap: 'mark',
+                            wrap: 'highlighted-text',
                         });
                     }
                 }
@@ -238,9 +184,6 @@ const generateRandomColor = () => {
 }
 
 export {
-    executeInCurrentTab,
-    executeInTab,
-    wrapResponse,
     callApi,
     analysePage,
     generateRandomColor
