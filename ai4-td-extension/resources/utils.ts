@@ -1,4 +1,4 @@
-import * as $ from 'jquery';
+import $ from 'jquery';
 
 /* Scripting */
 async function getCurrentTab() {
@@ -76,9 +76,6 @@ function callApi(url, bodyObject, type = 'application/json') {
 import findAndReplaceDOMText from './findAndReplaceDOMText'
 
 function analysePage() {
-    const relevantTags = ["div", "p", "h1", "h2", "h3", "h4", "h5", "h6"];
-    const search = relevantTags.join(", "); // "div, p, span, h1, h2, h3, h4, h5, h6"
-
     const exclude = ['head', 'meta', 'title', 'link', 'style',
         'script', 'noscript', 'audio', 'video', 'source',
         'track', 'canvas', 'svg', 'img', 'iframe',
@@ -113,8 +110,8 @@ function analysePage() {
         let text = clone.textContent;
         */
 
-        let newElem = $(elem).ignore("*:not(a, span, strong, b, i, s, u, tt, sup, sub)")[0];
-        clone = newElem.cloneNode(true);
+        let newElem = (<any>$(elem)).ignore("*:not(a, span, strong, b, i, s, u, tt, sup, sub)")[0];
+        const clone = newElem.cloneNode(true);
         clone.querySelectorAll(strExclude).forEach(function (v) {
             v.remove();
         });
@@ -227,7 +224,7 @@ function getParents(elem, selector) {
 
 }
 
-$.fn.ignore = function (sel) {
+(<any>$.fn).ignore = function (sel) {
     return this.clone().find(sel || ">*").remove().end();
 };
 
