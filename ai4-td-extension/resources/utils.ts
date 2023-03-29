@@ -142,7 +142,7 @@ function analysePage() {
             weightedSum += results[i].weight;
         }
 
-        let weightedAvg = weightedSum / sumCharacters;
+        let weightedAvg = sumCharacters > 0? weightedSum / sumCharacters : 0;
         weightedAvg = Math.round(weightedAvg); // round to nearest int
         console.log("Overall evaluation: " + weightedAvg + "%");
         return weightedAvg;
