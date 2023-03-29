@@ -1,0 +1,170 @@
+<html>
+    <head>
+        <title>Test PDF</title>
+        <style>
+            .myMark {
+            background-color: red;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="the-canvas" style="border: 1px solid black; direction: ltr;"></canvas>
+
+
+
+        <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+        <script>
+            $(window).on('load', function () {
+            
+            });
+            
+            let url = window.location.href;
+            url = "./11%20Dete%C3%A7%C3%A3o%20de%20texto%20sint%C3%A9tico.pdf";
+
+            // The workerSrc property shall be specified.
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://mozilla.github.io/pdf.js/build/pdf.js';
+            
+            const loadingTask = pdfjsLib.getDocument(url);
+            (async () => {
+            const pdf = await loadingTask.promise;
+            //
+            // Fetch the first page
+            //
+            const page = await pdf.getPage(1);
+            const scale = 1.5;
+            const viewport = page.getViewport({ scale });
+            // Support HiDPI-screens.
+            const outputScale = window.devicePixelRatio || 1;
+            
+            //
+            // Prepare canvas using PDF page dimensions
+            //
+            const canvas = document.getElementById("the-canvas");
+            const context = canvas.getContext("2d");
+            
+            canvas.width = Math.floor(viewport.width * outputScale);
+            canvas.height = Math.floor(viewport.height * outputScale);
+            canvas.style.width = Math.floor(viewport.width) + "px";
+            canvas.style.height = Math.floor(viewport.height) + "px";
+            
+            const transform = outputScale !== 1 
+            ? [outputScale, 0, 0, outputScale, 0, 0] 
+            : null;
+            
+            //
+            // Render PDF page into canvas context
+            //
+            const renderContext = {
+            canvasContext: context,
+            transform,
+            viewport,
+            };
+            page.render(renderContext);
+            })();
+            
+            function splitByLines(text) {
+                text = text.trim();
+                text = text.replace(/ +/g, ' ').trim();
+                let lines = text.split("\n \n") // <br />
+                let ret = [];
+                for (let i = 0; i < lines.length; i++) {
+                    lines[i] = lines[i].replaceAll("\n", "").trim();
+                    if (lines[i].length > 0)
+                        ret.push(lines[i]);
+                }
+                return ret;
+            }
+            
+            function getParents(elem, selector) {
+                // Element.matches() polyfill
+                if (!Element.prototype.matches) {
+                    Element.prototype.matches =
+                        Element.prototype.matchesSelector ||
+                        Element.prototype.mozMatchesSelector ||
+                        Element.prototype.msMatchesSelector ||
+                        Element.prototype.oMatchesSelector ||
+                        Element.prototype.webkitMatchesSelector ||
+                        function(s) {
+                            var matches = (this.document || this.ownerDocument).querySelectorAll(s),
+                                i = matches.length;
+                            while (--i >= 0 && matches.item(i) !== this) {}
+                            return i > -1;
+                        };
+                }
+            
+                // Set up a parent array
+                var parents = [];
+            
+                // Push each parent element to the array
+                for ( ; elem && elem !== document; elem = elem.parentNode ) {
+                    if (selector) {
+                        if (elem.matches(selector)) {
+                            parents.push(elem);
+                        }
+                        continue;
+                    }
+                    parents.push(elem);
+                }
+            
+                // Return our parent array
+                return parents;
+            
+            };
+            
+            $.fn.ignore = function(sel) {
+              return this.clone().find(sel || ">*").remove().end();
+            };
+            
+            
+            function getTextExcludingChildren(elem)
+            {
+                return elem.contents().filter(function() {
+                    return this.nodeType == 3;
+                }).text()
+            }
+            
+            function hasRelevantAncestor(elem)
+            {
+               const relevantTags = ["div", "p", "span", "h1", "h2", "h3", "h4", "h5", "h6", "b"];
+               const search = relevantTags.join(", "); // "div, p, span, h1, h2, h3, h4, h5, h6
+                       // If this elem has a relevant ancestor elem, skip this elem 
+              for (relevantTag of relevantTags)
+              {
+                  console.log("Testing " + relevantTag);
+                  let closest = elem.closest(relevantTag);
+                  if (closest != null && closest != elem)
+                      return true;
+              }
+              return false;
+            }
+            
+            
+            function textToSentences(text) {
+                let sentences = text.replace(/(\.+|\:|\!|\?)(\"*|\'*|\)*|}*|]*)(\s|\n|\r|\r\n)/gm, "$1$2|").split("|");
+                let indexToList = new Map();
+                for (let i = 0; i < sentences.length; i++) {
+                    sentences[i] = sentences[i].trim();
+                    sentences[i] = sentences[i].replace(/ +/g, ' ').trim(); // replace many spaces with 1 space
+                    let splitBrBreaks = sentences[i].split("\n \n");
+                    if (splitBrBreaks.length > 1) {
+                        sentences[i] = splitBrBreaks[0];
+                        indexToList.set(i + 1, splitBrBreaks.slice(1));
+                    }
+                }
+                let x = 0;
+                for (let idx of indexToList.keys()) {
+                    sentences.splice(idx + x, 0, ...indexToList.get(idx));
+                    x += indexToList.get(idx).length;
+                }
+                for (let i = 0; i < sentences.length; i++) {
+                    sentences[i] = sentences[i].trim();
+                    sentences[i] = sentences[i].replace(/ +/g, ' ').trim(); // replace many spaces with 1 space
+                    sentences[i] = sentences[i].replaceAll("\n", "");
+                }
+            
+                return sentences;
+            }
+        </script>
+    </body>
+</html>

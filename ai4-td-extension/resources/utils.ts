@@ -58,12 +58,12 @@ function wrapResponse(promise, sendResponse) {
 
 function callApi(url, bodyObject, type = 'application/json') {
     return fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': type
-            },
-            body: type == 'application/json' ? JSON.stringify(bodyObject) : bodyObject
-        })
+        method: 'POST',
+        headers: {
+            'Content-Type': type
+        },
+        body: type == 'application/json' ? JSON.stringify(bodyObject) : bodyObject
+    })
         .then(response => response.json())
         .catch(error => {
             console.error('Error fetching data: ', error);
@@ -115,7 +115,7 @@ function analysePage() {
 
         let newElem = $(elem).ignore("*:not(a, span, strong, b, i, s, u, tt, sup, sub)")[0];
         clone = newElem.cloneNode(true);
-        clone.querySelectorAll(strExclude).forEach(function(v) {
+        clone.querySelectorAll(strExclude).forEach(function (v) {
             v.remove();
         });
         let text = clone.textContent;
@@ -137,19 +137,19 @@ function analysePage() {
     });
 
     return Promise.all(promises).then((results) => {
-            let sumCharacters = 0;
-            let weightedSum = 0;
+        let sumCharacters = 0;
+        let weightedSum = 0;
 
-            for (let i = 0; i < results.length; i++) {
-                sumCharacters += results[i].length;
-                weightedSum += results[i].weight;
-            }
+        for (let i = 0; i < results.length; i++) {
+            sumCharacters += results[i].length;
+            weightedSum += results[i].weight;
+        }
 
-            let weightedAvg = weightedSum / sumCharacters;
-            weightedAvg = Math.round(weightedAvg); // round to nearest int
-            console.log("Overall evaluation: " + weightedAvg + "%");
-            return weightedAvg;
-        })
+        let weightedAvg = weightedSum / sumCharacters;
+        weightedAvg = Math.round(weightedAvg); // round to nearest int
+        console.log("Overall evaluation: " + weightedAvg + "%");
+        return weightedAvg;
+    })
         .catch((err) => {
             console.error(err);
         });
@@ -200,10 +200,10 @@ function getParents(elem, selector) {
             Element.prototype.msMatchesSelector ||
             Element.prototype.oMatchesSelector ||
             Element.prototype.webkitMatchesSelector ||
-            function(s) {
+            function (s) {
                 var matches = (this.document || this.ownerDocument).querySelectorAll(s),
                     i = matches.length;
-                while (--i >= 0 && matches.item(i) !== this) {}
+                while (--i >= 0 && matches.item(i) !== this) { }
                 return i > -1;
             };
     }
@@ -227,13 +227,12 @@ function getParents(elem, selector) {
 
 }
 
-$.fn.ignore = function(sel) {
-  return this.clone().find(sel || ">*").remove().end();
+$.fn.ignore = function (sel) {
+    return this.clone().find(sel || ">*").remove().end();
 };
 
-function getTextExcludingChildren(elem)
-{
-    $(elem).contents().filter(function() {
+function getTextExcludingChildren(elem) {
+    $(elem).contents().filter(function () {
         return this.nodeType == 3;
     }).text()
 }

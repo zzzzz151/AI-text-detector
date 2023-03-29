@@ -19,7 +19,7 @@ def handle_request(request):
     # 400 means bad request and 404 means resource not found
     # 500 means an internal server error
 
-    if request.content_type == 'text/html':
+    if request.content_type == 'text/plain':
         text = request.body.decode("utf-8")
     else:
         try:
