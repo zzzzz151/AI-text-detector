@@ -1,8 +1,5 @@
+import { executeInCurrentTab } from "./utils";
 import highlightSelection from "./highlight";
-import { executeInCurrentTab } from "../resources/utils";
-import { Storage } from "@plasmohq/storage";
-
-const storage = new Storage()
 
 const injectHighlight = async (info) => {
   if (info.menuItemId === "scan-text") {

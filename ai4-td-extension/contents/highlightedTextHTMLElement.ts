@@ -2,7 +2,7 @@ import type { PlasmoCSConfig } from "plasmo"
  
 export const config: PlasmoCSConfig = {
   matches: ["<all_urls>"],
-  world: "MAIN" // so we can access the window object
+  world: "MAIN"
 }
 
 class HighlightedTextHTMLElement extends HTMLElement {
@@ -25,11 +25,3 @@ class HighlightedTextHTMLElement extends HTMLElement {
 }
 
 window.customElements.define('highlighted-text', HighlightedTextHTMLElement);
-
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      'highlighted-text': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;
-    }
-  }
-}

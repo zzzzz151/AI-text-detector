@@ -5,7 +5,10 @@ Test API
 https://reqbin.com/
 
 
+http://127.0.0.1:8887/testHtml.html
 https://www.jn.pt/nacional/rui-nabeiro-partiu-o-homem-que-vivia-para-as-pessoas-e-para-a-sua-terra-16031690.html
 https://en.wikipedia.org/wiki/World_War_II
+file:///home/zzzzz/Desktop/AI-text-detector/11%20Dete%C3%A7%C3%A3o%20de%20texto%20sint%C3%A9tico.pdf
 
 
+pnpm dev

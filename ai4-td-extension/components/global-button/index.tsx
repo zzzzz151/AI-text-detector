@@ -14,7 +14,7 @@ function GlobalButton({setData, success, setSuccess, error, setError, loading, s
             setSuccess(true);
             setLoading(false);
             setData(data)
-            console.log(data);
+            //console.log(data);
           })
           .catch(error => {
             setError(true);

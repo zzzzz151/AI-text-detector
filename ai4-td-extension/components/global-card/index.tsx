@@ -18,7 +18,7 @@ function GlobalCard({data, success, anchor, setAnchor}) {
             padding: '16px',
             fontSize: '14px',
         }}>
-            The probability is {data}%
+            Overall evaluation {data}%
         </Box>
     )
 }
