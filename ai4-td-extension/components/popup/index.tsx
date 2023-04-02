@@ -29,7 +29,9 @@ function Popup() {
                 <Box width="100%">
                     <ListItemSwitcher default={false} id="scan-page-automatically" text="Scan page automatically" />
                     <Divider light variant="middle" sx={{width: "100%"}}/>
-                    <ListItemColorPicker default="#FF0000" id="highlight-color" text="Highlight color"/>
+                    <ListItemColorPicker default="#FFFF00" id="highlight-color-regular" text="Highlight color 1"/>
+                    <Divider light variant="middle" sx={{width: "100%"}}/>
+                    <ListItemColorPicker default="#FF0000" id="highlight-color-strong" text="Highlight color 1"/>
                     <Divider light variant="middle" sx={{width: "100%"}}/>
                 </Box>
                 <ListItemMessage />

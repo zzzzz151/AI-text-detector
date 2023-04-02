@@ -4,7 +4,7 @@ import { useStorage } from "@plasmohq/storage/hook"
 import SketchExample from "~components/color-picker/sketch-picker";
 
 function ListItemColorPicker(props) {
-  const [color, setColor] = useStorage<string>(props.id, v => (v && (v.length == 4 || v.length == 7)) ? v.toUpperCase() : props.default);
+  const [color, setColor] = useStorage<string>(props.id, v => (v && (v.length == 4 || v.length == 7)) ? v : props.default);
   const colorPickerRef = useRef(null);
     
   function handleListItemClick() {
