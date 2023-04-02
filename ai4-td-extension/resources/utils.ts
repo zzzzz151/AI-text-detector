@@ -21,6 +21,7 @@ function callApi(url, bodyObject, type = 'application/json') {
 
 import findAndReplaceDOMText from './findAndReplaceDOMText'
 
+/*
 function isPDF(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -34,25 +35,10 @@ function isPDF(file) {
       };
       reader.readAsArrayBuffer(file.slice(0, 4));
     });
-  }
+}
+*/
 
 function analysePage() {
-    if (document.contentType === 'application/pdf') {
-        console.log('This page is displaying a PDF.');
-
-        // Get the embedded data URI from the embed tag
-        var url = window.location.href;
-
-        return;
-    } else {
-        console.log('This page is not displaying a PDF.');
-    }
-
-
-    $('head').append('<style>.highlightYellow { background-color: yellow }</style>');
-    $('head').append('<style>.highlightRed { background-color: red }</style>');
-
-
     const exclude = ['base', 'head', 'meta', 'title', 'link', 'style',
         'script', 'noscript', 'audio', 'video', 'source',
         'track', 'canvas', 'svg', 'img', 'iframe',
@@ -142,24 +128,17 @@ function analyseText(url, text, elem, threshold) {
                     newText = newText.replace(/\s+/g, '\\s+'); // replace whitespace with \s+ pattern, this matches even with many spaces or line breaks between words
                     let pattern = RegExp("\\b" + newText + "\\b");
                     let before = elem.innerHTML;
-                    let redThreshold = threshold * 1.5;
-                    let myClass = "highlightYellow";
-                    if (data.probability_AI_generated >= redThreshold)
-                        myClass = "highlightRed";
-
 
                     findAndReplaceDOMText(elem, {
                         find: pattern,
-                        wrap: 'span',
-                        wrapClass: myClass
+                        wrap: 'highlighted-text',
                     });
 
                     if (elem.innerHTML == before) {
                         pattern = RegExp(newText);
                         findAndReplaceDOMText(elem, {
                             find: pattern,
-                            wrap: 'span',
-                            wrapClass: myClass
+                            wrap: 'highlighted-text',
                         });
                     }
                 }
