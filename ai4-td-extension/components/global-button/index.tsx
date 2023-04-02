@@ -8,7 +8,7 @@ function GlobalButton({setData, success, setSuccess, error, setError, loading, s
 
   const [autoscan] = useStorage<string>("scan-page-automatically")
 
-  const canScan = !(loading || success)
+  const canScan = !(loading || success || error)
 
   const handleClick = () => {
       setAnchor(prevState => !prevState);

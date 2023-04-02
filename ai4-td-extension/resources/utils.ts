@@ -128,10 +128,13 @@ function analyseText(url, text, elem, threshold) {
                     newText = newText.replace(/\s+/g, '\\s+'); // replace whitespace with \s+ pattern, this matches even with many spaces or line breaks between words
                     let pattern = RegExp("\\b" + newText + "\\b");
                     let before = elem.innerHTML;
-
+                    
                     findAndReplaceDOMText(elem, {
                         find: pattern,
                         wrap: 'highlighted-text',
+                        wrapAttributes: {
+                            'probability': data.probability_AI_generated
+                        },
                     });
 
                     if (elem.innerHTML == before) {
@@ -139,6 +142,9 @@ function analyseText(url, text, elem, threshold) {
                         findAndReplaceDOMText(elem, {
                             find: pattern,
                             wrap: 'highlighted-text',
+                            wrapAttributes: {
+                                'probability': data.probability_AI_generated
+                            },
                         });
                     }
                 }
