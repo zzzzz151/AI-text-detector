@@ -7,7 +7,7 @@ import json
 from .LMs.AI import LanguageModel
 from datetime import datetime
 
-#model = LanguageModel()
+model = LanguageModel()
 
 def log(msg):
     strDateTimeNow = str(datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
@@ -24,7 +24,7 @@ def handle_request(request):
     else:
         try:
             requestData = json.loads(request.body.decode())
-            text = requestData["text"];
+            text = requestData["text"]
         except:
             log("Received invalid request")
             return JsonResponse(
@@ -34,8 +34,8 @@ def handle_request(request):
 
     log("Received text request for \"" + text + "\"")
 
-    #probability_AI_generated = model.probability_AI_generated_text(text, "openAIBase")
-    probability_AI_generated = random.randint(0, 100)
+    probability_AI_generated = model.probability_AI_generated_text(text, "chatGPT")
+    #probability_AI_generated = random.randint(0, 100)
 
     responseData = {
         "text": text,

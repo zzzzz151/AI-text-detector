@@ -1,6 +1,7 @@
 import time
 from typing import Union, List
 import pandas as pd
+import sys
 
 from .language_models.chatgpt_detector_roberta import ChatGPTRobertaDetectorModel
 from .language_models.roberta_openai_detector import OpenAIBaseRobertaGPT2DetectorModel, OpenAILargeRobertaGPT2DetectorModel
@@ -27,6 +28,15 @@ class LanguageModel:
         if len(ret) == 0:
             return None
         return ret
+
+class IsolatedLanguageModel:
+    def __init__(self, className, lm_name):
+        # Warning: Takes time to load
+        print("Loading model")
+        self.model = className()
+        self.name = lm_name
+
+
 
 class TestLanguageModel:
     def __init__(self, model_class):
