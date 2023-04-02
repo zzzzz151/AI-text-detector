@@ -47,6 +47,8 @@ class TestLanguageModel:
         max = 100
         dataset_evaluation_time_started = time.time()
         for data_id, string, is_synthetic in dataset:
+            if len(string) < 250:
+                continue
             datapoint_evaluation_time_started = time.time()
             probability = round(self.model(str(string))[0] * 100)
             results.append((data_id, probability, is_synthetic, len(string), time.time() - datapoint_evaluation_time_started))
