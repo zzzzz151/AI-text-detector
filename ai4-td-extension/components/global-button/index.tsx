@@ -1,9 +1,12 @@
 import { Box, CircularProgress, Fab } from "@mui/material";
 import { green, purple, red } from "@mui/material/colors";
+import { useStorage } from "@plasmohq/storage/hook";
 import { AiFillSecurityScan } from "react-icons/ai";
 import { analysePage } from "~resources/utils";
 
 function GlobalButton({setData, success, setSuccess, error, setError, loading, setLoading, setAnchor}) {
+
+  const [autoscan] = useStorage<string>("scan-page-automatically")
 
     const handleClick = () => {
         setAnchor(prevState => !prevState);
@@ -18,12 +21,17 @@ function GlobalButton({setData, success, setSuccess, error, setError, loading, s
             setLoading(false);
             setData(data)
           })
-          .catch(error => {
+          .catch(() => {
             setError(true);
             setLoading(false);
           });
         }
     };
+
+    if (autoscan) {
+      if (!(loading || success))
+        handleClick();
+    }
       
     const buttonSx = {
         ...(success && {

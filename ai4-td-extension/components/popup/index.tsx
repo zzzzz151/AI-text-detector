@@ -27,11 +27,9 @@ function Popup() {
             <Box flexDirection="column" display="flex" alignItems="center" justifyContent="center" padding="18px" maxHeight="485px" overflow="auto">
                 <ListItemSettings />
                 <Box width="100%">
-                    <ListItemSwitcher id="list-item-scan-page-automatically" text="Scan page automatically" />
+                    <ListItemSwitcher default={false} id="scan-page-automatically" text="Scan page automatically" />
                     <Divider light variant="middle" sx={{width: "100%"}}/>
-                    <ListItemSwitcher id="list-item-option2" text="option2" />
-                    <Divider light variant="middle" sx={{width: "100%"}}/>
-                    <ListItemColorPicker id="list-item-highlight-color" text="Highlight color"/>
+                    <ListItemColorPicker default="#FF0000" id="highlight-color" text="Highlight color"/>
                     <Divider light variant="middle" sx={{width: "100%"}}/>
                 </Box>
                 <ListItemMessage />

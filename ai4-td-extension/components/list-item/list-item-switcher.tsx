@@ -1,9 +1,10 @@
 import { ListItem, ListItemText } from "@mui/material";
-import { useRef, useState } from "react";
+import { useStorage } from "@plasmohq/storage/hook";
+import { useRef } from "react";
 import Switcher from "~components/switchers/switcher";
 
 function ListItemSwitcher(props) {
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useStorage<boolean>(props.id, v => v === undefined ? props.default : v);
   const switcherRef = useRef(null);
 
   function handleClick(e) {
