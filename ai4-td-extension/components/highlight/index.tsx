@@ -14,7 +14,7 @@ const ELEMENT = "highlighted-text"
 const SINGLE_CARD_WIDTH = 200
 
 function Highlight() {
-  const [color] = useStorage<string>("highlight-color")
+  const [color] = useStorage<string>("highlight-color", v => (v && (v.length == 4 || v.length == 7)) ? v.toUpperCase() : "#FF0000")
   const [showSingleCard, setShowSingleCard] = useState(false);
   const [clickedElementPosition, setClickedElementPosition] = useState({
     top: 0,
