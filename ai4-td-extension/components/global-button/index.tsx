@@ -11,10 +11,12 @@ function GlobalButton({setData, success, setSuccess, error, setError, loading, s
           setLoading(true);
           analysePage()
           .then(data => {
+            if (!data) {
+              throw new Error('No data returned from API.');
+            }
             setSuccess(true);
             setLoading(false);
             setData(data)
-            //console.log(data);
           })
           .catch(error => {
             setError(true);
@@ -31,9 +33,9 @@ function GlobalButton({setData, success, setSuccess, error, setError, loading, s
           },
         }),
         ...(error && {
-          bgcolor: red[500],
+          bgcolor: red[700],
           '&:hover': {
-            bgcolor: red[600],
+            bgcolor: red[800],
           },
         }),
     };

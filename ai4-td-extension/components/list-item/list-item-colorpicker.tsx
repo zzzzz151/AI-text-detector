@@ -1,40 +1,36 @@
 import { ListItem, ListItemText } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
-import ColorPickerV3 from "~components/color-picker/color-picker-v3";
+import { useRef } from "react";
+import { useStorage } from "@plasmohq/storage/hook"
+import SketchExample from "~components/color-picker/sketch-picker";
 
 function ListItemColorPicker(props) {
-    const colorPickerRef = useRef<HTMLInputElement>(null);
-    const [focused, setFocused] = useState(false);
-  
-    useEffect(() => {
-      if (focused && colorPickerRef.current) {
-        colorPickerRef.current.focus();
-        setFocused(false);
-      }
-    }, [focused]);
-  
-    function handleListItemClick() {
-      setFocused(true);
+  const [color, setColor] = useStorage<string>('highlight-color', v => (v && (v.length == 4 || v.length == 7)) ? v.toUpperCase() : "#FF0000");
+  const colorPickerRef = useRef(null);
+    
+  function handleListItemClick() {
+    if (colorPickerRef.current) {
+      colorPickerRef.current.togglePicker();
     }
-  
-    function handleColorChange(color: string) {
-      console.log("New color:", color);
-    }
-  
-    return (
-      <ListItem sx={{cursor: "pointer"}} onClick={handleListItemClick}>
-        <ListItemText
-          id={props.id}
-          primary={props.text}
-          primaryTypographyProps={{
-            fontSize: 14,
-            color: '#1f243c',
-            lineHeight: '20px'
-          }}
-        />
-        <ColorPickerV3 onColorChange={handleColorChange} ref={colorPickerRef} />
-      </ListItem>
-    );
+  }
+    
+  function handleColorChange(color: string) {
+    setColor(color)
+  }
+    
+  return (
+    <ListItem sx={{cursor: "pointer"}} onClick={handleListItemClick}>
+      <ListItemText
+        id={props.id}
+        primary={props.text}
+        primaryTypographyProps={{
+          fontSize: 14,
+          color: '#1f243c',
+          lineHeight: '20px'
+        }}
+      />
+      <SketchExample defaultColor={color} onColorChange={handleColorChange} ref={colorPickerRef} />
+    </ListItem>
+  );
 }
 
 export default ListItemColorPicker

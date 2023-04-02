@@ -31,7 +31,7 @@ function Popup() {
                     <Divider light variant="middle" sx={{width: "100%"}}/>
                     <ListItemSwitcher id="list-item-option2" text="option2" />
                     <Divider light variant="middle" sx={{width: "100%"}}/>
-                    <ListItemColorPicker id="list-item-option3" text="option3" />
+                    <ListItemColorPicker id="list-item-highlight-color" text="Highlight color"/>
                     <Divider light variant="middle" sx={{width: "100%"}}/>
                 </Box>
                 <ListItemMessage />

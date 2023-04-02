@@ -1,23 +1,38 @@
 import { InputAdornment, TextField } from "@mui/material";
-import { forwardRef, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import "~components/color-picker/color-picker-v3.css"
 
 interface ColorPickerProps {
-    onColorChange: (color: string) => void;
-  }
+  onColorChange: (color: string) => void;
+  defaultColor: string;
+}
 
 const ColorPickerV3 = forwardRef<HTMLInputElement, ColorPickerProps>((props, ref) => {
-    const [color, setColor] = useState("FF0000");
-  
+    const [color, setColor] = useState(props.defaultColor);
+    const [isValidColor, setIsValidColor] = useState(true);
+
+    useEffect(() => {
+      setColor(props.defaultColor);
+    }, [props.defaultColor]);
+    
     function handleColorChange(e: React.ChangeEvent<HTMLInputElement>) {
       let newColor = e.target.value.replace(/[^A-Fa-f0-9]/g, ""); // remove non-hex characters
       setColor(newColor);
-      props.onColorChange(newColor);
+
+      if (newColor.length == 3 || newColor.length == 6) {
+        props.onColorChange(newColor);
+        setIsValidColor(true);
+      }
+      else {
+        setIsValidColor(false);
+      }
     }
   
+    const backgroundColor = isValidColor ? `#${color}` : '#fff';
+
     return (
       <div className="color-picker-wrapper">
-        <div className="color" style={{ backgroundColor: `#${color}` }}></div>
+        <div className="color" style={{ backgroundColor }}></div>
         <TextField
           id="outlined-start-adornment"
           size="small"
