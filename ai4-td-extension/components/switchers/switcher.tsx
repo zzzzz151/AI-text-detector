@@ -1,4 +1,4 @@
-import { forwardRef, useState } from 'react';
+import { forwardRef } from 'react';
 import "~components/switchers/switcher.css"
 
 function Switcher({checked}, ref) {

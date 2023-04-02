@@ -7,10 +7,11 @@ from .language_models.chatgpt_detector_roberta import ChatGPTRobertaDetectorMode
 from .language_models.roberta_openai_detector import OpenAIBaseRobertaGPT2DetectorModel, OpenAILargeRobertaGPT2DetectorModel
 
 language_models = {
-        "chatGPT": ChatGPTRobertaDetectorModel,
-        #"openAIBase": OpenAIBaseRobertaGPT2DetectorModel,
+        #"chatGPT": ChatGPTRobertaDetectorModel,
+        "openAIBase": OpenAIBaseRobertaGPT2DetectorModel,
         #"openAILarge": OpenAILargeRobertaGPT2DetectorModel
     }
+
 class LanguageModel:
     def __init__(self):
         # Warning: Takes time to load

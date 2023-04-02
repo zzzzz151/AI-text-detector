@@ -57,7 +57,7 @@
 }
 
 .ui-switcher[aria-checked=true]:after {
-    left: 31px;
+    left: 30px;
 }
 
 .ui-switcher:hover {
@@ -78,7 +78,7 @@
 
 @keyframes pulseON {
 	0% {
-		box-shadow: 0 0 0 0 #21a589;
+		box-shadow: 0 0 0 0 #21a5889c;
 	}
 
 	70% {
@@ -92,7 +92,7 @@
 
 @keyframes pulseOFF {
 	0% {
-		box-shadow: 0 0 0 0 #7e7e7eab;
+		box-shadow: 0 0 0 0 #7e7e7e94;
 	}
 
 	70% {

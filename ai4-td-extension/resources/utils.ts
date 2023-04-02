@@ -21,6 +21,23 @@ function callApi(url, bodyObject, type = 'application/json') {
 
 import findAndReplaceDOMText from './findAndReplaceDOMText'
 
+/*
+function isPDF(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const bytes = new Uint8Array(reader.result).subarray(0, 4);
+        const header = Array.from(bytes).map(byte => byte.toString(16)).join('');
+        resolve(header === '25504446');
+      };
+      reader.onerror = () => {
+        reject(reader.error);
+      };
+      reader.readAsArrayBuffer(file.slice(0, 4));
+    });
+}
+*/
+
 function analysePage() {
     const exclude = ['base', 'head', 'meta', 'title', 'link', 'style',
         'script', 'noscript', 'audio', 'video', 'source',
@@ -88,7 +105,7 @@ function analysePage() {
             weightedSum += results[i].weight;
         }
 
-        let weightedAvg = sumCharacters > 0? weightedSum / sumCharacters : 0;
+        let weightedAvg = sumCharacters > 0 ? weightedSum / sumCharacters : 0;
         weightedAvg = Math.round(weightedAvg); // round to nearest int
         console.log("Overall evaluation: " + weightedAvg + "%");
         return weightedAvg;
@@ -103,9 +120,9 @@ function analyseText(url, text, elem, threshold) {
         callApi(url, text, 'text/plain')
             .then(data => {
                 if (data.probability_AI_generated < threshold) {
-                    console.log("Not AI: '" + text + "'");
+                    console.log("Not AI (" + data.probability_AI_generated + "%): '" + text + "'");
                 } else {
-                    console.log("AI: '" + text + "'");
+                    console.log("AI (" + data.probability_AI_generated + "%): '" + text + "'");
 
                     let newText = text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // ignore special chars
                     newText = newText.replace(/\s+/g, '\\s+'); // replace whitespace with \s+ pattern, this matches even with many spaces or line breaks between words

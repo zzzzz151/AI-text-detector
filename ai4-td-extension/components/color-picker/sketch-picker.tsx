@@ -26,7 +26,7 @@ const SketchExample = forwardRef<void, ColorPickerProps>((props, ref) => {
     }
   }
 
-  const presets = ['#FF0000', '#00FF00', '#3d55ff', '#ffdb00', '#697689', '#2CCCE4', '#000000', '#ff8a65', '#ba68c8']
+  // const presets = ['#FF0000', '#00FF00', '#3d55ff', '#ffdb00', '#697689', '#2CCCE4', '#000000', '#ff8a65', '#ba68c8']
 
   const styles = {
     color: {

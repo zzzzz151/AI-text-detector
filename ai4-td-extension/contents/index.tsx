@@ -1,10 +1,10 @@
 import type { PlasmoCSConfig } from 'plasmo';
-import React, { useEffect, useState }  from 'react';
+import React, { useState }  from 'react';
 import { CacheProvider } from "@emotion/react"
 import createCache from "@emotion/cache"
 import GlobalButton from '../components/global-button';
 import GlobalCard from '../components/global-card';
-import Highlight from './highlight';
+import Highlight from '../components/highlight';
 
 export const config: PlasmoCSConfig = {
     matches: ["<all_urls>"],
