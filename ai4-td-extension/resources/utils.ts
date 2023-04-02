@@ -21,7 +21,38 @@ function callApi(url, bodyObject, type = 'application/json') {
 
 import findAndReplaceDOMText from './findAndReplaceDOMText'
 
+function isPDF(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const bytes = new Uint8Array(reader.result).subarray(0, 4);
+        const header = Array.from(bytes).map(byte => byte.toString(16)).join('');
+        resolve(header === '25504446');
+      };
+      reader.onerror = () => {
+        reject(reader.error);
+      };
+      reader.readAsArrayBuffer(file.slice(0, 4));
+    });
+  }
+
 function analysePage() {
+    if (document.contentType === 'application/pdf') {
+        console.log('This page is displaying a PDF.');
+
+        // Get the embedded data URI from the embed tag
+        var url = window.location.href;
+
+        return;
+    } else {
+        console.log('This page is not displaying a PDF.');
+    }
+
+
+    $('head').append('<style>.highlightYellow { background-color: yellow }</style>');
+    $('head').append('<style>.highlightRed { background-color: red }</style>');
+
+
     const exclude = ['base', 'head', 'meta', 'title', 'link', 'style',
         'script', 'noscript', 'audio', 'video', 'source',
         'track', 'canvas', 'svg', 'img', 'iframe',
@@ -88,7 +119,7 @@ function analysePage() {
             weightedSum += results[i].weight;
         }
 
-        let weightedAvg = sumCharacters > 0? weightedSum / sumCharacters : 0;
+        let weightedAvg = sumCharacters > 0 ? weightedSum / sumCharacters : 0;
         weightedAvg = Math.round(weightedAvg); // round to nearest int
         console.log("Overall evaluation: " + weightedAvg + "%");
         return weightedAvg;
@@ -103,25 +134,32 @@ function analyseText(url, text, elem, threshold) {
         callApi(url, text, 'text/plain')
             .then(data => {
                 if (data.probability_AI_generated < threshold) {
-                    console.log("Not AI: '" + text + "'");
+                    console.log("Not AI (" + data.probability_AI_generated + "%): '" + text + "'");
                 } else {
-                    console.log("AI: '" + text + "'");
+                    console.log("AI (" + data.probability_AI_generated + "%): '" + text + "'");
 
                     let newText = text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // ignore special chars
                     newText = newText.replace(/\s+/g, '\\s+'); // replace whitespace with \s+ pattern, this matches even with many spaces or line breaks between words
                     let pattern = RegExp("\\b" + newText + "\\b");
                     let before = elem.innerHTML;
+                    let redThreshold = threshold * 1.5;
+                    let myClass = "highlightYellow";
+                    if (data.probability_AI_generated >= redThreshold)
+                        myClass = "highlightRed";
+
 
                     findAndReplaceDOMText(elem, {
                         find: pattern,
-                        wrap: 'mark',
+                        wrap: 'span',
+                        wrapClass: myClass
                     });
 
                     if (elem.innerHTML == before) {
                         pattern = RegExp(newText);
                         findAndReplaceDOMText(elem, {
                             find: pattern,
-                            wrap: 'mark',
+                            wrap: 'span',
+                            wrapClass: myClass
                         });
                     }
                 }
