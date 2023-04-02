@@ -24,7 +24,7 @@ def handle_request(request):
     else:
         try:
             requestData = json.loads(request.body.decode())
-            text = requestData["text"];
+            text = requestData["text"]
         except:
             log("Received invalid request")
             return JsonResponse(

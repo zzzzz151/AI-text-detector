@@ -9,5 +9,17 @@ CREATE TABLE IF NOT EXISTS Accounts(
     PRIMARY KEY (AccountID)
 );
 
+CREATE TABLE IF NOT EXISTS LMs(
+    LMID INT NOT NULL AUTO_INCREMENT,
+    AccountID INT NOT NULL,
+    LMName VARCHAR(128) NOT NULL,
+    NeedsPremium BIT DEFAULT TRUE,
+    PRIMARY KEY (LMID),
+    FOREIGN KEY (AccountID) REFERENCES Accounts(AccountID)
+);
+
 INSERT INTO Accounts(AccountName)
-VALUES ("Andersen Job"), ("Andrew Smith")
+VALUES ("Andersen Job"), ("Andrew Smith");
+
+INSERT INTO LMs(AccountID, LMName)
+VALUES (1, "chatGPT");
