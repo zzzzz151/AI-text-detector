@@ -114,14 +114,14 @@ function analyseText(url, text, elem, threshold) {
 
                     findAndReplaceDOMText(elem, {
                         find: pattern,
-                        wrap: 'highlighted-text',
+                        wrap: 'mark',
                     });
 
                     if (elem.innerHTML == before) {
                         pattern = RegExp(newText);
                         findAndReplaceDOMText(elem, {
                             find: pattern,
-                            wrap: 'highlighted-text',
+                            wrap: 'mark',
                         });
                     }
                 }
