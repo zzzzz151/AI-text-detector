@@ -47,6 +47,7 @@ const SketchExample = forwardRef<void, ColorPickerProps>((props, ref) => {
         position: 'absolute',
         zIndex: 2,
         left: '50%',
+        marginLeft: '8px', // while scrollbar open
         transform: 'translateX(-50%)',
     } as React.CSSProperties,
   }
