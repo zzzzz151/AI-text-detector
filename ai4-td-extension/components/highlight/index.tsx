@@ -9,14 +9,15 @@ export const config: PlasmoCSConfig = {
   world: "MAIN"
 }
 
-const ELEMENT = "highlighted-text"
-const SINGLE_CARD_WIDTH = 200
+const ELEMENT = "highlighted-text";
+const SINGLE_CARD_WIDTH = 200;
+const SINGLE_CARD_HEIGHT = 50;
 const OBSERVER_CONFIG = { childList: true, subtree: true };
 
 function Highlight() {
   const [colorRegular] = useStorage<string>("highlight-color-regular", v => (v && (v.length == 4 || v.length == 7)) ? v : "#FFFF00")
   const [colorStrong] = useStorage<string>("highlight-color-strong", v => (v && (v.length == 4 || v.length == 7)) ? v : "#FF0000")
-  const [showSingleCard, setShowSingleCard] = useState(false);
+  const [clickedElement, setClickedElement] = useState<HTMLElement | null>(null);
   const [clickedElementPosition, setClickedElementPosition] = useState({
     top: 0,
     left: 0,
@@ -60,7 +61,7 @@ function Highlight() {
       y: e.clientY,
     };
   
-    let topPosition = elementTop - 50;
+    let topPosition = elementTop - SINGLE_CARD_HEIGHT - 5;
     let leftPosition = clickPosition.x - SINGLE_CARD_WIDTH / 2;
   
     // Check if the SingleCard is outside clicked element
@@ -75,15 +76,16 @@ function Highlight() {
   
     // Check if the SingleCard overflows beyond the top edge of the viewport
     if (topPosition < 0) {
-      topPosition = elementTop + elementHeight + 10;
+      topPosition = elementTop + elementHeight + 5;
     }
   
     const position = {
       top: topPosition,
       left: leftPosition,
     };
+    
     setClickedElementPosition(position);
-    setShowSingleCard(true);
+    setClickedElement(clickedElement);
   };  
 
   const observer = new MutationObserver(function(mutations) {
@@ -111,16 +113,28 @@ function Highlight() {
   
 
   const handleClickAway = () => {
-    setShowSingleCard(false)
+    setClickedElement(null);
   }
+
+  useEffect(() => {
+    const handleResize = () => {
+      setClickedElement(null);
+    }
+    
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    }
+  }, []);
 
   return (
     <>
-      {showSingleCard && (
+      {clickedElement && (
         <ClickAwayListener onClickAway={handleClickAway}>
-        <div style={{ position: "absolute", ...clickedElementPosition }}>
-          <SingleCard />
-        </div>
+          <div style={{ position: "absolute", ...clickedElementPosition }}>
+            <SingleCard element={clickedElement} />
+          </div>
         </ClickAwayListener>
       )}
     </>

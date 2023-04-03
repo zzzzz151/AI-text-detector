@@ -1,6 +1,8 @@
 import { Box } from "@mui/material";
 
 function SingleCard(props) {
+
+    const probability = props.element.getAttribute("probability");;
     
     return (
         <Box sx={{
@@ -13,8 +15,9 @@ function SingleCard(props) {
             outline: '0px',
             padding: '16px',
             fontSize: '14px',
+            width: '200px',
         }}>
-            HELLO
+            {`Probability ${probability}%`}
         </Box>
     );
 }

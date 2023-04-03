@@ -18,7 +18,7 @@ function GlobalCard({data, success, anchor, setAnchor}) {
             padding: '16px',
             fontSize: '14px',
         }}>
-            Overall evaluation {data}%
+            {`Overall evaluation ${data}%`}
         </Box>
     )
 }
