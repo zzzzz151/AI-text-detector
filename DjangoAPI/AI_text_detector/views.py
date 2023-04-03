@@ -35,6 +35,8 @@ def handle_request(request):
     log("Received text request for \"" + text + "\"")
 
     probability_AI_generated = model.probability_AI_generated_text(text, "openAIBase")
+    if probability_AI_generated == None:
+        probability_AI_generated = 0
     #probability_AI_generated = random.randint(0, 100)
 
     responseData = {
