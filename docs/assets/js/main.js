@@ -91,7 +91,7 @@
     /* Calendar table logic
      * ------------------------------------------------------ */
     var clTableLogic = function() {
-            
+        
         // Set up pagination
         var rowsPerPage = 10;
         var totalRows = $(".calendar-table tbody tr").length;
@@ -99,43 +99,64 @@
         var currentPage = 1;
         
         // Set up tablesorter
-        $(".calendar-table").tablesorter();
-
+        $.tablesorter.addParser({
+            id: "custom-date",
+            is: function(s) {
+                return false;
+            },
+            format: function(s, table, cell, cellIndex) {
+                var dateString = $(cell).text();
+                var dateParts = dateString.split("-");
+                var year = dateParts[2];
+                var month = dateParts[1];
+                var day = dateParts[0];
+                return new Date(year, month - 1, day);
+            },
+            type: "numeric"
+        });
+        $(".calendar-table").tablesorter({
+            headers: {
+                0: {
+                    sorter: "custom-date"
+                }
+            }
+        });
+    
         // add a callback function to update the display property after sorting
         // this function is called after each sorting event
         // it shows all the rows, and then hides the ones that should be hidden because of pagination
         $(".calendar-table")
         .bind("sortEnd",function(e, table) {
-
+    
             var startRow = (currentPage - 1) * rowsPerPage;
             var endRow = startRow + rowsPerPage;
-
+    
             $(".calendar-table tbody tr").hide();
             $(".calendar-table tbody tr").slice(startRow, endRow).show();
         });
-
+    
         for (var i = 1; i <= numPages; i++) {
             $(".pagination").append('<a href="#" class="page-link">' + i + '</a>');
         }
-
+    
         $(".pagination a:first").addClass("active");
-
+    
         $(".calendar-table tbody tr").hide();
         $(".calendar-table tbody tr").slice(0, rowsPerPage).show();
-
+    
         $(".pagination a").click(function () {
             var clickedPage = $(this).text();
-
+    
             if (clickedPage != currentPage) {
                 $(".pagination a").removeClass("active");
                 $(this).addClass("active");
-
+    
                 var startRow = (clickedPage - 1) * rowsPerPage;
                 var endRow = startRow + rowsPerPage;
-
+    
                 $(".calendar-table tbody tr").hide();
                 $(".calendar-table tbody tr").slice(startRow, endRow).show();
-
+    
                 // update the currentPage variable and hide the rows that should be hidden because of pagination
                 currentPage = clickedPage;
                 $(".calendar-table tbody tr").each(function(index) {
@@ -144,10 +165,11 @@
                     }
                 });
             }
-
+    
             return false;
         });
     };
+    
 
     /* slick slider
      * ------------------------------------------------------ */

@@ -2587,7 +2587,7 @@ html.cl-loaded .home-content__main {
 
 .s-calendar .pagination a {
     color: #cc1445;
-    font-size: 1.2em;
+    font-size: 20px;
     font-weight: bold;
     padding: 0;
     text-decoration: none;
@@ -2597,7 +2597,7 @@ html.cl-loaded .home-content__main {
     width: 45px;
     height: 45px;
     text-align: center;
-    line-height: 45px;
+    line-height: 40px;
 }
 
 .s-calendar .pagination a:hover {
