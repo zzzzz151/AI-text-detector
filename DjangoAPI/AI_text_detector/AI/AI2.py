@@ -3,24 +3,25 @@ from typing import Union, List
 import pandas as pd
 import sys
 import importlib.util
+
 from AI_text_detector.models import LM_Script
 
 lm = LM_Script()
-lm.name = "ChatGPT Roberta"
+lm.name = "chatgpt-roberta"
 lm.author = "OpenAI"
 lm.description = "ChatGPT Roberta by OpenAI"
 lm.script = "chatgpt_detector_roberta.py"
-lm.save()
+#lm.save()
 
 lm = LM_Script()
-lm.name = "OpenAI Roberta Base"
+lm.name = "openai-roberta-base"
 lm.author = "OpenAI"
 lm.description = "Base Roberta by OpenAI"
 lm.script = "openai_base_roberta.py"
 lm.save()
 
 lm = LM_Script()
-lm.name = "OpenAI Roberta Large"
+lm.name = "openai-roberta-large"
 lm.author = "OpenAI"
 lm.description = "Large Roberta by OpenAI"
 lm.script = "openai_large_roberta.py"
@@ -28,12 +29,13 @@ lm.script = "openai_large_roberta.py"
 
 class AI2:
     def __init__(self):
-        
+
         # Load language models
         self.models = {}
         for lm_script in LM_Script.objects.all():
             print("Loading LM " + lm_script.name)
             self.loadLM(lm_script.name, lm_script.script.name)
+
         
         
     def probability_AI_generated_text(self, text:Union[str, List[str]], model_name):

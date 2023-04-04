@@ -10,7 +10,7 @@ class LM(models.Model):
     # dont create this table
     class Meta:
         abstract = True 
-
+        
 class LM_Script(LM):
     script = models.FileField()
 

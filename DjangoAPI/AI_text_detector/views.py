@@ -40,7 +40,7 @@ def handle_request(request):
     log("Received text request for \"" + text + "\"")
 
     try:
-        probability_AI_generated = AI.probability_AI_generated_text(text, "OpenAI Roberta Base")
+        probability_AI_generated = AI.probability_AI_generated_text(text, "openai-roberta-base")
     except:
         probability_AI_generated = 0
     if probability_AI_generated == None:
