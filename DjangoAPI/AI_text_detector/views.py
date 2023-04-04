@@ -1,61 +1,22 @@
-import os
-import sys
 from typing import List
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import random
 import json
-#from .LMs.AI import LanguageModel
+from .AI.AI2 import AI2
 from datetime import datetime
-import socket
-import Docker.communicator.server.messages as m
+from rest_framework.views import APIView
+from rest_framework import parsers
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.response import Response
+from .models import *
 
-#model = LanguageModel()
-
-lm_name = "chatGPT_roberta"
-
-try:
-    port = int(os.getenv('SEND_PORT'))
-except TypeError:
-    port = int(sys.argv[2])
-try:
-    host = os.getenv('SEND_HOST')
-    if not host:
-        host = sys.argv[2]
-except TypeError:
-    host = sys.argv[2]
-
-message_ID = [0]
-def increment_and_return_ID():
-    ID = message_ID[0]
-    message_ID[0] = ID + 1
-    return ID
-
+AI = AI2()
 
 def log(msg):
     strDateTimeNow = str(datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
     print(strDateTimeNow + " " + msg)
-    sys.stdout.flush()
-
-
-
-def create_socket():
-    lm_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    lm_socket.connect((host, port))
-    lm_socket.setblocking(True)
-    return lm_socket
-
-def get_prediction(text, lm):
-    lm_socket = create_socket()
-    ID = increment_and_return_ID()
-    m.send_message_object(lm_socket, m.create_django_message(ID))
-    m.send_message_object(lm_socket, m.create_predict_message(ID, lm, text))
-    response = m.receive_message_object(lm_socket)
-    lm_socket.close()
-    if response and response.probability:
-        return int(response.probability)
-    return 0
 
 @csrf_exempt
 def handle_request(request):
@@ -63,29 +24,35 @@ def handle_request(request):
     # 400 means bad request and 404 means resource not found
     # 500 means an internal server error
 
-    if request.content_type == 'text/plain':
-        text = request.body.decode("utf-8")
-    else:
-        try:
-            requestData = json.loads(request.body.decode())
-            text = requestData["text"]
-        except:
-            log("Received invalid request")
-            return JsonResponse(
-                {'message': "Invalid request"},
-                status=400,
-                json_dumps_params={'indent': 2})
+    try:
+        requestData = json.loads(request.body.decode())
+        text = requestData["text"]
+        lm_name = requestData["language_model"]
+    except:
+        log("Received invalid request")
+        return JsonResponse(
+            {'message': "Invalid request"},
+            status=400,
+            json_dumps_params={'indent': 2})
 
-    log("Received text request for \"" + text + "\"")
+    log("Received request with LM " + lm_name + " for \"" + text + "\"")
 
-    #probability_AI_generated = model.probability_AI_generated_text(text, "openAIBase")
-    probability_AI_generated = get_prediction(text, lm_name)
-    if probability_AI_generated is None:
-        probability_AI_generated = 0
-    #probability_AI_generated = random.randint(0, 100)
+    try:
+        probability_AI_generated = AI.probability_AI_generated_text(text, lm_name)
+    except:
+        return JsonResponse(
+            {'message': "Invalid request"},
+            status=400,
+            json_dumps_params={'indent': 2})
+    if probability_AI_generated == None:
+        return JsonResponse(
+            {'message': "Invalid request"},
+            status=400,
+            json_dumps_params={'indent': 2})
 
     responseData = {
         "text": text,
+        "language_model": lm_name,
         "probability_AI_generated": probability_AI_generated
     }
 
@@ -95,5 +62,70 @@ def handle_request(request):
         json_dumps_params={'indent': 2})
 
 
-def create_container():
-    ...
+
+
+@authentication_classes([]) 
+@permission_classes([])
+class LM_Upload(APIView):
+    parser_classes = (parsers.MultiPartParser,)
+
+    @authentication_classes([]) 
+    @permission_classes([])
+    def post(self, request):
+        try: 
+            lm_name = request.data["name"]
+            print("Received LM " + lm_name)
+
+            if "script" in request.data:
+                save_path = "AI_text_detector/AI/language_models/"
+                script = request.data["script"]
+                newFile = open(save_path + script.name, "w")
+                newFile.write(script.read().decode("utf-8"))
+                newFile.close()
+                AI.loadLM(lm_name, script.name)
+
+                newLM = LM_Script()
+                newLM.name = lm_name
+                newLM.author = "author here"
+                newLM.description = "description here"
+                newLM.script = script
+                newLM.save()
+
+            if "API" in request.data or "api" in request.data:
+                api_url = request.data["API"] if "API" in request.data else request.data["api"]
+                newLM = LM_API()
+                newLM.name = lm_name
+                newLM.author = "author here"
+                newLM.description = "description here"
+                newLM.API = api_url
+
+            print("Accepted LM " + lm_name)
+            #print(AI.probability_AI_generated_text("Hello", lm_name))
+        except:
+            return Response(status=500) # Internal server error
+
+        return Response(status=200) # Ok
+
+@csrf_exempt
+def get_LMs(request):
+    filter_param = request.GET.get('filter', None)
+    lm_type_filter = request.GET.get('type', None)
+
+    if filter_param:
+        filter_fields = filter_param.split(',')
+    else:
+        filter_fields = ['name', 'author', 'description']
+
+    lms = []
+
+    for model in [LM_Script, LM_API]:
+        lm_type = model.__name__
+        if lm_type_filter and lm_type != lm_type_filter:
+            continue
+        lms += [
+            {
+                field: getattr(lm, field) for field in filter_fields
+            } | {'type': lm_type} for lm in model.objects.all()
+        ]
+
+    return JsonResponse(lms, safe=False, status=200, json_dumps_params={'indent': 2})
