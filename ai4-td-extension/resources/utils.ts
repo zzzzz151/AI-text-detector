@@ -31,7 +31,7 @@ function analysePage() {
 
     const URL = "http://127.0.0.1:8000/api/v1";
     const HIGHLIGHT_THRESHOLD_PROBABILITY = 50;
-    const MIN_WORDS = 7;
+    const MIN_WORDS = 0;
     let promises = []; // array to save fetch promises
 
     // Iterate elements with relevant tag
@@ -93,7 +93,7 @@ function analyseText(url, text, elem, threshold) {
                     newText = newText.replace(/\s+/g, '\\s+'); // replace whitespace with \s+ pattern, this matches even with many spaces or line breaks between words
                     let pattern = RegExp("\\b" + newText + "\\b");
                     let before = elem.innerHTML;
-                    
+
                     findAndReplaceDOMText(elem, {
                         find: pattern,
                         wrap: 'highlighted-text',
@@ -132,7 +132,7 @@ function splitByLines(text) {
     let lines = text.split("\n \n") // <br />
     let ret = [];
     for (let i = 0; i < lines.length; i++) {
-        lines[i] = lines[i].replaceAll("\n", "").trim();
+        //lines[i] = lines[i].replaceAll("\n", "").trim();
         if (lines[i].length > 0)
             ret.push(lines[i]);
     }
@@ -168,9 +168,9 @@ function textToSentences(text) {
 /* Clean page */
 
 function cleanPage() {
-    $("highlighted-text").replaceWith(function() { return this.innerHTML; });
+    $("highlighted-text").replaceWith(function () { return this.innerHTML; });
 }
-  
+
 
 /* Other */
 

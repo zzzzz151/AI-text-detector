@@ -6,8 +6,9 @@ import random
 import json
 from .LMs.AI import LanguageModel
 from datetime import datetime
-from serializers import *
-from models import *
+from rest_framework.views import APIView
+from rest_framework import parsers
+
 
 model = LanguageModel()
 
@@ -53,17 +54,17 @@ def handle_request(request):
 
 
 
-class LM_Script_Viewset(viewsets.ModelViewSet):
-    serializer_class = LM_Script_Serializer
-    #parser_classes = (MultipartJsonParser, parsers.JSONParser) use this if you have simple key value pair as data with no nested serializers
-    #parser_classes = (parsers.MultipartParser, parsers.JSONParser) use this if you want to parse json in the key value pair data sent
-    queryset = LM_Script.objects.all()
-    lookup_field = 'id'
 
-class LM_API_Viewset(viewsets.ModelViewSet):
-    serializer_class = LM_API_Serializer
-    #parser_classes = (MultipartJsonParser, parsers.JSONParser) use this if you have simple key value pair as data with no nested serializers
-    #parser_classes = (parsers.MultipartParser, parsers.JSONParser) use this if you want to parse json in the key value pair data sent
-    queryset = LM_API.objects.all()
-    lookup_field = 'id'
-    print("APIIIIIIIIIIIIIIIIIIIIIIIIII")
+
+class LM_Upload(APIView):
+    parser_classes = (parsers.MultiPartParser,)
+
+    def put(self, request, filename, format=None):
+        print("XXXXXXXXXXXXXXXXXXXXX")
+        #file_obj = request.data['file']
+        #ftype    = request.data['ftype']
+        #caption  = request.data['caption']
+        # ...
+        # do some stuff with uploaded file
+        # ...
+        return Response(status=204)

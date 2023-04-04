@@ -2,11 +2,6 @@
 
 <head>
     <title>Test Html</title>
-    <style>
-        .myMark {
-            background-color: red;
-        }
-    </style>
 
 </head>
 
@@ -80,11 +75,11 @@
     </div>
 
     <p>
-        I like Mwzera.
+        aaaaaaaa aaa aa a a a a aaaaaaaaaaaaaaaaaa
         <br>
-        Got a fucking problem?
+       b b bbbbbbbbbbb bb b b b b bbbbbbbbbbb
         <br>
-        Your team lulquit in an embarrasment to EMEA region
+        ccc    ccccccccccccccc ccc c c c ccccccccc c c cc
     </p>
 
     <p>I like Mwzera.<br>
@@ -105,119 +100,14 @@
 
     <div class="post-body">
 
-        <p>So what?<br>
-            He's my favourite player and my hero!<br>
-            You guys dickride random NA tier 2 players all day.<br>
-            So stfu when I praise Mwzera!</p>
+        <p>Computational science involves the use of mathematical algorithms,<br>
+            Humans do not know the secrets of the universe<br>
+            The uttermost planet in our universe is stranded by diamonds</p>
     </div>
 
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-    <script>
-        $(window).on('load', function () {
-        });
-
-        function splitByLines(text) {
-            text = text.trim();
-            text = text.replace(/ +/g, ' ').trim();
-            let lines = text.split("\n \n") // <br />
-            let ret = [];
-            for (let i = 0; i < lines.length; i++) {
-                lines[i] = lines[i].replaceAll("\n", "").trim();
-                if (lines[i].length > 0)
-                    ret.push(lines[i]);
-            }
-            return ret;
-        }
-
-        function getParents(elem, selector) {
-            // Element.matches() polyfill
-            if (!Element.prototype.matches) {
-                Element.prototype.matches =
-                    Element.prototype.matchesSelector ||
-                    Element.prototype.mozMatchesSelector ||
-                    Element.prototype.msMatchesSelector ||
-                    Element.prototype.oMatchesSelector ||
-                    Element.prototype.webkitMatchesSelector ||
-                    function (s) {
-                        var matches = (this.document || this.ownerDocument).querySelectorAll(s),
-                            i = matches.length;
-                        while (--i >= 0 && matches.item(i) !== this) { }
-                        return i > -1;
-                    };
-            }
-
-            // Set up a parent array
-            var parents = [];
-
-            // Push each parent element to the array
-            for (; elem && elem !== document; elem = elem.parentNode) {
-                if (selector) {
-                    if (elem.matches(selector)) {
-                        parents.push(elem);
-                    }
-                    continue;
-                }
-                parents.push(elem);
-            }
-
-            // Return our parent array
-            return parents;
-
-        };
-
-        $.fn.ignore = function (sel) {
-            return this.clone().find(sel || ">*").remove().end();
-        };
-
-
-        function getTextExcludingChildren(elem) {
-            return elem.contents().filter(function () {
-                return this.nodeType == 3;
-            }).text()
-        }
-
-        function hasRelevantAncestor(elem) {
-            const relevantTags = ["div", "p", "span", "h1", "h2", "h3", "h4", "h5", "h6", "b"];
-            const search = relevantTags.join(", "); // "div, p, span, h1, h2, h3, h4, h5, h6
-            // If this elem has a relevant ancestor elem, skip this elem 
-            for (relevantTag of relevantTags) {
-                console.log("Testing " + relevantTag);
-                let closest = elem.closest(relevantTag);
-                if (closest != null && closest != elem)
-                    return true;
-            }
-            return false;
-        }
-
-
-        function textToSentences(text) {
-            let sentences = text.replace(/(\.+|\:|\!|\?)(\"*|\'*|\)*|}*|]*)(\s|\n|\r|\r\n)/gm, "$1$2|").split("|");
-            let indexToList = new Map();
-            for (let i = 0; i < sentences.length; i++) {
-                sentences[i] = sentences[i].trim();
-                sentences[i] = sentences[i].replace(/ +/g, ' ').trim(); // replace many spaces with 1 space
-                let splitBrBreaks = sentences[i].split("\n \n");
-                if (splitBrBreaks.length > 1) {
-                    sentences[i] = splitBrBreaks[0];
-                    indexToList.set(i + 1, splitBrBreaks.slice(1));
-                }
-            }
-            let x = 0;
-            for (let idx of indexToList.keys()) {
-                sentences.splice(idx + x, 0, ...indexToList.get(idx));
-                x += indexToList.get(idx).length;
-            }
-            for (let i = 0; i < sentences.length; i++) {
-                sentences[i] = sentences[i].trim();
-                sentences[i] = sentences[i].replace(/ +/g, ' ').trim(); // replace many spaces with 1 space
-                sentences[i] = sentences[i].replaceAll("\n", "");
-            }
-
-            return sentences;
-        }
-    </script>
 
 </body>
 

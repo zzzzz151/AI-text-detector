@@ -49,14 +49,14 @@
                 formData.append('api', api_url);
             }
 
-            // Display the key/value pairs
+            // Log the key/value pairs
             console.log("------------");
             for (var pair of formData.entries()) {
                 console.log(pair[0] + ': ' + pair[1]);
             }
             console.log("------------");
 
-            fetch("127.0.0.1/api/v1/uploadLM",
+            fetch("http://127.0.0.1:8000/api/v1/uploadLM",
                 {
                     body: formData,
                     method: "post"
