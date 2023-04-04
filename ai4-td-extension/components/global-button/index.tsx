@@ -1,39 +1,9 @@
 import { Box, CircularProgress, Fab } from "@mui/material";
 import { green, purple, red } from "@mui/material/colors";
-import { useStorage } from "@plasmohq/storage/hook";
 import { AiFillSecurityScan } from "react-icons/ai";
-import { analysePage } from "~resources/utils";
 
-function GlobalButton({setData, success, setSuccess, error, setError, loading, setLoading, setAnchor}) {
+function GlobalButton({onClick, success, error, loading}) {
 
-  const [autoscan] = useStorage<string>("scan-page-automatically")
-
-  const canScan = !(loading || success || error)
-
-  const handleClick = () => {
-      setAnchor(prevState => !prevState);
-      if (canScan) {
-        setLoading(true);
-        analysePage()
-        .then(data => {
-          if (!data) {
-            throw new Error('No data returned from API.');
-          }
-          setSuccess(true);
-          setLoading(false);
-          setData(data)
-        })
-        .catch(() => {
-          setError(true);
-          setLoading(false);
-        });
-      }
-  };  
-  if (autoscan) {
-    if (canScan)
-      handleClick();
-  }
-    
   const buttonSx = {
       ...(success && {
         bgcolor: green[500],
@@ -52,7 +22,7 @@ function GlobalButton({setData, success, setSuccess, error, setError, loading, s
       <Box sx={{ position: 'fixed', right: 30, bottom: 30 }}>
           <Fab
               aria-label="save"
-              onClick={handleClick}
+              onClick={onClick}
               sx={{
               height: 60,
               width: 60,

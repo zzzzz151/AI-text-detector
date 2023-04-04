@@ -1,0 +1,69 @@
+<html>
+
+<head>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+</head>
+
+<body>
+    <br />
+
+    <label for="lm_name">LM name</label>
+    <input type="text" id="lm_name" name="lm_name">
+    <br />
+    <br />
+    <input type="file" id="pyScript" accept=".py">
+    <button type="button" class="btn btn-primary" onclick="submitLm('script')">Submit LM as python script</button>
+    <br />
+    <br />
+    <br />
+    <label for="api_url">Or submit LM as API</label>
+    <input type="text" id="api_url" name="api_url" style="width:500px">
+    <br />
+    <button type="button" class="btn btn-primary" onclick="submitLm('api')">Submit LM as API</button>
+
+    <script>
+        function submitLm(type) {
+            let formData = new FormData();
+
+            let lm_name = document.getElementById("lm_name").value.trim();
+            if (lm_name.length <= 1)
+                return;
+
+            formData.append('name', lm_name);
+
+            if (type == "script") {
+                let pyScript = document.getElementById("pyScript").files[0];
+                if (pyScript == null | pyScript == undefined)
+                    return;
+                formData.append('script', pyScript);
+
+            }
+            else if (type == "api") {
+                let api_url = document.getElementById("api_url").value.trim();
+                if (api_url.length <= 1)
+                    return;
+                formData.append('api', api_url);
+            }
+
+            // Log the key/value pairs
+            console.log("------------");
+            for (var pair of formData.entries()) {
+                console.log(pair[0] + ': ' + pair[1]);
+            }
+            console.log("------------");
+
+            fetch("http://127.0.0.1:8000/api/v1/uploadLM",
+                {
+                    body: formData,
+                    method: "post"
+                });
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,17 +1,12 @@
-import type { PlasmoCSConfig } from 'plasmo';
 import React, { useEffect, useState }  from 'react';
 import { CacheProvider } from "@emotion/react"
 import createCache from "@emotion/cache"
-import GlobalButton from '../components/global-button';
-import GlobalCard from '../components/global-card';
-import Highlight from '../components/highlight';
-
-export const config: PlasmoCSConfig = {
-    matches: ["<all_urls>"],
-    css: ["style.css"]
-}
+import Highlight from '~/components/highlight';
+import GlobalMenu from '~components/global-menu';
+import styleText from "data-text:./base.css"
 
 const styleElement = document.createElement("style")
+styleElement.textContent = styleText
 
 const styleCache = createCache({
   key: "plasmo-mui-cache",
@@ -22,11 +17,6 @@ const styleCache = createCache({
 export const getStyle = () => styleElement
 
 function Index() {
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState(false);
-  const [anchor, setAnchor] = useState(false);
-  const [data, setData] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   // Asking for CSS @media property value from JavaScript
@@ -49,17 +39,7 @@ function Index() {
       {!isFullscreen && (
         <CacheProvider value={styleCache}>
           <Highlight />
-          <GlobalButton
-            setData={setData}
-            success={success}
-            setSuccess={setSuccess}
-            error={error}
-            setError={setError}
-            loading={loading}
-            setLoading={setLoading}
-            setAnchor={setAnchor}
-          />
-          <GlobalCard data={data} success={success} anchor={anchor} setAnchor={setAnchor} />
+          <GlobalMenu />
         </CacheProvider>
       )}
     </>

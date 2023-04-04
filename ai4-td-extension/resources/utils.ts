@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import findAndReplaceDOMText from './findAndReplaceDOMText'
 
 /* API */
 
@@ -18,8 +19,6 @@ function callApi(url, bodyObject, type = 'application/json') {
 }
 
 /* Analyzer */
-
-import findAndReplaceDOMText from './findAndReplaceDOMText'
 
 function analysePage() {
     const exclude = ['base', 'head', 'meta', 'title', 'link', 'style',
@@ -94,7 +93,7 @@ function analyseText(url, text, elem, threshold) {
                     newText = newText.replace(/\s+/g, '\\s+'); // replace whitespace with \s+ pattern, this matches even with many spaces or line breaks between words
                     let pattern = RegExp("\\b" + newText + "\\b");
                     let before = elem.innerHTML;
-                    
+
                     findAndReplaceDOMText(elem, {
                         find: pattern,
                         wrap: 'highlighted-text',
@@ -133,7 +132,7 @@ function splitByLines(text) {
     let lines = text.split("\n \n") // <br />
     let ret = [];
     for (let i = 0; i < lines.length; i++) {
-        lines[i] = lines[i].replaceAll("\n", "").trim();
+        //lines[i] = lines[i].replaceAll("\n", "").trim();
         if (lines[i].length > 0)
             ret.push(lines[i]);
     }
@@ -166,6 +165,13 @@ function textToSentences(text) {
     return sentences;
 }
 
+/* Clean page */
+
+function cleanPage() {
+    $("highlighted-text").replaceWith(function () { return this.innerHTML; });
+}
+
+
 /* Other */
 
 const generateRandomColor = () => {
@@ -177,5 +183,6 @@ const generateRandomColor = () => {
 export {
     callApi,
     analysePage,
+    cleanPage,
     generateRandomColor,
 };

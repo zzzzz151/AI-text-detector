@@ -3,7 +3,7 @@ from typing import Union, List
 import torch
 
     
-class ChatGPTRobertaDetectorModel:
+class LM:
 
     def __init__(self):
         """
