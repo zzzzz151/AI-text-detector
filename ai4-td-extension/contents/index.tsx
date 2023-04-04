@@ -1,16 +1,12 @@
-import type { PlasmoCSConfig } from 'plasmo';
 import React, { useEffect, useState }  from 'react';
 import { CacheProvider } from "@emotion/react"
 import createCache from "@emotion/cache"
 import Highlight from '~/components/highlight';
 import GlobalMenu from '~components/global-menu';
-
-export const config: PlasmoCSConfig = {
-    matches: ["<all_urls>"],
-    css: ["styles.css"]
-}
+import styleText from "data-text:./base.css"
 
 const styleElement = document.createElement("style")
+styleElement.textContent = styleText
 
 const styleCache = createCache({
   key: "plasmo-mui-cache",
