@@ -3,10 +3,7 @@ import NavBar from './components/NavBar'
 import LMCard from './components/LMCard'
 import Footer from './components/Footer'
 
-
-
-const App = () => {
-
+function App() {
   return (
     <>
       <NavBar />
@@ -33,4 +30,5 @@ const App = () => {
   )
 }
 
-export default App
+
+export default App;
