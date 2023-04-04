@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import findAndReplaceDOMText from './findAndReplaceDOMText'
 
 /* API */
 
@@ -18,8 +19,6 @@ function callApi(url, bodyObject, type = 'application/json') {
 }
 
 /* Analyzer */
-
-import findAndReplaceDOMText from './findAndReplaceDOMText'
 
 function analysePage() {
     const exclude = ['base', 'head', 'meta', 'title', 'link', 'style',
@@ -166,6 +165,13 @@ function textToSentences(text) {
     return sentences;
 }
 
+/* Clean page */
+
+function cleanPage() {
+    $("highlighted-text").replaceWith(function() { return this.innerHTML; });
+}
+  
+
 /* Other */
 
 const generateRandomColor = () => {
@@ -177,5 +183,6 @@ const generateRandomColor = () => {
 export {
     callApi,
     analysePage,
+    cleanPage,
     generateRandomColor,
 };

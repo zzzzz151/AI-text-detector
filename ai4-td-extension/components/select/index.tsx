@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState } from 'react';
 import SelectItem from '~components/select-item';
-import './select.css';
+import '~/components/select/styles.css';
 import { ClickAwayListener } from '@mui/material';
 import buildTrie from '~resources/buildTrie';
 

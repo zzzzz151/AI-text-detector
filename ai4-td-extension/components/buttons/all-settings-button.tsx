@@ -1,4 +1,4 @@
-import "~/components/buttons/all-settings-button.css"
+import "~/components/buttons/styles.css"
 function AllSettingsButton() {
     function handleClick() {
         chrome.runtime.openOptionsPage();
