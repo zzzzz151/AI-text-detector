@@ -28,6 +28,9 @@
     font-size: 14px;
     height: 28px;
 }
+.select-option:not(:last-child) {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
 .select-option-text {
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -42,9 +45,13 @@
     text-overflow: ellipsis;
     font-family: Inter, sans-serif;
     font-weight: 700;
-    padding-left: 10px;
-    font-size: 12px;
+    margin-left: 8px;
+    font-size: 14px;
     width: 150px;
+    outline: 0;
+    border: 0;
+    background: transparent;
+    caret-color: auto;
 }
 .select-preview {
     display: flex;

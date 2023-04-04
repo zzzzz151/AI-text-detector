@@ -27,7 +27,7 @@ function ListItemSelect(props) {
                 lineHeight: '20px'
             }}
             />
-            <Select options={options} value={options[0]} onChange={handleOptionChange}/>
+            <Select options={options} value={selectedOption} onChange={handleOptionChange}/>
       </ListItem>
     );
 }
