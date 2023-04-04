@@ -2,12 +2,23 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
+import Login from './login';
+import LoginFront from './loginFront';
+import RegistFront from './registFront';
 import reportWebVitals from './reportWebVitals';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<App />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/loginFront" element={<LoginFront />} />
+        <Route path="/registFront" element={<RegistFront />} />
+      </Routes>
+    </BrowserRouter>
   </React.StrictMode>
 );
 

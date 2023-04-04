@@ -16,9 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path, re_path
 from AI_text_detector.views import *
+from authentication.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
+    path('authentication/', include('authentication.urls')),
     re_path(r'api/v1/?$', handle_request)
 ]
