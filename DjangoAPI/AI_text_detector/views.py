@@ -4,12 +4,13 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import random
 import json
-from .AI.AI2 import *
+from .AI.AI2 import AI2
 from datetime import datetime
 from rest_framework.views import APIView
 from rest_framework import parsers
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
+from .models import *
 
 AI = AI2()
 
@@ -39,7 +40,7 @@ def handle_request(request):
     log("Received text request for \"" + text + "\"")
 
     try:
-        probability_AI_generated = AI.probability_AI_generated_text(text, "openAIBase")
+        probability_AI_generated = AI.probability_AI_generated_text(text, "OpenAI Roberta Base")
     except:
         probability_AI_generated = 0
     if probability_AI_generated == None:
@@ -67,20 +68,60 @@ class LM_Upload(APIView):
     @authentication_classes([]) 
     @permission_classes([])
     def post(self, request):
-        lm_name = request.data["name"]
-        print("Received LM " + lm_name)
+        try: 
+            lm_name = request.data["name"]
+            print("Received LM " + lm_name)
 
-        if "script" in request.data:
-            save_path = "AI_text_detector/AI/language_models/"
-            script = request.data["script"]
-            newFile = open(save_path + script.name, "w")
-            newFile.write(script.read().decode("utf-8"))
-            newFile.close()
-            AI.loadLM(lm_name, script.name)
+            if "script" in request.data:
+                save_path = "AI_text_detector/AI/language_models/"
+                script = request.data["script"]
+                newFile = open(save_path + script.name, "w")
+                newFile.write(script.read().decode("utf-8"))
+                newFile.close()
+                AI.loadLM(lm_name, script.name)
 
-        if "API" in request.data or "api" in request.data:
-            api_url = request.data["API"] if "API" in request.data else request.data["api"]
+                newLM = LM_Script()
+                newLM.name = lm_name
+                newLM.author = "author here"
+                newLM.description = "description here"
+                newLM.script = script
+                newLM.save()
 
-        print(AI.probability_AI_generated_text("Hello", "myLM"))
+            if "API" in request.data or "api" in request.data:
+                api_url = request.data["API"] if "API" in request.data else request.data["api"]
+                newLM = LM_API()
+                newLM.name = lm_name
+                newLM.author = "author here"
+                newLM.description = "description here"
+                newLM.API = api_url
 
-        return Response(status=200)
+            print("Accepted LM " + lm_name)
+            #print(AI.probability_AI_generated_text("Hello", lm_name))
+        except:
+            return Response(status=500) # Internal server error
+
+        return Response(status=200) # Ok
+
+@csrf_exempt
+def get_LMs(request):
+    responseData =  []
+    for lm in LM_Script.objects.all():
+        thisLM = {}
+        thisLM["name"] = lm.name
+        thisLM["author"] = lm.author
+        thisLM["type"] = "script"
+        thisLM["description"] = lm.description
+        responseData.append(thisLM)
+    for lm in LM_API.objects.all():
+        thisLM = {}
+        thisLM["name"] = lm.name
+        thisLM["author"] = lm.author
+        thisLM["type"] = "API"
+        thisLM["description"] = lm.description
+        responseData.append(thisLM)
+
+    return JsonResponse(
+        responseData,
+        safe=False,
+        status=200,
+        json_dumps_params={'indent': 2})

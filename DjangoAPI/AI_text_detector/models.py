@@ -1,10 +1,20 @@
 from django.db import models
+class LM(models.Model):
+    name = models.CharField(max_length=30, primary_key=True)
+    author = models.CharField(max_length=50)
+    description = models.TextField()
 
-class LM_Script(models.Model):
-    name = models.CharField(max_length=30)
+    def __str__():
+        return self.name
+
+    # dont create this table
+    class Meta:
+        abstract = True 
+
+class LM_Script(LM):
     script = models.FileField()
 
 
-class LM_API(models.Model):
-    name = models.CharField(max_length=30)
-    api = models.CharField(max_length=255)
+class LM_API(LM):
+    API = models.CharField(max_length=255)
+

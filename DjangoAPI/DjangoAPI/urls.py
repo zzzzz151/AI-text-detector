@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path, re_path
-from AI_text_detector.views import *
+from AI_text_detector.views import handle_request, LM_Upload, get_LMs
 from authentication.views import *
 
 urlpatterns = [
@@ -23,5 +23,6 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('authentication/', include('authentication.urls')),
     re_path(r'api/v1/?$', handle_request),
-    re_path(r'api/v1/uploadLM/?$', LM_Upload.as_view())
+    re_path(r'api/v1/uploadLM/?$', LM_Upload.as_view()),
+    re_path(r'api/v1/LMs/?$', get_LMs),
 ]

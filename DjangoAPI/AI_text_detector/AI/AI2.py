@@ -3,23 +3,39 @@ from typing import Union, List
 import pandas as pd
 import sys
 import importlib.util
+from AI_text_detector.models import LM_Script
 
-from .language_models.chatgpt_detector_roberta import ChatGPTRobertaDetectorModel
-from .language_models.roberta_openai_detector import OpenAIBaseRobertaGPT2DetectorModel, OpenAILargeRobertaGPT2DetectorModel
+lm = LM_Script()
+lm.name = "ChatGPT Roberta"
+lm.author = "OpenAI"
+lm.description = "ChatGPT Roberta by OpenAI"
+lm.script = "chatgpt_detector_roberta.py"
+lm.save()
 
-language_models = {
-        #"chatGPT": ChatGPTRobertaDetectorModel,
-        "openAIBase": OpenAIBaseRobertaGPT2DetectorModel,
-        #"openAILarge": OpenAILargeRobertaGPT2DetectorModel
-    }
+lm = LM_Script()
+lm.name = "OpenAI Roberta Base"
+lm.author = "OpenAI"
+lm.description = "Base Roberta by OpenAI"
+lm.script = "openai_base_roberta.py"
+lm.save()
+
+lm = LM_Script()
+lm.name = "OpenAI Roberta Large"
+lm.author = "OpenAI"
+lm.description = "Large Roberta by OpenAI"
+lm.script = "openai_large_roberta.py"
+#lm.save()
 
 class AI2:
     def __init__(self):
-        # Warning: Takes time to load
-        print("Loading models")
-        self.models = {language_model_name:language_model() for language_model_name, language_model in list(language_models.items())}
-        self.models_name = [model.__class__.__name__ for model in self.models]
-
+        
+        # Load language models
+        self.models = {}
+        for lm_script in LM_Script.objects.all():
+            print("Loading LM " + lm_script.name)
+            self.loadLM(lm_script.name, lm_script.script.name)
+        
+        
     def probability_AI_generated_text(self, text:Union[str, List[str]], model_name):
         if model_name not in self.models.keys():
             raise ValueError(f"The model {model_name} does not exist.")
