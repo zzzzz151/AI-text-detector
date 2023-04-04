@@ -10,7 +10,8 @@ export const config: PlasmoCSConfig = {
 }
 
 const ELEMENT = "highlighted-text";
-const SINGLE_CARD_WIDTH = 200;
+const SINGLE_CARD_GAP = 2;
+const SINGLE_CARD_WIDTH = 152;
 const SINGLE_CARD_HEIGHT = 50;
 const OBSERVER_CONFIG = { childList: true, subtree: true };
 
@@ -61,22 +62,20 @@ function Highlight() {
       y: e.clientY,
     };
   
-    let topPosition = elementTop - SINGLE_CARD_HEIGHT - 5;
+    let topPosition = elementTop - SINGLE_CARD_HEIGHT - SINGLE_CARD_GAP;
     let leftPosition = clickPosition.x - SINGLE_CARD_WIDTH / 2;
   
     // Check if the SingleCard is outside clicked element
     if (leftPosition < elementLeft) {
       leftPosition = elementLeft;
     }
-  
-    // Check if the SingleCard overflows beyond the right edge of the viewport
-    if (leftPosition + SINGLE_CARD_WIDTH > window.innerWidth) {
+    else if (leftPosition > elementLeft + elementWidth - SINGLE_CARD_WIDTH) {
       leftPosition = elementLeft + elementWidth - SINGLE_CARD_WIDTH;
     }
   
     // Check if the SingleCard overflows beyond the top edge of the viewport
     if (topPosition < 0) {
-      topPosition = elementTop + elementHeight + 5;
+      topPosition = elementTop + elementHeight + SINGLE_CARD_GAP;
     }
   
     const position = {
