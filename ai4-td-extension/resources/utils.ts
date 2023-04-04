@@ -31,7 +31,7 @@ function analysePage() {
 
     const URL = "http://127.0.0.1:8000/api/v1";
     const HIGHLIGHT_THRESHOLD_PROBABILITY = 50;
-    const MIN_WORDS = 0;
+    const MIN_WORDS = 7;
     let promises = []; // array to save fetch promises
 
     // Iterate elements with relevant tag
