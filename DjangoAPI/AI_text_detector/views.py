@@ -24,31 +24,35 @@ def handle_request(request):
     # 400 means bad request and 404 means resource not found
     # 500 means an internal server error
 
-    if request.content_type == 'text/plain':
-        text = request.body.decode("utf-8")
-    else:
-        try:
-            requestData = json.loads(request.body.decode())
-            text = requestData["text"]
-        except:
-            log("Received invalid request")
-            return JsonResponse(
-                {'message': "Invalid request"},
-                status=400,
-                json_dumps_params={'indent': 2})
+    try:
+        requestData = json.loads(request.body.decode())
+        text = requestData["text"]
+        lm_name = requestData["language_model"]
+    except:
+        log("Received invalid request")
+        return JsonResponse(
+            {'message': "Invalid request"},
+            status=400,
+            json_dumps_params={'indent': 2})
 
-    log("Received text request for \"" + text + "\"")
+    log("Received request with LM " + lm_name + " for \"" + text + "\"")
 
     try:
-        probability_AI_generated = AI.probability_AI_generated_text(text, "openai-roberta-base")
+        probability_AI_generated = AI.probability_AI_generated_text(text, lm_name)
     except:
-        probability_AI_generated = 0
+        return JsonResponse(
+            {'message': "Invalid request"},
+            status=400,
+            json_dumps_params={'indent': 2})
     if probability_AI_generated == None:
-        probability_AI_generated = 0
-    #probability_AI_generated = random.randint(0, 100)
+        return JsonResponse(
+            {'message': "Invalid request"},
+            status=400,
+            json_dumps_params={'indent': 2})
 
     responseData = {
         "text": text,
+        "language_model": lm_name,
         "probability_AI_generated": probability_AI_generated
     }
 
@@ -104,24 +108,24 @@ class LM_Upload(APIView):
 
 @csrf_exempt
 def get_LMs(request):
-    responseData =  []
-    for lm in LM_Script.objects.all():
-        thisLM = {}
-        thisLM["name"] = lm.name
-        thisLM["author"] = lm.author
-        thisLM["type"] = "script"
-        thisLM["description"] = lm.description
-        responseData.append(thisLM)
-    for lm in LM_API.objects.all():
-        thisLM = {}
-        thisLM["name"] = lm.name
-        thisLM["author"] = lm.author
-        thisLM["type"] = "API"
-        thisLM["description"] = lm.description
-        responseData.append(thisLM)
+    filter_param = request.GET.get('filter', None)
+    lm_type_filter = request.GET.get('type', None)
 
-    return JsonResponse(
-        responseData,
-        safe=False,
-        status=200,
-        json_dumps_params={'indent': 2})
+    if filter_param:
+        filter_fields = filter_param.split(',')
+    else:
+        filter_fields = ['name', 'author', 'description']
+
+    lms = []
+
+    for model in [LM_Script, LM_API]:
+        lm_type = model.__name__
+        if lm_type_filter and lm_type != lm_type_filter:
+            continue
+        lms += [
+            {
+                field: getattr(lm, field) for field in filter_fields
+            } | {'type': lm_type} for lm in model.objects.all()
+        ]
+
+    return JsonResponse(lms, safe=False, status=200, json_dumps_params={'indent': 2})
