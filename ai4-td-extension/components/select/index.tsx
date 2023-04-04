@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import SelectItem from '~components/select-item';
 import './select.css';
 import { ClickAwayListener } from '@mui/material';
@@ -7,6 +7,7 @@ import buildTrie from '~resources/buildTrie';
 function Select({ options, value, onChange }) {
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState(value);
+  const inputRef = useRef(null);
   const trie = useMemo(() => buildTrie(options), [options]);
 
   const filteredOptions = trie.search(inputValue);
@@ -14,6 +15,7 @@ function Select({ options, value, onChange }) {
   function toggleSelectOptions() {
     setIsOpen(true);
     setInputValue("");
+    inputRef.current.focus();
   }
 
   function handleSelectOption(option) {
@@ -41,6 +43,7 @@ function Select({ options, value, onChange }) {
             placeholder='Search'
             className="select-value-preview"
             onChange={handleInputChange}
+            ref={inputRef}
           />
           <svg
             width="28"
