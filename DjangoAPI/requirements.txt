@@ -2,8 +2,8 @@ django_rest_framework
 markdown
 django-filter
 django-cors-headers
-transformers
-torch
+#transformers
+#torch
 requests
 bs4
 regex

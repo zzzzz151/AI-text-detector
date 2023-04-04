@@ -1,0 +1,49 @@
+services:
+  communicator:
+    build: .
+    command: sh -c "sleep 2s; python3 ./communicator.py chatGPT_roberta"
+    environment:
+      LISTEN_HOST: server
+      LISTEN_PORT: 5555
+    ports:
+      - '5556:5556'
+    depends_on:
+      - server
+
+  server:
+    build: /server/
+    command: sh -c "python3 ./server.py"
+    environment:
+      SEND_HOST: server
+      SEND_PORT: 5555
+    ports:
+      - '5555:5555'
+
+  db:
+    build: ../mysql
+    ports:
+      - "3306:3306"
+    command: --init-file /docker-entrypoint-initdb.d/data.sql
+    container_name: mysql_container
+    environment:
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: ai
+      MYSQL_USER: non_root
+      MYSQL_PASSWORD: ai
+
+  api:
+    build: ../django
+    volumes:
+      - ../../../DjangoAPI:/DjangoAPI
+    working_dir: /DjangoAPI
+    environment:
+      SEND_HOST: server
+      SEND_PORT: 5555
+    ports:
+      - "8000:8000"
+    container_name: django_container
+    command:
+      sh -c "ls; pip3 install -r requirements.txt; python manage.py runserver 0.0.0.0:8000"
+    depends_on:
+      - db
+      - server
