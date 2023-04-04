@@ -6,6 +6,8 @@ import random
 import json
 from .LMs.AI import LanguageModel
 from datetime import datetime
+from serializers import *
+from models import *
 
 model = LanguageModel()
 
@@ -49,3 +51,19 @@ def handle_request(request):
         status=200,
         json_dumps_params={'indent': 2})
 
+
+
+class LM_Script_Viewset(viewsets.ModelViewSet):
+    serializer_class = LM_Script_Serializer
+    #parser_classes = (MultipartJsonParser, parsers.JSONParser) use this if you have simple key value pair as data with no nested serializers
+    #parser_classes = (parsers.MultipartParser, parsers.JSONParser) use this if you want to parse json in the key value pair data sent
+    queryset = LM_Script.objects.all()
+    lookup_field = 'id'
+
+class LM_API_Viewset(viewsets.ModelViewSet):
+    serializer_class = LM_API_Serializer
+    #parser_classes = (MultipartJsonParser, parsers.JSONParser) use this if you have simple key value pair as data with no nested serializers
+    #parser_classes = (parsers.MultipartParser, parsers.JSONParser) use this if you want to parse json in the key value pair data sent
+    queryset = LM_API.objects.all()
+    lookup_field = 'id'
+    print("APIIIIIIIIIIIIIIIIIIIIIIIIII")

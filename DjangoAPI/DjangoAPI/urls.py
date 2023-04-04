@@ -23,4 +23,5 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('authentication/', include('authentication.urls')),
     re_path(r'api/v1/?$', handle_request)
+    re_path(r'api/v1/uploadLM/?$', handle_LM_upload)
 ]
