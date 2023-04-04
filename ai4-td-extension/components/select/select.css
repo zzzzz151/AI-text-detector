@@ -45,12 +45,15 @@
     text-overflow: ellipsis;
     font-family: Inter, sans-serif;
     font-weight: 700;
-    margin-left: 8px;
+    margin-left: 10px;
     font-size: 14px;
     width: 150px;
     outline: 0;
     border: 0;
+    padding: 0;
     background: transparent;
+}
+.select-value-preview:focus {
     caret-color: auto;
 }
 .select-preview {
