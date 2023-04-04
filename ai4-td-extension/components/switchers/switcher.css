@@ -1,7 +1,7 @@
 .ui-switcher {
-    background-color: #bdc1c2;
+    background-color: #9ca1b1;
     display: inline-block;
-    height: 21px;
+    height: 20px;
     width: 48px;
     border-radius: 10px;
     box-sizing: border-box;
@@ -12,19 +12,18 @@
 }
 
 .ui-switcher[aria-checked=true] {
-    background-color: #25ba9a;
+    background-color: #11a683;
 }
 
 .ui-switcher:before {
-    font-family: sans-serif;
+    font-family: Inter, sans-serif;
     font-size: 10px;
     font-weight: 700;
     color: #ffffff;
-    line-height: 1;
     display: flex;
     position: absolute;
     width: 20px;
-    top: calc(50% + 1px);
+    top: 50%;
     transform: translateY(-50%);
     text-align: center;
 }
@@ -61,11 +60,11 @@
 }
 
 .ui-switcher:hover {
-    background-color: #bdc1c2da;
+    background-color: #9ca1b1e9;
 }
 
 .ui-switcher[aria-checked=true]:hover {
-    background-color: #25ba9ac9;
+    background-color: #11a683c9;
 }
 
 .ui-switcher.pulseON:after {
@@ -78,7 +77,7 @@
 
 @keyframes pulseON {
 	0% {
-		box-shadow: 0 0 0 0 #21a5889c;
+		box-shadow: 0 0 0 0 #21a5885e;
 	}
 
 	70% {
@@ -92,7 +91,7 @@
 
 @keyframes pulseOFF {
 	0% {
-		box-shadow: 0 0 0 0 #7e7e7e94;
+		box-shadow: 0 0 0 0 #7e7e7e73;
 	}
 
 	70% {

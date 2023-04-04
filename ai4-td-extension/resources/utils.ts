@@ -21,23 +21,6 @@ function callApi(url, bodyObject, type = 'application/json') {
 
 import findAndReplaceDOMText from './findAndReplaceDOMText'
 
-/*
-function isPDF(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const bytes = new Uint8Array(reader.result).subarray(0, 4);
-        const header = Array.from(bytes).map(byte => byte.toString(16)).join('');
-        resolve(header === '25504446');
-      };
-      reader.onerror = () => {
-        reject(reader.error);
-      };
-      reader.readAsArrayBuffer(file.slice(0, 4));
-    });
-}
-*/
-
 function analysePage() {
     const exclude = ['base', 'head', 'meta', 'title', 'link', 'style',
         'script', 'noscript', 'audio', 'video', 'source',
@@ -53,25 +36,8 @@ function analysePage() {
     let promises = []; // array to save fetch promises
 
     // Iterate elements with relevant tag
+    //console.log(document.documentElement.outerHTML);
     document.querySelectorAll("body, div, p, h1, h2, h3, h4, h5, h6").forEach((elem) => {
-
-        /*
-        // If this elem has a relevant ancestor elem, skip this elem 
-        for (relevantTag of relevantTags) {
-            let relevantRoots = getParents(elem, relevantTag);
-            if (relevantRoots.length == 0)
-                continue;
-            let relevantRoot = relevantRoots[relevantRoots.length - 1];
-            if (relevantRoot != elem)
-                return;
-        }
-
-        clone = elem.cloneNode(true);
-        clone.querySelectorAll(strExclude).forEach(function(v) {
-            v.remove()
-        });
-        let text = clone.textContent;
-        */
 
         let newElem = (<any>$(elem)).ignore("*:not(a, span, strong, b, i, s, u, tt, sup, sub)")[0];
         const clone = newElem.cloneNode(true);
@@ -128,10 +94,13 @@ function analyseText(url, text, elem, threshold) {
                     newText = newText.replace(/\s+/g, '\\s+'); // replace whitespace with \s+ pattern, this matches even with many spaces or line breaks between words
                     let pattern = RegExp("\\b" + newText + "\\b");
                     let before = elem.innerHTML;
-
+                    
                     findAndReplaceDOMText(elem, {
                         find: pattern,
                         wrap: 'highlighted-text',
+                        wrapAttributes: {
+                            'probability': data.probability_AI_generated
+                        },
                     });
 
                     if (elem.innerHTML == before) {
@@ -139,6 +108,9 @@ function analyseText(url, text, elem, threshold) {
                         findAndReplaceDOMText(elem, {
                             find: pattern,
                             wrap: 'highlighted-text',
+                            wrapAttributes: {
+                                'probability': data.probability_AI_generated
+                            },
                         });
                     }
                 }

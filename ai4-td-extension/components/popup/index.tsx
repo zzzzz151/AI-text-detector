@@ -5,6 +5,7 @@ import ListItemColorPicker from "~components/list-item/list-item-colorpicker";
 import ListItemMessage from "~components/list-item/list-item-message";
 import ListItemSettings from "~components/list-item/list-item-settings";
 import ListItemSwitcher from "~components/list-item/list-item-switcher";
+import ListItemSelect from "~components/list-item/list-item-select";
 
 function Popup() {
 
@@ -24,17 +25,22 @@ function Popup() {
                 </ListSubheader>}
         >
             <Divider />
-            <Box flexDirection="column" display="flex" alignItems="center" justifyContent="center" padding="18px" maxHeight="485px" overflow="auto">
+            <Box flexDirection="column" display="flex" alignItems="center" justifyContent="flex-start" padding="0" maxHeight="485px" overflow="hidden auto">
                 <ListItemSettings />
                 <Box width="100%">
                     <ListItemSwitcher default={false} id="scan-page-automatically" text="Scan page automatically" />
                     <Divider light variant="middle" sx={{width: "100%"}}/>
-                    <ListItemColorPicker default="#FF0000" id="highlight-color" text="Highlight color"/>
+                    <ListItemColorPicker default="#FFFF00" id="highlight-color-regular" text="Highlight color 1"/>
+                    <Divider light variant="middle" sx={{width: "100%"}}/>
+                    <ListItemColorPicker default="#FF0000" id="highlight-color-strong" text="Highlight color 1"/>
+                    <Divider light variant="middle" sx={{width: "100%"}}/>
+                    <ListItemSelect id="language-model" text="Model"/>
                     <Divider light variant="middle" sx={{width: "100%"}}/>
                 </Box>
                 <ListItemMessage />
+                <ListItemMessage />
+                <ListItemMessage />
             </Box>
-            <Divider />
             <PopupFooter />
         </List>
     )

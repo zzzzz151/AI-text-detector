@@ -1,7 +1,7 @@
 services:
   pythonapp:
     build: ./python/
-    command: sh -c "sleep 10s; python3 ./hello_world.py"
+    command: sh -c "sleep 15s; python3 ./hello_world.py"
     depends_on:
       - mysql
 
