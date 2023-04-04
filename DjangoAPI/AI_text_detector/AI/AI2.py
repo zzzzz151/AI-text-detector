@@ -4,7 +4,11 @@ import pandas as pd
 import sys
 import importlib.util
 
-from AI_text_detector.models import LM_Script
+from AI_text_detector.models import LM_Script, LM_API
+
+LM_Script.objects.all().delete()
+LM_API.objects.all().delete()
+
 
 lm = LM_Script()
 lm.name = "chatgpt-roberta"
