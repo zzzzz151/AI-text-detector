@@ -4,13 +4,14 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import random
 import json
-from .LMs.AI import LanguageModel
+from .AI.AI2 import *
 from datetime import datetime
 from rest_framework.views import APIView
 from rest_framework import parsers
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.response import Response
 
-
-model = LanguageModel()
+AI = AI2()
 
 def log(msg):
     strDateTimeNow = str(datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
@@ -37,7 +38,10 @@ def handle_request(request):
 
     log("Received text request for \"" + text + "\"")
 
-    probability_AI_generated = model.probability_AI_generated_text(text, "openAIBase")
+    try:
+        probability_AI_generated = AI.probability_AI_generated_text(text, "openAIBase")
+    except:
+        probability_AI_generated = 0
     if probability_AI_generated == None:
         probability_AI_generated = 0
     #probability_AI_generated = random.randint(0, 100)
@@ -55,16 +59,28 @@ def handle_request(request):
 
 
 
-
+@authentication_classes([]) 
+@permission_classes([])
 class LM_Upload(APIView):
     parser_classes = (parsers.MultiPartParser,)
 
-    def put(self, request, filename, format=None):
-        print("XXXXXXXXXXXXXXXXXXXXX")
-        #file_obj = request.data['file']
-        #ftype    = request.data['ftype']
-        #caption  = request.data['caption']
-        # ...
-        # do some stuff with uploaded file
-        # ...
-        return Response(status=204)
+    @authentication_classes([]) 
+    @permission_classes([])
+    def post(self, request):
+        lm_name = request.data["name"]
+        print("Received LM " + lm_name)
+
+        if "script" in request.data:
+            save_path = "AI_text_detector/AI/language_models/"
+            script = request.data["script"]
+            newFile = open(save_path + script.name, "w")
+            newFile.write(script.read().decode("utf-8"))
+            newFile.close()
+            AI.loadLM(lm_name, script.name)
+
+        if "API" in request.data or "api" in request.data:
+            api_url = request.data["API"] if "API" in request.data else request.data["api"]
+
+        print(AI.probability_AI_generated_text("Hello", "myLM"))
+
+        return Response(status=200)
