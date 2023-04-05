@@ -1,16 +1,9 @@
 import { ListItem, ListItemText } from "@mui/material";
 import Select from "~components/select";
-import { useState } from "react";
+import { useStorage } from "@plasmohq/storage/hook";
 
-const options = [
-    'Option 1',
-    "best-language-model-1",
-    "long-text-to-see-what-happens-maybe-it-overflows-idk",
-    "wtf am I doing",
-];
-
-function ListItemSelect(props) {
-    const [selectedOption, setSelectedOption] = useState(options[0]);
+function ListItemSelect({options, ...props}) { 
+    const [selectedOption, setSelectedOption] = useStorage<string>(props.id, v => v ?? options[0]);
 
     function handleOptionChange(option) {
         setSelectedOption(option);

@@ -1,13 +1,26 @@
 import { Box, Divider, List, ListSubheader } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PopupFooter from "~components/popup-footer";
 import ListItemColorPicker from "~components/list-item/list-item-colorpicker";
 import ListItemMessage from "~components/list-item/list-item-message";
 import ListItemSettings from "~components/list-item/list-item-settings";
 import ListItemSwitcher from "~components/list-item/list-item-switcher";
 import ListItemSelect from "~components/list-item/list-item-select";
+import { callApi } from "../../resources/utils";
 
 function Popup() {
+    const [models, setModels] = useState([]);
+    
+    useEffect(() => {
+        callApi('http://127.0.0.1:8000/api/v1/LMs?filter=name', null, 'application/json', 'GET')
+          .then(data => {
+            const names = data.map(lm => lm.name);
+            setModels(names);
+          })
+          .catch(error => {
+            console.error('Error fetching LM names: ', error);
+          });
+      }, []);
 
     return (
         <List
@@ -34,7 +47,7 @@ function Popup() {
                     <Divider light variant="middle" sx={{width: "100%"}}/>
                     <ListItemColorPicker default="#FF0000" id="highlight-color-strong" text="Highlight color 1"/>
                     <Divider light variant="middle" sx={{width: "100%"}}/>
-                    <ListItemSelect id="language-model" text="Model"/>
+                    <ListItemSelect options={models} id="language-model" text="Model"/>
                     <Divider light variant="middle" sx={{width: "100%"}}/>
                 </Box>
                 <ListItemMessage />

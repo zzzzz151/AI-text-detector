@@ -87,33 +87,34 @@ function Highlight() {
     setClickedElement(clickedElement);
   };  
 
-  const observer = new MutationObserver(function(mutations) {
-    mutations.forEach(function(mutation) {
-      const addedNodes = mutation.addedNodes;
-      addedNodes.forEach(function(node: HTMLElement) {
-        if (node.nodeType === Node.ELEMENT_NODE && node.matches(ELEMENT)) {
-          const probability = parseFloat(node.getAttribute("probability"));
-    
-          if (probability >= 75) {
-            node.style.backgroundColor = `${colorStrong}40`;
-            node.style.borderBottom = `2px solid ${colorStrong}`;
-          } else if (probability >= 50) {
-            node.style.backgroundColor = `${colorRegular}40`;
-            node.style.borderBottom = `2px solid ${colorRegular}`;
-          }
-            
-          node.addEventListener("click", handleElementClick);
-        }
-      });
-    });    
-  });
-  
-  observer.observe(document.body, OBSERVER_CONFIG);
-  
-
   const handleClickAway = () => {
     setClickedElement(null);
   }
+
+  useEffect(() => {
+    const observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        const addedNodes = mutation.addedNodes;
+        addedNodes.forEach(function(node: HTMLElement) {
+          if (node.nodeType === Node.ELEMENT_NODE && node.matches(ELEMENT)) {
+            const probability = parseFloat(node.getAttribute("probability"));
+      
+            if (probability >= 75) {
+              node.style.backgroundColor = `${colorStrong}40`;
+              node.style.borderBottom = `2px solid ${colorStrong}`;
+            } else if (probability >= 50) {
+              node.style.backgroundColor = `${colorRegular}40`;
+              node.style.borderBottom = `2px solid ${colorRegular}`;
+            }
+              
+            node.addEventListener("click", handleElementClick);
+          }
+        });
+      });    
+    });
+    
+    observer.observe(document.body, OBSERVER_CONFIG);
+  }, [])
 
   useEffect(() => {
     const handleResize = () => {

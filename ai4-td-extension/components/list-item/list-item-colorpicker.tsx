@@ -28,7 +28,7 @@ function ListItemColorPicker(props) {
           lineHeight: '20px'
         }}
       />
-      <SketchExample defaultColor={color} onColorChange={handleColorChange} ref={colorPickerRef} />
+      <SketchExample color={color} onColorChange={handleColorChange} ref={colorPickerRef} />
     </ListItem>
   );
 }

@@ -3,14 +3,26 @@ import findAndReplaceDOMText from './findAndReplaceDOMText'
 
 /* API */
 
-function callApi(url, bodyObject, type = 'application/json') {
-    return fetch(url, {
-        method: 'POST',
+interface HTTPOptions {
+    method: string,
+    headers: { [key: string]: string },
+    body?: string | FormData | Blob | ArrayBufferView | ArrayBuffer | ReadableStream<Uint8Array> | null
+}
+
+function callApi(url, bodyObject, type = 'application/json', method = 'POST') {
+    const methodsWithRequestBody = ['POST', 'PUT', 'PATCH'];
+    const options: HTTPOptions  = {
+        method: method,
         headers: {
             'Content-Type': type
-        },
-        body: type == 'application/json' ? JSON.stringify(bodyObject) : bodyObject
-    })
+        }
+    };
+
+    if (methodsWithRequestBody.includes(method.toUpperCase())) {
+        options.body = type == 'application/json' ? JSON.stringify(bodyObject) : bodyObject;
+    };
+
+    return fetch(url, options)
         .then(response => response.json())
         .catch(error => {
             console.error('Error fetching data: ', error);
