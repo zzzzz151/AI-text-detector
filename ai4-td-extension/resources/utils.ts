@@ -24,6 +24,9 @@ function callApi(url, bodyObject, type = 'application/json', method = 'POST') {
 
     return fetch(url, options)
         .then(response => {
+            if (response.status == 404) {
+                return {probability_AI_generated: 0};
+            }
             if (!response.ok) {
                 throw Error(response.statusText);
             }
@@ -31,7 +34,7 @@ function callApi(url, bodyObject, type = 'application/json', method = 'POST') {
         })
         .catch(error => {
             console.error('Error fetching data: ', error);
-            throw error // return {probability_AI_generated: 0};
+            throw error
         });
 }
 
