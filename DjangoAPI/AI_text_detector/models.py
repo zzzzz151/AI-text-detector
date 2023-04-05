@@ -11,6 +11,7 @@ class LM(models.Model):
     class Meta:
         abstract = True 
         
+
 class LM_Script(LM):
     TYPE = "script"
     script = models.FileField()

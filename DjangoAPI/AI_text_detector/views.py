@@ -141,11 +141,13 @@ def my_LM_as_API(request):
     try:
         text = request.body.decode("utf-8")
         if text.strip() == "":
+            print("\nSTRIP == EMPTY\n")
             return JsonResponse(
                 {'message': "Invalid request"},
                 status=400,
                 json_dumps_params={'indent': 2})
     except:
+        print("\nEXCEPTTTTTTTTT\n")
         return JsonResponse(
             {'message': "Invalid request"},
             status=400,

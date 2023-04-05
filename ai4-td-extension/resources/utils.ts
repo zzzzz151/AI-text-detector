@@ -11,7 +11,7 @@ interface HTTPOptions {
 
 function callApi(url, bodyObject, type = 'application/json', method = 'POST') {
     const methodsWithRequestBody = ['POST', 'PUT', 'PATCH'];
-    const options: HTTPOptions  = {
+    const options: HTTPOptions = {
         method: method,
         headers: {
             'Content-Type': type
@@ -23,7 +23,14 @@ function callApi(url, bodyObject, type = 'application/json', method = 'POST') {
     };
 
     return fetch(url, options)
-        .then(response => response.json())
+        .then(response => {
+            if (response.status == 200)
+                return response.json();
+            let myObj = {probability_AI_generated: 0};
+            //myObj.probability_AI_generated = 0;
+            return myObj;
+        }
+            )
         .catch(error => {
             console.error('Error fetching data: ', error);
             throw error;
@@ -94,7 +101,7 @@ function analysePage(language_model) {
 
 function analyseText(url, language_model, text, elem, threshold) {
     return new Promise((resolve, reject) => {
-        callApi(url, {language_model, text})
+        callApi(url, { language_model, text })
             .then(data => {
                 if (data.probability_AI_generated < threshold) {
                     console.log("Not AI (" + data.probability_AI_generated + "%): '" + text + "'");
@@ -130,7 +137,7 @@ function analyseText(url, language_model, text, elem, threshold) {
                     "weight": text.length * data.probability_AI_generated
                 });
             })
-            .catch(error => reject(error));
+            .catch(error => console.log("Error fetching data, ", error));
     });
 };
 
