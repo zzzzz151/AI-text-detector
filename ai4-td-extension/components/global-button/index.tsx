@@ -2,16 +2,16 @@ import { Box, CircularProgress, Fab } from "@mui/material";
 import { green, purple, red } from "@mui/material/colors";
 import { AiFillSecurityScan } from "react-icons/ai";
 
-function GlobalButton({onClick, success, error, loading}) {
+function GlobalButton({onClick, is}) {
 
   const buttonSx = {
-      ...(success && {
+      ...(is("success") && {
         bgcolor: green[500],
         '&:hover': {
           bgcolor: green[600],
         },
       }),
-      ...(error && {
+      ...(is("error") && {
         bgcolor: red[700],
         '&:hover': {
           bgcolor: red[800],
@@ -31,13 +31,13 @@ function GlobalButton({onClick, success, error, loading}) {
               ...buttonSx // Include any other styles from the buttonSx object
               }}
           >
-          {success || error ?
+          {is("success", "error")?
           (<AiFillSecurityScan size={35} color={"#fff"} />)
           :
           (<AiFillSecurityScan size={35} color={"#6a1b9a"} />)
           }
           </Fab>
-          {loading &&
+          {is("loading") &&
           (<CircularProgress
               size={72}
               sx={{

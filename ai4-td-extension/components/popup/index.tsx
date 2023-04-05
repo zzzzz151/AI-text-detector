@@ -1,5 +1,5 @@
 import { Box, Divider, List, ListSubheader } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import PopupFooter from "~components/popup-footer";
 import ListItemColorPicker from "~components/list-item/list-item-colorpicker";
 import ListItemMessage from "~components/list-item/list-item-message";
