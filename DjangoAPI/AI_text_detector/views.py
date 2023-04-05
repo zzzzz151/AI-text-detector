@@ -98,6 +98,7 @@ class LM_Upload(APIView):
                 newLM.author = "author here"
                 newLM.description = "description here"
                 newLM.API = api_url
+                newLM.save()
 
             print("Accepted LM " + lm_name)
             #print(AI.probability_AI_generated_text("Hello", lm_name))
@@ -129,3 +130,37 @@ def get_LMs(request):
         ]
 
     return JsonResponse(lms, safe=False, status=200, json_dumps_params={'indent': 2})
+
+@csrf_exempt
+def my_LM_as_API(request):
+    try:
+        text = request.body.decode("utf-8")
+        if text.strip() == "":
+            return JsonResponse(
+                {'message': "Invalid request"},
+                status=400,
+                json_dumps_params={'indent': 2})
+    except:
+        return JsonResponse(
+            {'message': "Invalid request"},
+            status=400,
+            json_dumps_params={'indent': 2})
+
+    responseData = {
+        "text": text,
+        "probability_AI_generated": round(random.uniform(0,1), 4)
+    }
+
+    return JsonResponse(
+        responseData,
+        status=200,
+        json_dumps_params={'indent': 2})
+
+def execute_code(request):
+    # insert test code here
+    
+    return JsonResponse(
+        {},
+        status=200,
+        json_dumps_params={'indent': 2})
+
