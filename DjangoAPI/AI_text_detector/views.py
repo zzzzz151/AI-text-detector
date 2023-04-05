@@ -31,7 +31,7 @@ def handle_request(request):
     except:
         log("Received invalid request")
         return JsonResponse(
-            {'message': "Invalid request"},
+            {'message': "Invalid request (invalid fields or format)"},
             status=400,
             json_dumps_params={'indent': 2})
 
@@ -41,12 +41,12 @@ def handle_request(request):
         probability_AI_generated = AI.probability_AI_generated_text(text, lm_name)
     except:
         return JsonResponse(
-            {'message': "Invalid request"},
+            {'message': "Invalid request (probably invalid language model)"},
             status=400,
             json_dumps_params={'indent': 2})
     if probability_AI_generated == None:
         return JsonResponse(
-            {'message': "Invalid request"},
+            {'message': "Invalid request (probably invalid language model)"},
             status=400,
             json_dumps_params={'indent': 2})
 

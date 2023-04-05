@@ -57,7 +57,7 @@ class AI2:
 
         if lm_name in self.scriptLMs.keys():
             # the requested LM is of type script
-            ret = self.models[lm_name].predict(text)
+            ret = self.scriptLMs[lm_name].predict(text)
             if type(ret) != list:
                 return round(ret*100)
             # At this point, ret is a list
