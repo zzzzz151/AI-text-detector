@@ -117,17 +117,22 @@ def get_LMs(request):
     else:
         filter_fields = ['name', 'author', 'description']
 
+    if 'type' in filter_fields:
+        include_type = True
+        filter_fields.remove('type')
+    else:
+        include_type = True
+
     lms = []
 
     for model in [LM_Script, LM_API]:
-        lm_type = model.__name__
-        if lm_type_filter and lm_type != lm_type_filter:
+        if lm_type_filter and lm_type_filter.lower() != model.TYPE:
             continue
-        lms += [
-            {
-                field: getattr(lm, field) for field in filter_fields
-            } | {'type': lm_type} for lm in model.objects.all()
-        ]
+        for lm in model.objects.all():
+            lm_dict = {field: getattr(lm, field) for field in filter_fields}        
+            if include_type:
+                lm_dict['type'] = model.TYPE
+            lms.append(lm_dict)
 
     return JsonResponse(lms, safe=False, status=200, json_dumps_params={'indent': 2})
 
