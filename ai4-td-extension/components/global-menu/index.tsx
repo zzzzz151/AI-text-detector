@@ -43,10 +43,10 @@ function GlobalMenu() {
 
     /* Could have problems */
     const handleReloadClick = () => {
-        setReload(true);
-        setAnchor(false);
         setSuccess(false);
         setError(false);
+        setAnchor(false);
+        setReload(true);
     };
 
     useEffect(() => {
