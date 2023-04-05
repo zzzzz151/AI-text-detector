@@ -41,8 +41,6 @@ function Highlight() {
       }
     }
   }, [colorRegular, colorStrong]);
-  
-  
 
   const handleElementClick = (e) => {
     e.stopPropagation();
@@ -92,13 +90,14 @@ function Highlight() {
   }
 
   useEffect(() => {
+    // Mutation observer
     const observer = new MutationObserver(function(mutations) {
       mutations.forEach(function(mutation) {
         const addedNodes = mutation.addedNodes;
         addedNodes.forEach(function(node: HTMLElement) {
           if (node.nodeType === Node.ELEMENT_NODE && node.matches(ELEMENT)) {
             const probability = parseFloat(node.getAttribute("probability"));
-      
+  
             if (probability >= 75) {
               node.style.backgroundColor = `${colorStrong}40`;
               node.style.borderBottom = `2px solid ${colorStrong}`;
@@ -106,27 +105,28 @@ function Highlight() {
               node.style.backgroundColor = `${colorRegular}40`;
               node.style.borderBottom = `2px solid ${colorRegular}`;
             }
-              
+  
             node.addEventListener("click", handleElementClick);
           }
         });
       });    
     });
-    
+  
     observer.observe(document.body, OBSERVER_CONFIG);
-  }, [])
-
-  useEffect(() => {
+  
+    // Handle resize and scroll
     const handleResize = () => {
       setClickedElement(null);
     }
-    
+  
     window.addEventListener('resize', handleResize);
-    
+
     return () => {
+      // Clean up
+      observer.disconnect();
       window.removeEventListener('resize', handleResize);
     }
-  }, []);
+  }, []);  
 
   return (
     <>
