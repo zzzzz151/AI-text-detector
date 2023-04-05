@@ -1,9 +1,8 @@
 import { ListItem, ListItemText } from "@mui/material";
 import Select from "~components/select";
-import { useStorage } from "@plasmohq/storage/hook";
 
-function ListItemSelect({options, ...props}) { 
-    const [selectedOption, setSelectedOption] = useStorage<string>(props.id, v => v ?? options[0]);
+function ListItemSelect({hook, ...props}) { 
+    const [selectedOption, setSelectedOption, options] = hook();
 
     function handleOptionChange(option) {
         setSelectedOption(option);
