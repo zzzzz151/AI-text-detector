@@ -129,7 +129,7 @@ def get_LMs(request):
         if lm_type_filter and lm_type_filter.lower() != model.TYPE:
             continue
         for lm in model.objects.all():
-            lm_dict = {field: getattr(lm, field) for field in filter_fields}        
+            lm_dict = {field: getattr(lm, field) for field in filter_fields if hasattr(lm, field)}        
             if include_type:
                 lm_dict['type'] = model.TYPE
             lms.append(lm_dict)
