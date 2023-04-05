@@ -2,6 +2,7 @@ import { useStorage } from "@plasmohq/storage/hook";
 import { useEffect, useState } from "react";
 import GlobalButton from "~components/global-button";
 import GlobalCard from "~components/global-card";
+import GlobalCardError from "~components/global-card-error";
 import { analysePage, cleanPage } from "~resources/utils";
 
 function GlobalMenu() {
@@ -26,12 +27,12 @@ function GlobalMenu() {
                 }
                 setSuccess(true);
                 setData(data)
-                setAnchor(true);
             })
             .catch(() => {
                 setError(true);
             })
             .finally(() => {
+                setAnchor(true);
                 setLoading(false);
             })
         }
@@ -40,11 +41,12 @@ function GlobalMenu() {
         }
     };
 
+    /* Could have problems */
     const handleReloadClick = () => {
+        setReload(true);
         setAnchor(false);
         setSuccess(false);
         setError(false);
-        setReload(true);
     };
 
     useEffect(() => {
@@ -70,6 +72,7 @@ function GlobalMenu() {
                 loading={loading}
             />
             {success && anchor && <GlobalCard data={data} onReloadClick={handleReloadClick} />}
+            {error && anchor && <GlobalCardError error={"Some error happened"} onReloadClick={handleReloadClick} />}
         </>
     );
 }
