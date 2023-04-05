@@ -111,17 +111,17 @@ class LM_Upload(APIView):
 def get_LMs(request):
     filter_param = request.GET.get('filter', None)
     lm_type_filter = request.GET.get('type', None)
+    include_type = False
 
     if filter_param:
         filter_fields = filter_param.split(',')
     else:
         filter_fields = ['name', 'author', 'description']
+        include_type = True
 
     if 'type' in filter_fields:
         include_type = True
         filter_fields.remove('type')
-    else:
-        include_type = True
 
     lms = []
 
