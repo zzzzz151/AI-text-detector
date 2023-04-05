@@ -124,21 +124,3 @@ if __name__ == "__main__":
 		server_socket.bind((host, port))
 		server_socket.listen()
 		start(server_socket)
-
-	"""
-	client = docker.from_env()
-	compose_file = 'Docker/server/docker-compose.yml'
-	project_name = 'AI-text-detector'
-	services = ['service1', 'service2']
-
-	options = docker.types.ComposeProjectOptions()
-	options.working_dir = '/path/to/project'
-	options.project_name = project_name
-
-	project = docker.types.Project.from_config(
-		project_name, docker.types.ComposeFile(compose_file), client
-	)
-
-	project.up(services=services, options=options)
-
-	"""

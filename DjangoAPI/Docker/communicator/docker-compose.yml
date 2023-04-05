@@ -2,17 +2,17 @@ services:
   communicator:
     build: .
     command: sh -c "sleep 2s; python3 ./communicator.py chatGPT_roberta"
+    container_name: communicator
     environment:
       LISTEN_HOST: server
       LISTEN_PORT: 5555
-    ports:
-      - '5556:5556'
     depends_on:
       - server
 
   server:
     build: /server/
     command: sh -c "python3 ./server.py"
+    container_name: server
     environment:
       SEND_HOST: server
       SEND_PORT: 5555
