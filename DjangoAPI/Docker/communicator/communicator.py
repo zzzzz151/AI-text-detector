@@ -4,7 +4,8 @@ import lm_name.lm_submission as lm
 import socket
 import os
 
-from server import messages as m
+from Docker.communicator import messages as m
+
 
 def log(text):
 	print(text)
@@ -42,17 +43,20 @@ if __name__ == "__main__":
 	try:
 		host = os.getenv('LISTEN_HOST')
 		if not host:
-			host = sys.argv[2]
+			host = sys.argv[3]
 	except TypeError:
-		host = sys.argv[2]
+		host = sys.argv[3]
 
 	try:
-		lm_name = sys.argv[1]
-	except IndexError:
-		lm_name = "chatGPT_roberta"
+		lm_name = os.getenv('LM_NAME')
+	except TypeError:
+		try:
+			lm_name = sys.argv[4]
+		except IndexError:
+			lm_name = "abcd"
 	model = IsolatedLanguageModel(lm_name)
 
-	log(f"Connecting with port {port}")
+	log(f"Connecting LM {lm_name} with port {port}")
 	with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 		s.connect((host, port))
 		m.send_message_object(s, m.create_connect_message(lm_name))

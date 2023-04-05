@@ -7,6 +7,7 @@ import os
 
 import messages as m
 
+
 def log(text):
 	print(text)
 	sys.stdout.flush()
@@ -80,7 +81,8 @@ def handle_messages(client_socket, selector):
 
 	# Django server is asking us to create a container
 	if message_type == 'create_container':
-		create_container(lm)
+		...
+		#create_container(lm)
 	# At this point, container is setup and working.
 	elif message_type == 'connect':
 		add_lm(lm, client_socket)
@@ -105,8 +107,7 @@ def add_lm(lm_name, client_socket):
 
 
 
-def create_container(lm_name):
-	...
+
 
 if __name__ == "__main__":
 	try:

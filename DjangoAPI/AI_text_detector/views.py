@@ -1,15 +1,21 @@
+import json
 import os
+import random
+# from .LMs.AI import LanguageModel
+import socket
 import sys
-from typing import List
-from django.shortcuts import render
+from datetime import datetime
+
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-import random
-import json
-#from .LMs.AI import LanguageModel
-from datetime import datetime
-import socket
-import Docker.communicator.server.messages as m
+from rest_framework import parsers
+from rest_framework.decorators import authentication_classes, permission_classes
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+import Docker.communicator.messages as m
+from Docker.test import add_communicator
+from .models import *
 
 #model = LanguageModel()
 
@@ -31,21 +37,15 @@ def increment_and_return_ID():
     ID = message_ID[0]
     message_ID[0] = ID + 1
     return ID
-
-
 def log(msg):
     strDateTimeNow = str(datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
-    print(strDateTimeNow + " " + msg)
+    print(strDateTimeNow + " " + str(msg))
     sys.stdout.flush()
-
-
-
 def create_socket():
     lm_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     lm_socket.connect((host, port))
     lm_socket.setblocking(True)
     return lm_socket
-
 def get_prediction(text, lm):
     lm_socket = create_socket()
     ID = increment_and_return_ID()
@@ -56,6 +56,22 @@ def get_prediction(text, lm):
     if response and response.probability:
         return int(response.probability)
     return 0
+def store_file(path:str, file_name:str, content):
+    os.makedirs(path, exist_ok=True)
+    newFile = open(path + file_name, "w")
+    if type(content) != str:
+        newFile.write(content.read().decode('UTF-8'))
+    else:
+        newFile.write(content)
+    newFile.close()
+    newFile.close()
+def save_lm(lm_name, author, description, script):
+    newLM = LM_Script()
+    newLM.name = lm_name
+    newLM.author = author
+    newLM.description = description
+    newLM.script = script
+    newLM.save()
 
 @csrf_exempt
 def handle_request(request):
@@ -94,6 +110,107 @@ def handle_request(request):
         status=200,
         json_dumps_params={'indent': 2})
 
+@authentication_classes([])
+@permission_classes([])
+class LM_Upload(APIView):
+    parser_classes = (parsers.MultiPartParser,)
 
-def create_container():
-    ...
+    @authentication_classes([])
+    @permission_classes([])
+    def post(self, request):
+        #try:
+        process_lm(request)
+    #except:
+        return Response(status=500)  # Internal server error
+
+        return Response(status=200)  # Ok
+
+
+@csrf_exempt
+def get_LMs(request):
+    filter_param = request.GET.get('filter', None)
+    lm_type_filter = request.GET.get('type', None)
+    include_type = False
+
+    if filter_param:
+        filter_fields = filter_param.split(',')
+    else:
+        filter_fields = ['name', 'author', 'description']
+        include_type = True
+
+    if 'type' in filter_fields:
+        include_type = True
+        filter_fields.remove('type')
+
+    lms = []
+
+    for model in [LM_Script, LM_API]:
+        if lm_type_filter and lm_type_filter.lower() != model.TYPE:
+            continue
+        for lm in model.objects.all():
+            lm_dict = {field: getattr(lm, field) for field in filter_fields if hasattr(lm, field)}
+            if include_type:
+                lm_dict['type'] = model.TYPE
+            lms.append(lm_dict)
+
+    return JsonResponse(lms, safe=False, status=200, json_dumps_params={'indent': 2})
+
+@csrf_exempt
+def my_LM_as_API(request):
+    try:
+        text = request.body.decode("utf-8")
+        if text.strip() == "":
+            return JsonResponse(
+                {'message': "Invalid request"},
+                status=400,
+                json_dumps_params={'indent': 2})
+    except:
+        return JsonResponse(
+            {'message': "Invalid request"},
+            status=400,
+            json_dumps_params={'indent': 2})
+
+    responseData = {
+        "text": text,
+        "probability_AI_generated": round(random.uniform(0, 1), 4)
+    }
+
+    return JsonResponse(
+        responseData,
+        status=200,
+        json_dumps_params={'indent': 2})
+
+def execute_code(request):
+    # insert test code here
+
+    return JsonResponse(
+        {},
+        status=200,
+        json_dumps_params={'indent': 2})
+
+def process_lm(request):
+    lm_name = request.data["name"]
+    log("Received LM " + lm_name)
+
+    if "script" in request.data:
+        save_path = f"AI_text_detector/LMs/{lm_name}/"
+        script = request.data["script"]
+
+        store_file(save_path, lm_name + '.py', script)
+        store_file(save_path, 'requirements.txt', "")
+
+        save_lm(lm_name, "author here", "description here", script)
+
+        add_communicator('/DjangoAPI/Docker/communicator/docker-compose.yml', lm_name)
+
+    if "API" in request.data or "api" in request.data:
+        api_url = request.data["API"] if "API" in request.data else request.data["api"]
+        newLM = LM_API()
+        newLM.name = lm_name
+        newLM.author = "author here"
+        newLM.description = "description here"
+        newLM.API = api_url
+        newLM.save()
+
+    print("Accepted LM " + lm_name)
+    # print(AI.probability_AI_generated_text("Hello", lm_name))

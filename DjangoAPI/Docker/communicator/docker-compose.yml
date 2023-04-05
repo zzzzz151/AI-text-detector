@@ -1,17 +1,21 @@
 services:
   communicator:
-    build: .
-    command: sh -c "sleep 2s; python3 ./communicator.py chatGPT_roberta"
+    build:
+      context: .
+      dockerfile: Dockerfile_Communicator
+    command: sh -c "ls; python3 ./communicator.py"
     container_name: communicator
     environment:
       LISTEN_HOST: server
       LISTEN_PORT: 5555
-    depends_on:
-      - server
+    #depends_on:
+    #  - server
 
   server:
-    build: /server/
-    command: sh -c "python3 ./server.py"
+    build:
+      context: .
+      dockerfile: Dockerfile_Server
+    command: sh -c "ls; python3 ./server.py"
     container_name: server
     environment:
       SEND_HOST: server
@@ -35,6 +39,7 @@ services:
     build: ../django
     volumes:
       - ../../../DjangoAPI:/DjangoAPI
+      - /var/run/docker.sock:/var/run/docker.sock
     working_dir: /DjangoAPI
     environment:
       SEND_HOST: server
