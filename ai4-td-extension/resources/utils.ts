@@ -24,16 +24,14 @@ function callApi(url, bodyObject, type = 'application/json', method = 'POST') {
 
     return fetch(url, options)
         .then(response => {
-            if (response.status == 200)
-                return response.json();
-            let myObj = {probability_AI_generated: 0};
-            //myObj.probability_AI_generated = 0;
-            return myObj;
-        }
-            )
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+            return response.json();
+        })
         .catch(error => {
             console.error('Error fetching data: ', error);
-            throw error;
+            throw error // return {probability_AI_generated: 0};
         });
 }
 
@@ -80,20 +78,21 @@ function analysePage(language_model) {
         }
     });
 
-    return Promise.all(promises).then((results) => {
-        let sumCharacters = 0;
-        let weightedSum = 0;
+    return Promise.all(promises)
+        .then((results) => {
+            let sumCharacters = 0;
+            let weightedSum = 0;
 
-        for (let i = 0; i < results.length; i++) {
-            sumCharacters += results[i].length;
-            weightedSum += results[i].weight;
-        }
+            for (let i = 0; i < results.length; i++) {
+                sumCharacters += results[i].length;
+                weightedSum += results[i].weight;
+            }
 
-        let weightedAvg = sumCharacters > 0 ? weightedSum / sumCharacters : 0;
-        weightedAvg = Math.round(weightedAvg); // round to nearest int
-        console.log("Overall evaluation: " + weightedAvg + "%");
-        return weightedAvg;
-    })
+            let weightedAvg = sumCharacters > 0 ? weightedSum / sumCharacters : 0;
+            weightedAvg = Math.round(weightedAvg); // round to nearest int
+            console.log("Overall evaluation: " + weightedAvg + "%");
+            return weightedAvg;
+        })
         .catch((err) => {
             console.error(err);
         });
@@ -137,7 +136,10 @@ function analyseText(url, language_model, text, elem, threshold) {
                     "weight": text.length * data.probability_AI_generated
                 });
             })
-            .catch(error => console.log("Error fetching data, ", error));
+            .catch(error => {
+                reject(error);
+                console.log("Error fetching data, ", error)
+            });
     });
 };
 
