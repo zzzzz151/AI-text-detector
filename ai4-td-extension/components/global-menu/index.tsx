@@ -20,8 +20,8 @@ function GlobalMenu() {
         if (canScan) {
             setLoading();
             analysePage(languageModel)
-            .then(data => {
-                if (!data) {
+            .then((data: number) => {
+                if (data === null || data === undefined || isNaN(data)) {
                     throw new Error('No data returned from API.');
                 }
                 setSuccess();
