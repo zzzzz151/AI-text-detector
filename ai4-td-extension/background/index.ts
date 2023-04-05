@@ -1,4 +1,4 @@
-import { executeInCurrentTab } from "./utils";
+import { executeInCurrentTab } from "./scripting";
 import highlightSelection from "./highlight";
 
 const injectHighlight = async (info) => {

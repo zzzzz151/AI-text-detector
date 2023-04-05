@@ -12,20 +12,14 @@ interface HTTPOptions {
 function convertToJSON(str) {
     return JSON.stringify(str, (key, value) => {
       if (typeof value === 'string') {
-        const result = [];
-        for (let i = 0; i < value.length; i++) {
-          const charCode = value.charCodeAt(i);
-          if (charCode > 127) {
-            result.push(`\\u${charCode.toString(16).padStart(4, '0')}`);
-          } else {
-            result.push(value[i]);
-          }
-        }
-        return result.join('');
+        return value.replace(/[\u007F-\uFFFF]/g, (match) =>
+          '\\u' + ('0000' + match.charCodeAt(0).toString(16)).slice(-4)
+        );
       }
       return value;
     });
 }
+  
 
 function callApi(url, bodyObject, type = 'application/json', method = 'POST') {
     const methodsWithRequestBody = ['POST', 'PUT', 'PATCH'];
