@@ -9,6 +9,24 @@ interface HTTPOptions {
     body?: string | FormData | Blob | ArrayBufferView | ArrayBuffer | ReadableStream<Uint8Array> | null
 }
 
+function convertToJSON(str) {
+    return JSON.stringify(str, (key, value) => {
+      if (typeof value === 'string') {
+        const result = [];
+        for (let i = 0; i < value.length; i++) {
+          const charCode = value.charCodeAt(i);
+          if (charCode > 127) {
+            result.push(`\\u${charCode.toString(16).padStart(4, '0')}`);
+          } else {
+            result.push(value[i]);
+          }
+        }
+        return result.join('');
+      }
+      return value;
+    });
+}
+
 function callApi(url, bodyObject, type = 'application/json', method = 'POST') {
     const methodsWithRequestBody = ['POST', 'PUT', 'PATCH'];
     const options: HTTPOptions = {
@@ -19,7 +37,7 @@ function callApi(url, bodyObject, type = 'application/json', method = 'POST') {
     };
 
     if (methodsWithRequestBody.includes(method.toUpperCase())) {
-        options.body = type == 'application/json' ? JSON.stringify(bodyObject) : bodyObject;
+        options.body = type == 'application/json' ? convertToJSON(bodyObject) : bodyObject;
     };
 
     return fetch(url, options)
