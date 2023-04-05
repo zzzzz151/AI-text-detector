@@ -12,9 +12,11 @@ class LM(models.Model):
         abstract = True 
         
 class LM_Script(LM):
+    TYPE = "script"
     script = models.FileField()
 
 
 class LM_API(LM):
+    TYPE = "api"
     API = models.CharField(max_length=255)
 
