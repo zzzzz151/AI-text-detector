@@ -12,13 +12,14 @@ function GlobalMenu() {
     const [data, setData] = useState(null);
     const [reload, setReload] = useState(false);
     const [autoscan] = useStorage<string>("scan-page-automatically")
+    const language_model = "openai-roberta-base"
 
     const canScan = !(loading || success || error);
 
     const handleClick = () => {
         if (canScan) {
             setLoading(true);
-            analysePage()
+            analysePage(language_model)
             .then(data => {
                 if (!data) {
                     throw new Error('No data returned from API.');

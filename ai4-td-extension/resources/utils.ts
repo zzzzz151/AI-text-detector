@@ -20,7 +20,7 @@ function callApi(url, bodyObject, type = 'application/json') {
 
 /* Analyzer */
 
-function analysePage() {
+function analysePage(language_model) {
     const exclude = ['base', 'head', 'meta', 'title', 'link', 'style',
         'script', 'noscript', 'audio', 'video', 'source',
         'track', 'canvas', 'svg', 'img', 'iframe',
@@ -55,7 +55,7 @@ function analysePage() {
                 if (sentence.split(" ").length < MIN_WORDS)
                     continue;
 
-                let promise = analyseText(URL, sentence, elem, HIGHLIGHT_THRESHOLD_PROBABILITY);
+                let promise = analyseText(URL, language_model, sentence, elem, HIGHLIGHT_THRESHOLD_PROBABILITY);
                 promises.push(promise);
             }
         }
@@ -80,9 +80,9 @@ function analysePage() {
         });
 }
 
-function analyseText(url, text, elem, threshold) {
+function analyseText(url, language_model, text, elem, threshold) {
     return new Promise((resolve, reject) => {
-        callApi(url, text, 'text/plain')
+        callApi(url, {language_model, text})
             .then(data => {
                 if (data.probability_AI_generated < threshold) {
                     console.log("Not AI (" + data.probability_AI_generated + "%): '" + text + "'");
