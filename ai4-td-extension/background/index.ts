@@ -3,7 +3,7 @@ import highlightSelection from "./highlight";
 
 const injectHighlight = async (info) => {
   if (info.menuItemId === "scan-text") {
-    await executeInCurrentTab({ func: highlightSelection, args: [info.selectionText, 55] })
+    await executeInCurrentTab({ func: highlightSelection, args: [info.selectionText] })
   }
 }
 
