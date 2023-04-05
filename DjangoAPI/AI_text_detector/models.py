@@ -17,6 +17,6 @@ class LM_Script(LM):
 
 
 class LM_API(LM):
-    TYPE = "api"
+    TYPE = "API"
     API = models.CharField(max_length=255)
 

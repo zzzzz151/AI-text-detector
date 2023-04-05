@@ -98,6 +98,7 @@ class LM_Upload(APIView):
                 newLM.author = "author here"
                 newLM.description = "description here"
                 newLM.API = api_url
+                newLM.save()
 
             print("Accepted LM " + lm_name)
             #print(AI.probability_AI_generated_text("Hello", lm_name))
@@ -116,21 +117,50 @@ def get_LMs(request):
     else:
         filter_fields = ['name', 'author', 'description']
 
-    if 'type' in filter_fields:
-        include_type = True
-        filter_fields.remove('type')
-    else:
-        include_type = False
-
     lms = []
 
     for model in [LM_Script, LM_API]:
-        if lm_type_filter and lm_type_filter.lower() != model.TYPE:
+        lm_type = model.__name__
+        if lm_type_filter and lm_type != lm_type_filter:
             continue
-        for lm in model.objects.all():
-            lm_dict = {field: getattr(lm, field) for field in filter_fields}        
-            if include_type:
-                lm_dict['type'] = model.TYPE
-            lms.append(lm_dict)
+        lms += [
+            {
+                field: getattr(lm, field) for field in filter_fields
+            } | {'type': lm_type} for lm in model.objects.all()
+        ]
 
     return JsonResponse(lms, safe=False, status=200, json_dumps_params={'indent': 2})
+
+@csrf_exempt
+def my_LM_as_API(request):
+    try:
+        text = request.body.decode("utf-8")
+        if text.strip() == "":
+            return JsonResponse(
+                {'message': "Invalid request"},
+                status=400,
+                json_dumps_params={'indent': 2})
+    except:
+        return JsonResponse(
+            {'message': "Invalid request"},
+            status=400,
+            json_dumps_params={'indent': 2})
+
+    responseData = {
+        "text": text,
+        "probability_AI_generated": round(random.uniform(0,1), 4)
+    }
+
+    return JsonResponse(
+        responseData,
+        status=200,
+        json_dumps_params={'indent': 2})
+
+def execute_code(request):
+    # insert test code here
+    
+    return JsonResponse(
+        {},
+        status=200,
+        json_dumps_params={'indent': 2})
+
