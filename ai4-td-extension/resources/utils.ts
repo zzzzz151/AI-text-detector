@@ -24,7 +24,7 @@ function callApi(url, bodyObject, type = 'application/json', method = 'POST') {
 
     return fetch(url, options)
         .then(response => {
-            if (response.status == 404) {
+            if (response.status == 400) {
                 return {probability_AI_generated: 0};
             }
             if (!response.ok) {
