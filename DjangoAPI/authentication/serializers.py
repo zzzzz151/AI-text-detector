@@ -4,7 +4,6 @@ from django.contrib.auth import get_user_model, authenticate
 
 UserModel = get_user_model()
 
-
 class UserRegisterSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = UserModel
@@ -22,7 +21,6 @@ class UserLoginSerializer(serializers.Serializer):
         email = clean_data.get('email')
         # from UserModel.objects get username by email
         username = UserModel.objects.get(email=email).username
-        print(username)
         
         password = clean_data.get('password')
         
