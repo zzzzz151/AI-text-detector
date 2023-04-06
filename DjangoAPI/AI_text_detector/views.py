@@ -74,6 +74,8 @@ class LM_Upload(APIView):
     def post(self, request):
         try: 
             lm_name = request.data["name"]
+            lm_author = request.data["author"]
+            lm_description = request.data["description"]
             print("Received LM " + lm_name)
 
             if "script" in request.data:
@@ -86,8 +88,8 @@ class LM_Upload(APIView):
 
                 newLM = LM_Script()
                 newLM.name = lm_name
-                newLM.author = "author here"
-                newLM.description = "description here"
+                newLM.author = lm_author
+                newLM.description = lm_description
                 newLM.script = script
                 newLM.save()
 
@@ -95,8 +97,8 @@ class LM_Upload(APIView):
                 api_url = request.data["API"] if "API" in request.data else request.data["api"]
                 newLM = LM_API()
                 newLM.name = lm_name
-                newLM.author = "author here"
-                newLM.description = "description here"
+                newLM.author = lm_author
+                newLM.description = lm_description
                 newLM.API = api_url
                 newLM.save()
 

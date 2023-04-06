@@ -19,7 +19,6 @@ function NavBar( props ) {
     const [selectedOption, setSelectedOption] = useState(null);
     const [showLinkInput, setShowLinkInput] = useState(false);
     const [showScriptInput, setShowScriptInput] = useState(false);
-    const [file, setFile] = useState(null);
     const fileInputRef = useRef(null);
     const username = "test"
 
@@ -56,7 +55,7 @@ function NavBar( props ) {
         formData.append('type', type);
         if (type === 'url') {
             formData.append('api', url);
-        } else if (type === 'script') {
+        } else {
             formData.append('script', scriptFile);
         }
         console.log("FormDate: ",formData);
@@ -81,7 +80,7 @@ function NavBar( props ) {
       
 
     function handleFileChange(event) {
-        setFile(event.target.files[0]);
+        setScriptFile(event.target.files[0]);
         console.log(event.target.files[0]);
       }
     
