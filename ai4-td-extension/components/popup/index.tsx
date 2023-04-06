@@ -30,9 +30,9 @@ function Popup() {
                 <Box width="100%">
                     <ListItemSwitcher default={false} id="scan-page-automatically" text="Scan page automatically" />
                     <Divider light variant="middle" sx={{width: "100%"}}/>
-                    <ListItemColorPicker default="#FFFF00" id="highlight-color-regular" text="Highlight color 1"/>
+                    <ListItemColorPicker default="#FFFF00" id="highlight-color-regular" text="Highlight color (50-75)"/>
                     <Divider light variant="middle" sx={{width: "100%"}}/>
-                    <ListItemColorPicker default="#FF0000" id="highlight-color-strong" text="Highlight color 1"/>
+                    <ListItemColorPicker default="#FF0000" id="highlight-color-strong" text="Highlight color (75-100)"/>
                     <Divider light variant="middle" sx={{width: "100%"}}/>
                     <ListItemSelect hook={useLanguageModelOptions} id="language-model" text="Language model"/>
                     <Divider light variant="middle" sx={{width: "100%"}}/>
