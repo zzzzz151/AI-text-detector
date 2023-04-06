@@ -2,7 +2,7 @@ import type { PlasmoCSConfig } from "plasmo"
 import { useStorage } from "@plasmohq/storage/hook";
 import { useEffect, useRef, useState } from "react";
 import SingleCard from "~components/single-card";
-import { ClickAwayListener, colors } from "@mui/material";
+import { ClickAwayListener } from "@mui/material";
 
 export const config: PlasmoCSConfig = {
   matches: ["<all_urls>"],

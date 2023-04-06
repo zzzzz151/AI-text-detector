@@ -1,9 +1,19 @@
-import { executeInCurrentTab } from "./scripting";
+import { callApi, executeInCurrentTab } from "./scripting";
 import highlightSelection from "./highlight";
+import { Storage } from "@plasmohq/storage"
+
+const storage = new Storage()
+
+const URL = "http://127.0.0.1:8000/api/v1";
 
 const injectHighlight = async (info) => {
   if (info.menuItemId === "scan-text") {
-    await executeInCurrentTab({ func: highlightSelection, args: [info.selectionText] })
+    const languageModel = await storage.get("language-model");
+    callApi(URL, { "language_model": languageModel, "text": info.selectionText })
+    .then(async data => {
+      console.log(languageModel)
+      await executeInCurrentTab({ func: highlightSelection, args: [data] })
+    });
   }
 }
 

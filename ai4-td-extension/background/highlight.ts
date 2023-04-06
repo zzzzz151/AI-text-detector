@@ -1,4 +1,4 @@
-function highlightSelection(selectionText: string, keep = false, merge = true) {
+function highlightSelection(data, keep = false, merge = true) {
 
   const getNodeRange = (range, node) => {
     const nodeRange = document.createRange();
@@ -45,9 +45,9 @@ function highlightSelection(selectionText: string, keep = false, merge = true) {
     return selectedNodes;
   }
 
-  function createHighlightElement(prob) {
+  function createHighlightElement() {
     const highlight = document.createElement('highlighted-text');
-    highlight.setAttribute("probability", prob);
+    highlight.setAttribute("probability", data.probability_AI_generated);
     return highlight;
   }
 
@@ -130,7 +130,7 @@ function highlightSelection(selectionText: string, keep = false, merge = true) {
   const prob = String(Math.round(Math.random() * 50 +  50));
 
   selectedNodes.forEach((node) => {
-    const highlight = createHighlightElement(prob);
+    const highlight = createHighlightElement();
     const nodeRange = getNodeRange(range, node);
     highlight.textContent = nodeRange.toString();
 
