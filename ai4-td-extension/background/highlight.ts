@@ -51,25 +51,39 @@ function highlightSelection(selectionText: string, keep = false, merge = true) {
     return highlight;
   }
 
-  function canMerge(element1, element2) {
-    return element1.nodeName === "HIGHLIGHTED-TEXT" && element2.nodeName === "HIGHLIGHTED-TEXT" && element1.getAttribute("probability") === element2.getAttribute("probability")
+  function isRelevantNode(node) {
+    return  node.nodeType === Node.ELEMENT_NODE || (node.nodeType === Node.TEXT_NODE && node.nodeValue.trim() !== '')
   }
 
-  function mergeSiblingHighlights(element) {
-    const children = Array.from(element.children);
-    children.forEach((child: HTMLElement, i) => {
-      if (i === 0) {
-        return;
+  function hasNoRelevantChildNodes(element) {
+    const childNodes = element.childNodes;
+    for (let i = 0; i < childNodes.length; i++) {
+      const childNode = childNodes[i];
+      if (isRelevantNode(childNode)) {
+        return false;
       }
-      const prevChild = children[i - 1] as HTMLElement;
-      if (canMerge(prevChild, child)) {
-        const mergedText = prevChild.textContent + child.textContent;
-        prevChild.textContent = mergedText;
-        element.removeChild(child);
-      }
-    });
+    }
+    return true;
   }
 
+  function canMerge(prev, curr) {
+    return prev
+      && prev.nodeName === 'HIGHLIGHTED-TEXT'
+      && prev.getAttribute('probability') === curr.getAttribute('probability');
+  }
+  
+  function mergeHighlightedText(element) {
+    let prevSibling = element.previousSibling;
+    while (prevSibling && !isRelevantNode(prevSibling)) {
+      prevSibling = prevSibling.previousSibling;
+    }
+    if (canMerge(prevSibling, element)) {
+      prevSibling.textContent += element.textContent;
+      element.parentNode.removeChild(element);
+    }
+  }
+  
+  
   function removeNestedHighlights(element) {
     const content = element.innerHTML;
     const fragment = document.createRange().createContextualFragment(content);
@@ -77,16 +91,22 @@ function highlightSelection(selectionText: string, keep = false, merge = true) {
   }
 
   function keepNestedHighlights(element) {
+    const parent = element.parentNode;
     const childElements = Array.from(element.childNodes);
+
     childElements.forEach((child: HTMLElement) => {
       if (child.nodeName === 'HIGHLIGHTED-TEXT') {
         if (child.compareDocumentPosition(element) & Node.DOCUMENT_POSITION_FOLLOWING) {
-          element.parentNode.insertBefore(child, element.nextSibling);
+          parent.insertBefore(child, element.nextSibling);
         } else {
-          element.parentNode.insertBefore(child, element);
+          parent.insertBefore(child, element);
         }
       }
     });
+
+    if (hasNoRelevantChildNodes(element)) {
+      parent.removeChild(element);
+    }
   }
 
   function refactorNestedHighlights(element) {
@@ -96,13 +116,17 @@ function highlightSelection(selectionText: string, keep = false, merge = true) {
     else {
       removeNestedHighlights(element)
     }
-    if (merge) {
-      mergeSiblingHighlights(element.parentNode)
-    }
+  }
+
+  const selection = window.getSelection();
+  if (!selection || selection.rangeCount === 0) {
+    return null;
   }
   
   const range = window.getSelection().getRangeAt(0);
+
   const selectedNodes = getSelectedNodes(range);
+  
   const prob = String(Math.round(Math.random() * 50 +  50));
 
   selectedNodes.forEach((node) => {
@@ -116,6 +140,10 @@ function highlightSelection(selectionText: string, keep = false, merge = true) {
     const parent = highlight.parentNode;
     if (parent.nodeName === "HIGHLIGHTED-TEXT") {
       refactorNestedHighlights(parent)
+    }
+
+    if (merge) {
+      mergeHighlightedText(highlight)
     }
   });
 }
