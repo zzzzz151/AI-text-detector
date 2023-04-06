@@ -51,19 +51,19 @@ function NavBar( props ) {
         event.preventDefault();
         const formData = new FormData();
         formData.append('name', name);
-        formData.append('username', username);
+        formData.append('author', username);
         formData.append('description', description);
         formData.append('type', type);
-        {/* if type url append url, elif type scrypt, append script */}
         if (type === 'url') {
-            formData.append('url', url);
+            formData.append('api', url);
         } else if (type === 'script') {
             formData.append('script', scriptFile);
         }
+        console.log("FormDate: ",formData);
         client.post("/api/v1/uploadLM",{ 
             body: formData,
             method : 'post',
-         }, {withCredentials: true})
+         })
         .then(function(res) {
             console.log(res);
         })
