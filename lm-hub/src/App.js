@@ -30,7 +30,7 @@ function App() {
 
   return (
     <>
-      <NavBar isLogged = {currentUser} Username = {username}/>
+      <NavBar isLogged = {currentUser}/>
       <div className="bg-slate-400 h-full pt-10">
         <div className="p-8 justify-items-center ">
           <LMCard score={100} />

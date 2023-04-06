@@ -21,7 +21,7 @@ function NavBar( props ) {
     const [showScriptInput, setShowScriptInput] = useState(false);
     const [file, setFile] = useState(null);
     const fileInputRef = useRef(null);
-    const username = props.Username;
+    const username = "test"
 
     const currentUser = props.isLogged;
 
@@ -60,10 +60,7 @@ function NavBar( props ) {
             formData.append('script', scriptFile);
         }
         console.log("FormDate: ",formData);
-        client.post("/api/v1/uploadLM",{ 
-            body: formData,
-            method : 'post',
-         })
+        client.post("/api/v1/uploadLM", formData, { withCredentials: true })
         .then(function(res) {
             console.log(res);
         })
