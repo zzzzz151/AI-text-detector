@@ -60,7 +60,10 @@ function NavBar( props ) {
         } else if (type === 'script') {
             formData.append('script', scriptFile);
         }
-        client.post("/api/v1/uploadLM", formData, {withCredentials: true})
+        client.post("/api/v1/uploadLM",{ 
+            body: formData,
+            method : 'post',
+         }, {withCredentials: true})
         .then(function(res) {
             console.log(res);
         })
