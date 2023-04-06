@@ -28,7 +28,6 @@ class UserLoginSerializer(serializers.Serializer):
         
         if email and password:
             user = authenticate(email=email, username=username, password=password)
-            print(user)
             if not user:
                 raise ValidationError('Invalid email or password')
         else:

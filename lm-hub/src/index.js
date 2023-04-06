@@ -2,7 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import Login from './login';
+import Test from './test';
+import LoginTest from './logintest';
 import LoginFront from './loginFront';
 import RegistFront from './registFront';
 import reportWebVitals from './reportWebVitals';
@@ -14,9 +15,10 @@ root.render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />} />
-        <Route path="/login" element={<Login />} />
         <Route path="/loginFront" element={<LoginFront />} />
         <Route path="/registFront" element={<RegistFront />} />
+        <Route path="/test" element={<Test />} />
+        <Route path="/logintest" element={<LoginTest />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
