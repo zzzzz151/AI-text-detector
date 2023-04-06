@@ -1,10 +1,9 @@
 import sys
-
-import lm_name.lm_submission as lm
+import lm_submission as lm
 import socket
 import os
 
-from Docker.communicator import messages as m
+import messages as m
 
 
 def log(text):
@@ -54,7 +53,9 @@ if __name__ == "__main__":
 			lm_name = sys.argv[4]
 		except IndexError:
 			lm_name = "abcd"
+	log(f"NAME: {lm_name}")
 	model = IsolatedLanguageModel(lm_name)
+	log('test')
 
 	log(f"Connecting LM {lm_name} with port {port}")
 	with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:

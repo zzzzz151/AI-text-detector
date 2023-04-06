@@ -120,8 +120,8 @@ class LM_Upload(APIView):
     def post(self, request):
         #try:
         process_lm(request)
-    #except:
-        return Response(status=500)  # Internal server error
+        #except:
+            #return Response(status=500)  # Internal server error
 
         return Response(status=200)  # Ok
 
@@ -193,10 +193,10 @@ def process_lm(request):
     log("Received LM " + lm_name)
 
     if "script" in request.data:
-        save_path = f"AI_text_detector/LMs/{lm_name}/"
+        save_path = f"Docker/communicator/LMs/{lm_name}/"
         script = request.data["script"]
 
-        store_file(save_path, lm_name + '.py', script)
+        store_file(save_path, 'lm_submission.py', script)
         store_file(save_path, 'requirements.txt', "")
 
         save_lm(lm_name, "author here", "description here", script)

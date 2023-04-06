@@ -37,7 +37,25 @@ def container_is_running(client, container_name:str):
     return container_name in container_names
 def create_container_name(service_name, lm_name):
     return f"{service_name}_{lm_name}"
-def create_and_run_container(compose_file_path:str, service_name:str, container_name:str, extra_options:list):
+def build_image(compose_file_path:str, build_args:dict):
+    command = [
+        "docker", "compose",
+        "-f", compose_file_path,
+        "build",
+    ]
+    for env_name, env_value in build_args.items():
+        command.append("--build-arg")
+        command.append(f"{env_name}={env_value}")
+
+    subprocess.run(command)
+    """
+    try:
+        output = subprocess.check_output(command, stderr=subprocess.STDOUT, universal_newlines=True)
+        print(output)
+    except subprocess.CalledProcessError as e:
+        print(e.output)
+    """
+def run_image(compose_file_path:str, service_name:str, container_name:str, extra_options:list):
     command = [
         "docker", "compose",
         "-f", compose_file_path,
@@ -52,17 +70,21 @@ def create_and_run_container(compose_file_path:str, service_name:str, container_
         if indicator == 'e':
             command.insert(5, f"-{indicator}")
             command.insert(6, f"{arg_tuple[1]}={arg_tuple[2]}")
-        else: # e.g. key = v
+        elif indicator == 'v':
             command.insert(5, f"-{indicator}")
             command.insert(6, f"{arg_tuple[1]}")
+        else:
+            for arg in arg_tuple:
+                command.append(arg)
 
 
     subprocess.run(command, check=True)
 def start_container(container_name):
     subprocess.run(['docker', 'start', container_name])
-def create_or_run_container(client, compose_file_path:str, service_name:str, container_name:str, environment_variables:list):
+def create_or_run_container(client, compose_file_path:str, service_name:str, container_name:str, extra_options:list):
     if not container_exists(client, container_name):
-        create_and_run_container(compose_file_path, service_name, container_name, environment_variables)
+        build_image(compose_file_path, {"LM_NAME":extra_options[0][2]})
+        run_image(compose_file_path, service_name, container_name, extra_options)
     elif not container_is_running(client, container_name):
         start_container(container_name)
 def store_file(path, file_name, file):
@@ -75,16 +97,18 @@ def add_communicator(compose_file_path, lm_name):
     service_name = "communicator"
     env_vars = [
         ('e', "LM_NAME", lm_name),
-        ('v', f"/DjangoAPI/AI_text_detector/LMs/{lm_name}:/usr/app/src/{lm_name}"),
-        #('v', "./communicator.py:/usr/app/src/communicator.py"),
-        ('v', "/DjangoAPI/Docker/communicator/messages.py:/usr/app/src/messages.py"),
+        #('v', f"/DjangoAPI/AI_text_detector/LMs/{lm_name}:/usr/app/src/lm_name"),
+        #('v', "/DjangoAPI/Docker/communicator/communicator.py:/usr/app/src/communicator.py"),
+        #('v', "/DjangoAPI/Docker/communicator/messages.py:/usr/app/src/messages.py"),
+        #('pip3', 'install', '-r', f'/usr/app/src/lm_name/requirements.txt')
     ]
     create_or_run_container(client, compose_file_path, service_name, create_container_name(service_name, lm_name), env_vars)
     client.close()
 
 
 if __name__ == "__main__":
-    #"""
+    ...
+    """
     client = docker.from_env()
 
     compose_file_path = './communicator/docker-compose.yml'
@@ -108,4 +132,4 @@ if __name__ == "__main__":
     subprocess.run(['docker-compose', '-f', compose_file_path, 'stop', 'server'])
 
     client.close()
-    #"""
+    """

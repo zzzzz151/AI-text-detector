@@ -3,13 +3,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile_Communicator
-    command: sh -c "ls; python3 ./communicator.py"
-    container_name: communicator
+    command: sh -c "ls; sleep 15; python3 ./communicator.py"
     environment:
       LISTEN_HOST: server
       LISTEN_PORT: 5555
-    #depends_on:
-    #  - server
 
   server:
     build:
@@ -50,5 +47,5 @@ services:
     command:
       sh -c "ls; pip3 install -r requirements.txt; python manage.py runserver 0.0.0.0:8000"
     depends_on:
-      - db
+      #- db
       - server
