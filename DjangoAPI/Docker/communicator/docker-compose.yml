@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile_Communicator
-    command: sh -c "ls; sleep 15; python3 ./communicator.py"
+    command: sh -c "python3 ./communicator.py"
     environment:
       LISTEN_HOST: server
       LISTEN_PORT: 5555
@@ -12,7 +12,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile_Server
-    command: sh -c "ls; python3 ./server.py"
+    command: sh -c "python3 ./server.py"
     container_name: server
     environment:
       SEND_HOST: server
@@ -45,7 +45,7 @@ services:
       - "8000:8000"
     container_name: django_container
     command:
-      sh -c "ls; pip3 install -r requirements.txt; python manage.py runserver 0.0.0.0:8000"
+      sh -c "pip3 install -r requirements.txt; python manage.py runserver 0.0.0.0:8000"
     depends_on:
       #- db
       - server

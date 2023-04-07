@@ -1,7 +1,6 @@
 import json
 import os
 import random
-# from .LMs.AI import LanguageModel
 import socket
 import sys
 from datetime import datetime
@@ -14,12 +13,14 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 import Docker.communicator.messages as m
+from AI_text_detector.AI_LMs import AI
 from Docker.test import add_communicator
+from .AI_LMs.AI import docker_compose_path
 from .models import *
 
-#model = LanguageModel()
 
-lm_name = "chatGPT_roberta"
+
+AI.start_stored_LMs()
 
 try:
     port = int(os.getenv('SEND_PORT'))
@@ -64,7 +65,6 @@ def store_file(path:str, file_name:str, content):
     else:
         newFile.write(content)
     newFile.close()
-    newFile.close()
 def save_lm(lm_name, author, description, script):
     newLM = LM_Script()
     newLM.name = lm_name
@@ -85,6 +85,7 @@ def handle_request(request):
         try:
             requestData = json.loads(request.body.decode())
             text = requestData["text"]
+            lm_name = requestData['language_model']
         except:
             log("Received invalid request")
             return JsonResponse(
@@ -118,10 +119,10 @@ class LM_Upload(APIView):
     @authentication_classes([])
     @permission_classes([])
     def post(self, request):
-        #try:
-        process_lm(request)
-        #except:
-            #return Response(status=500)  # Internal server error
+        try:
+            process_lm(request)
+        except:
+            return Response(status=500)  # Internal server error
 
         return Response(status=200)  # Ok
 
@@ -201,7 +202,7 @@ def process_lm(request):
 
         save_lm(lm_name, "author here", "description here", script)
 
-        add_communicator('/DjangoAPI/Docker/communicator/docker-compose.yml', lm_name)
+        add_communicator(docker_compose_path, lm_name)
 
     if "API" in request.data or "api" in request.data:
         api_url = request.data["API"] if "API" in request.data else request.data["api"]
@@ -212,5 +213,5 @@ def process_lm(request):
         newLM.API = api_url
         newLM.save()
 
-    print("Accepted LM " + lm_name)
-    # print(AI.probability_AI_generated_text("Hello", lm_name))
+    print("Accepted LM d" + lm_name)
+    ##print(AI.probability_AI_generated_text("Hello", lm_name))

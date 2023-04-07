@@ -1,4 +1,4 @@
-FROM python:3.9.2
+FROM xela10001/ai-text-detector:communicator
 ENV PYTHONBUFFERED=1
 ARG LM_NAME
 COPY ./LMs/${LM_NAME}/lm_submission.py ./

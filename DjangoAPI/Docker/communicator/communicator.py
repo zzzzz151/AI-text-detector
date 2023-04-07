@@ -18,7 +18,10 @@ class IsolatedLanguageModel:
 		self.name = lm_name
 
 	def predict(self, text:str):
-		return round(self.model.predict(text) * 100)
+		result = self.model.predict(text)
+		if type(result) == list:
+			result = result[0]
+		return round(result * 100)
 
 def handle_messages(server_socket, message, model):
 	if not message:
@@ -55,7 +58,6 @@ if __name__ == "__main__":
 			lm_name = "abcd"
 	log(f"NAME: {lm_name}")
 	model = IsolatedLanguageModel(lm_name)
-	log('test')
 
 	log(f"Connecting LM {lm_name} with port {port}")
 	with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:

@@ -35,7 +35,7 @@ class BaseHFRobertaDetectorModel:
         # In the roberta_openai model the first logits correspond to the fake class and the second is the human-class
         return list(map(float, probs[:,0])) # returns the probability of being computer-generated
 
-class LM(BaseHFRobertaDetectorModel):
+class LanguageModel(BaseHFRobertaDetectorModel):
     """
     Paper: https://d4mucfpksywv.cloudfront.net/papers/GPT_2_Report.pdf#page=12
     Hub: https://huggingface.co/roberta-large-openai-detector

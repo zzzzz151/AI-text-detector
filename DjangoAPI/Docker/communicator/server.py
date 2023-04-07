@@ -97,9 +97,14 @@ def handle_messages(client_socket, selector):
 		predict(ID, text, lm)
 
 def predict(ID, text, lm_name):
-	predict_message = m.create_predict_message(ID, lm_name, text)
-	lm_socket = lm_name_dictionary[lm_name][0]
-	m.send_message_object(lm_socket, predict_message)
+	if lm_name in lm_name_dictionary.keys():
+		predict_message = m.create_predict_message(ID, lm_name, text)
+		lm_socket = lm_name_dictionary[lm_name][0]
+		m.send_message_object(lm_socket, predict_message)
+	else:
+		sock = django_sockets.pop(ID)
+		prob_message = m.create_probability_message(ID, lm_name, 0)
+		m.send_message_object(sock, prob_message)
 
 def add_lm(lm_name, client_socket):
 	log(f"Submitting {lm_name}")

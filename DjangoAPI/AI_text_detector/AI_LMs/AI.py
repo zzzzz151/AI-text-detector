@@ -1,17 +1,26 @@
 import time
+from datetime import datetime
 from typing import Union, List
 import pandas as pd
 import sys
 
-from .language_models.chatgpt_detector_roberta import ChatGPTRobertaDetectorModel
-from .language_models.roberta_openai_detector import OpenAIBaseRobertaGPT2DetectorModel, OpenAILargeRobertaGPT2DetectorModel
+from AI_text_detector.models import LM_Script, LM_API
+from Docker.test import start_communicator
 
-language_models = {
-        #"chatGPT": ChatGPTRobertaDetectorModel,
-        "openAIBase": OpenAIBaseRobertaGPT2DetectorModel,
-        #"openAILarge": OpenAILargeRobertaGPT2DetectorModel
-    }
+docker_compose_path = '/DjangoAPI/Docker/communicator/docker-compose.yml'
 
+def log(msg):
+    strDateTimeNow = str(datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
+    print(strDateTimeNow + " " + str(msg))
+    sys.stdout.flush()
+
+language_models = [
+    "chatGPT",
+    "openAIBase",
+    "openAILarge"
+]
+
+"""
 class LanguageModel:
     def __init__(self):
         # Warning: Takes time to load
@@ -40,6 +49,40 @@ class IsolatedLanguageModel:
         print("Loading model")
         self.model = className()
         self.name = lm_name
+"""
+
+# Clear database
+#LM_Script.objects.all().delete()
+#LM_API.objects.all().delete()
+
+"""
+lm = LM_Script()
+lm.name = "chatgpt-roberta"
+lm.author = "OpenAI"
+lm.description = "ChatGPT Roberta by OpenAI"
+lm.script = "chatgpt_detector_roberta.py"
+lm.save()
+
+lm = LM_Script()
+lm.name = "openai-roberta-base"
+lm.author = "OpenAI"
+lm.description = "Base Roberta by OpenAI"
+lm.script = "openai_base_roberta.py"
+lm.save()
+
+lm = LM_Script()
+lm.name = "openai-roberta-large"
+lm.author = "OpenAI"
+lm.description = "Large Roberta by OpenAI"
+lm.script = "openai_large_roberta.py"
+lm.save()
+"""
+
+def start_stored_LMs():
+    lms = LM_Script.objects.all()
+    log(f"LMs: {lms}")
+    for lm_object in lms:
+        start_communicator(lm_object.name)
 
 
 
@@ -86,6 +129,8 @@ class TestLanguageModel:
 
 
 if __name__ == '__main__':
+    ...
+    """
     def test_while_loop(model: LanguageModel):
         while True:
             input_text = input("Input text: ")
@@ -94,7 +139,6 @@ if __name__ == '__main__':
             print(f"Probability of being computer-generated: {model.probability_AI_generated_text(input_text, 'openAIBase')}")
 
 
-    #"""
     model = LanguageModel()
     test_while_loop(model)
 
@@ -111,8 +155,8 @@ if __name__ == '__main__':
     
 
     #test_while_loop(model)
-    #"""
 
     for model_class in list(language_models.values()):
         test_model = TestLanguageModel(model_class)
         test_model.test_model("LMs/train.tsv")
+    """

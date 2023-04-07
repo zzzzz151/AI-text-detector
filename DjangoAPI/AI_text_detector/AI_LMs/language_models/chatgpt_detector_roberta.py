@@ -3,7 +3,7 @@ from typing import Union, List
 import torch
 
     
-class LM:
+class LanguageModel:
 
     def __init__(self):
         """

@@ -27,6 +27,8 @@ import subprocess
 import docker
 import os
 
+service_name = "communicator"
+
 def container_exists(client, container_name:str):
     containers = client.containers.list(all=True)
     container_names = [c.name for c in containers]
@@ -42,12 +44,13 @@ def build_image(compose_file_path:str, build_args:dict):
         "docker", "compose",
         "-f", compose_file_path,
         "build",
+        "--quiet"
     ]
     for env_name, env_value in build_args.items():
         command.append("--build-arg")
         command.append(f"{env_name}={env_value}")
 
-    subprocess.run(command)
+    subprocess.run(command, check=True)
     """
     try:
         output = subprocess.check_output(command, stderr=subprocess.STDOUT, universal_newlines=True)
@@ -94,7 +97,6 @@ def store_file(path, file_name, file):
     newFile.close()
 def add_communicator(compose_file_path, lm_name):
     client = docker.from_env()
-    service_name = "communicator"
     env_vars = [
         ('e', "LM_NAME", lm_name),
         #('v', f"/DjangoAPI/AI_text_detector/LMs/{lm_name}:/usr/app/src/lm_name"),
@@ -103,6 +105,12 @@ def add_communicator(compose_file_path, lm_name):
         #('pip3', 'install', '-r', f'/usr/app/src/lm_name/requirements.txt')
     ]
     create_or_run_container(client, compose_file_path, service_name, create_container_name(service_name, lm_name), env_vars)
+    client.close()
+def start_communicator(lm_name):
+    client = docker.from_env()
+    container_name = create_container_name(service_name, lm_name)
+    if not container_is_running(client, container_name):
+        start_container(container_name)
     client.close()
 
 
