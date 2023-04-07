@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 
 UserModel = get_user_model()
 
+
 def custom_validation(data):
     email = data['email'].strip()
     username = data['username'].strip()
@@ -25,11 +26,13 @@ def validate_email(data):
         raise ValidationError('Email is required')
     return True
 
+
 def validate_username(data):
     username = data['username'].strip()
     if not username:
         raise ValidationError('Username is required')
     return True
+
 
 def validate_password(data):
     password = data['password'].strip()

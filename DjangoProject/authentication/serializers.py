@@ -1,40 +1,56 @@
-from django.forms import ValidationError
-from rest_framework import serializers
 from django.contrib.auth import get_user_model, authenticate
+from rest_framework import serializers
 
 UserModel = get_user_model()
 
-class UserRegisterSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = UserModel
-		fields = '__all__'
-	def create(self, clean_data):
-		user_obj = UserModel.objects.create_user(email=clean_data['email'], username=clean_data['username'], password=clean_data['password'])
-		user_obj.save()
-		return user_obj
 
-class UserLoginSerializer(serializers.Serializer):
-    email = serializers.EmailField()
-    password = serializers.CharField()
-    
+class UserRegisterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserModel
+        fields = '__all__'
+
+    def validate(self, data):
+        # Check if a user with the same username already exists
+        if UserModel.objects.filter(username=data['username']).exists():
+            raise serializers.ValidationError({'username': 'A user with this username already exists.'})
+        # Check if a user with the same email already exists
+        if UserModel.objects.filter(email=data['email']).exists():
+            raise serializers.ValidationError({'email': 'A user with this email already exists.'})
+        return data
+
+    def create(self, validated_data):
+        try:
+            user = UserModel.objects.create_user(
+                username=validated_data['username'],
+                email=validated_data['email'],
+                password=validated_data['password']
+            )
+            return user
+        except Exception as e:
+            # Log the error or handle it as appropriate for your application
+            return None
+
+
+class UserLoginSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserModel
+        fields = ('email', 'password')
+
     def check_user(self, clean_data):
         email = clean_data.get('email')
         # from UserModel.objects get username by email
         username = UserModel.objects.get(email=email).username
-        
+
         password = clean_data.get('password')
-        
+
         if email and password:
             user = authenticate(email=email, username=username, password=password)
-            if not user:
-                raise ValidationError('Invalid email or password')
-        else:
-            raise ValidationError('Email and password are required')
-        
-        return user
+            if user:
+                return user
+        return None
 
 
 class UserSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = UserModel
-		fields = ('email', 'username')
+    class Meta:
+        model = UserModel
+        fields = ('email', 'username')
