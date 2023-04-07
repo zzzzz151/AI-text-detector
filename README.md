@@ -10,15 +10,9 @@ Daniel Ferreira (102885)
 
 Ricardo Pinto (103078)
 
-João Matos (103182)
-
 # Project website
 
 https://zzzzz151.github.io/AI-text-detector/
-
-# API
-
-http://zzzzz151.pythonanywhere.com/api/v1/
 
 # Abstract
 

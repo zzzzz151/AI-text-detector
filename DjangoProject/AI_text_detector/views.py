@@ -4,19 +4,16 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import random
 import json
-from .AI.AI2 import AI2
-from datetime import datetime
+from .AI2 import AI2
 from rest_framework.views import APIView
 from rest_framework import parsers
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
 from .models import *
+from pathlib import Path
+from .logger import log
 
 AI = AI2()
-
-def log(msg):
-    strDateTimeNow = str(datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
-    print(strDateTimeNow + " " + msg)
 
 @csrf_exempt
 def handle_request(request):
@@ -76,21 +73,26 @@ class LM_Upload(APIView):
             lm_name = request.data["name"]
             lm_author = request.data["author"]
             lm_description = request.data["description"]
-            print("Received LM " + lm_name)
+            log("Received LM '" + lm_name + "'")
+            assert len(LM_Script.objects.filter(name=lm_name)) == 0 # Assert this LM name doesnt exist in database
+            assert len(LM_API.objects.filter(name=lm_name)) == 0 # Assert this LM name doesnt exist in database
 
             if "script" in request.data:
-                save_path = "AI_text_detector/AI/language_models/"
                 script = request.data["script"]
-                newFile = open(save_path + script.name, "w")
+                save_folder = "AI_text_detector/language_models/"
+                save_path = save_folder + script.name # AI_text_detector/language_models/thisNewLM.py
+                if save_path[-3:] != ".py":
+                    save_path += ".py"
+                assert not Path(save_path).is_file() # Assert a file with this name doesnt exist
+                newFile = open(save_path, "w")
                 newFile.write(script.read().decode("utf-8"))
                 newFile.close()
-                AI.loadLM(lm_name, script.name)
-
+                AI.loadLM(lm_name, save_path)
                 newLM = LM_Script()
                 newLM.name = lm_name
                 newLM.author = lm_author
                 newLM.description = lm_description
-                newLM.script = script
+                newLM.script = save_path # AI_text_detector/language_models/thisNewLM.py
                 newLM.save()
 
             if "API" in request.data or "api" in request.data:
@@ -102,9 +104,10 @@ class LM_Upload(APIView):
                 newLM.API = api_url
                 newLM.save()
 
-            print("Accepted LM " + lm_name)
-            #print(AI.probability_AI_generated_text("Hello", lm_name))
+            log("Accepted LM '" + lm_name + "'")
+            #log(AI.probability_AI_generated_text("Hello", lm_name))
         except:
+            log("Refused LM '" + lm_name + "'")
             return Response(status=500) # Internal server error
 
         return Response(status=200) # Ok
@@ -165,7 +168,9 @@ def my_LM_as_API(request):
 
 def execute_code(request):
     # insert test code here
-    
+    log(len(LM_Script.objects.filter(name="openai-roberta-base")))
+    log(len(LM_Script.objects.filter(name="aogpatgta")))
+
     return JsonResponse(
         {},
         status=200,

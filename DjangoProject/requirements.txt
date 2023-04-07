@@ -10,3 +10,5 @@ regex
 datetime
 pandas
 mysqlclient
+#transformers==4.27.1
+#torch==2.0.0

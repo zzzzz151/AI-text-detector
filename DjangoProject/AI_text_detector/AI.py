@@ -3,12 +3,13 @@ from typing import Union, List
 import pandas as pd
 import sys
 
-from .language_models.chatgpt_detector_roberta import ChatGPTRobertaDetectorModel
-from .language_models.roberta_openai_detector import OpenAIBaseRobertaGPT2DetectorModel, OpenAILargeRobertaGPT2DetectorModel
+from .language_models.chatgpt_detector_roberta import LM as chatgpt
+from .language_models.openai_base_roberta import LM as base
+from .language_models.openai_large_roberta import LM as large
 
 language_models = {
         #"chatGPT": ChatGPTRobertaDetectorModel,
-        "openAIBase": OpenAIBaseRobertaGPT2DetectorModel,
+        "openAIBase": base,
         #"openAILarge": OpenAILargeRobertaGPT2DetectorModel
     }
 
