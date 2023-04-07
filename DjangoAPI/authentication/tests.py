@@ -18,16 +18,30 @@ class UserLoginLogoutTestCase(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user('test_user', 'test@test.com', 'test1234')
 
-    def test_login_user_with_correct_credentials(self):
+    def test_login_user_with_correct_credentials_email(self):
         url = reverse('login')
-        data = {'email': 'test@test.com', 'password': 'test1234'}
+        data = {'user_id': 'test@test.com', 'password': 'test1234'}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue('sessionid' in response.cookies)
+
+    def test_login_user_with_correct_credentials_username(self):
+        url = reverse('login')
+        data = {'user_id': 'test_user', 'password': 'test1234'}
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue('sessionid' in response.cookies)
 
     def test_login_user_with_incorrect_credentials(self):
         url = reverse('login')
-        data = {'email': 'test@test.com', 'password': 'wrongpassword'}
+        data = {'user_id': 'test@test.com', 'password': 'wrongpassword'}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertFalse('sessionid' in response.cookies)
+
+    def test_login_user_with_incorrect_format(self):
+        url = reverse('login')
+        data = {'teste': 'teste', 'teste2': 'teste2'}
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertFalse('sessionid' in response.cookies)
@@ -44,7 +58,7 @@ class UserViewTestCase(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user('test_user', 'test@test.com', 'test1234')
         url = reverse('login')
-        data = {'email': 'test@test.com', 'password': 'test1234'}
+        data = {'user_id': 'test@test.com', 'password': 'test1234'}
         response = self.client.post(url, data, format='json')
         self.assertTrue(self.user.is_authenticated)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
