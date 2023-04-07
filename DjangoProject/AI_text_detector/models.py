@@ -14,7 +14,7 @@ class LM(models.Model):
 
 class LM_Script(LM):
     TYPE = "script"
-    script = models.FileField()
+    script = models.CharField(max_length=200)
 
 
 class LM_API(LM):

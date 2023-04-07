@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import include, path, re_path
 from AI_text_detector.views import handle_request, LM_Upload, get_LMs, my_LM_as_API, execute_code
 from authentication.views import *
+from LM_hub.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,5 +28,8 @@ urlpatterns = [
     re_path(r'api/v1/LMs/?$', get_LMs),
     re_path(r'api/v1/myLM/?$', my_LM_as_API),
     re_path(r'api/v1/executeCode/?$', execute_code),
+    path('LM-hub', lm_hub, name="lm-hub"),
+    path('login', login, name="login"),
+    path('register', register, name="register"),
 
 ]
