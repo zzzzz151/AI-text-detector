@@ -29,5 +29,7 @@ urlpatterns = [
     re_path(r'api/v1/myLM/?$', my_LM_as_API),
     re_path(r'api/v1/executeCode/?$', execute_code),
     path('LM-hub', lm_hub, name="lm-hub"),
+    path('login', login, name="login"),
+    path('register', register, name="register"),
 
 ]

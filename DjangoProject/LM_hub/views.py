@@ -8,6 +8,12 @@ def lm_hub(request):
   data = {"LMs" : get_all_LMs()}
   return render(request, "lm-hub.html", data)
 
+def login(request):
+  return render(request, "login.html")
+
+def register(request):
+  return render(request, "register.html")
+
 def get_all_LMs():
     scripts = LM_Script.objects.all()
     APIs = LM_API.objects.all()
