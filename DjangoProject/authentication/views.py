@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 
 from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerializer
 
+
 class UserRegister(APIView):
     permission_classes = (permissions.AllowAny,)
 
@@ -26,16 +27,12 @@ class UserLogin(APIView):
     authentication_classes = (SessionAuthentication,)
 
     def post(self, request):
-        data = request.data
-        serializer = UserLoginSerializer(data=data)
+        serializer = UserLoginSerializer(data=request.data)
         if serializer.is_valid():
-            user = serializer.check_user(data)
-            if user is None:
-                return Response({'error': 'Invalid email or password.'}, status=status.HTTP_400_BAD_REQUEST)
+            user = serializer.authenticated_user
             login(request, user)
             return Response(serializer.data, status=status.HTTP_200_OK)
-        errors = serializer.errors
-        return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserLogout(APIView):
