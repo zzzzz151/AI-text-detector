@@ -22,7 +22,7 @@ def login(request):
         url = reverse('authentication:login')
         response = requests.post(request.build_absolute_uri(url), data)
         if response.status_code == 200:
-            return render(request, 'lm-hub.html')
+            return render(request, 'lm-hub.html', {"LMs" : get_all_LMs()})
 
     return render(request, "registration/login.html")
 
