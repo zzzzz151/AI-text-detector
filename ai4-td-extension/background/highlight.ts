@@ -48,6 +48,10 @@ function highlightSelection(data, keep = false, merge = true) {
   function createHighlightElement() {
     const highlight = document.createElement('highlighted-text');
     highlight.setAttribute("probability", data.probability_AI_generated);
+    if (data.probability_AI_generated < 50) {
+      highlight.style.backgroundColor = "#d5e0f240";
+      highlight.style.borderBottom = "2px solid #d5e0f2";
+    }
     return highlight;
   }
 

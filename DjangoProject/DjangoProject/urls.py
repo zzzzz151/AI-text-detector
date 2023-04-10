@@ -22,7 +22,7 @@ from LM_hub.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
-    path('authentication/', include('authentication.urls')),
+    path('authentication/', include('authentication.urls', namespace='authentication')),
     re_path(r'api/v1/?$', handle_request),
     re_path(r'api/v1/uploadLM/?$', LM_Upload.as_view()),
     re_path(r'api/v1/LMs/?$', get_LMs),
