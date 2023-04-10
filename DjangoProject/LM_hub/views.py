@@ -1,15 +1,30 @@
+import requests
 from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import render
 from itertools import chain
+
+from django.urls import reverse
+
 from AI_text_detector.models import LM_Script, LM_API
+from rest_framework import permissions, status
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 def lm_hub(request):
   data = {"LMs" : get_all_LMs()}
   return render(request, "lm-hub.html", data)
 
 def login(request):
-  return render(request, "login.html")
+    if request.POST:
+        data = {'user_id': request.POST['email'], 'password': request.POST['password']}
+        url = reverse('authentication:login')
+        response = requests.post(request.build_absolute_uri(url), data)
+        if response.status_code == 200:
+            return render(request, 'lm-hub.html')
+
+    return render(request, "registration/login.html")
 
 def register(request):
   return render(request, "register.html")

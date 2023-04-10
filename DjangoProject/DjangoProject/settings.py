@@ -32,7 +32,8 @@ ALLOWED_HOSTS = [
     "zzzzz151.pythonanywhere.com"
 ]
 
-LOGIN_REDIRECT_URL = "/"
+LOGIN_URL = "login"
+LOGIN_REDIRECT_URL = "/LM-hub"
 
 
 # Application definition

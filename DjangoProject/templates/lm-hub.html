@@ -40,24 +40,37 @@
           <li class="nav-item" style="padding-right:12px">
             <button type="button" class="btn btn-primary" onclick="onClickUploadLM()">Upload LM</button>
           </li>
-          <li class=" nav-item" id="signUp">
-              <a class="nav-link" href="register.html">
-                <i class="fa fa-user-plus"></i> Sign Up
-              </a>
+          {% if not user.is_authenticated %}
+
+          <li class="nav-item" id="signUp">
+            <a class="nav-link" href="register.html">
+              <i class="fa fa-user-plus"></i> Sign Up
+            </a>
           </li>
           <li id="logIn" class="nav-item">
-            <a class="nav-link" href="login.html">
+
+            <a class="nav-link" href="registration/login.html">
               <i class="fa fa-sign-in"></i> Log In
             </a>
           </li>
-          <li id="username" class="nav-item d-none" style="padding-right:12px">
-            <a class="nav-link" id="username-text"></a>
-          </li>
-          <li id="logOut" class="nav-item d-none">
-            <a class="nav-link" href="#">
-              <i class="fa fa-sign-out"></i> Log Out
-            </a>
-          </li>
+          {% else %}
+            <li id="username" class="nav-item">
+              <a class="nav-link" href="registration/login.html">
+                {{ user.username }}
+              </a>
+            </li>
+            <li class="nav-item d-none">
+              <a class="nav-link" href="#">
+                <i class="fa fa-sign-out"></i> Log Odut
+              </a>
+            </li>
+            <li id="logOut" class="nav-item d-none">
+              <a class="nav-link" href="#">
+                <i class="fa fa-sign-out"></i> Log Out
+              </a>
+            </li>
+          {% endif %}
+
         </ul>
       </div>
     </div>
@@ -122,7 +135,7 @@
       $("#myModal").modal('show');
     });
 
-    let USERNAME = "zzzzz";
+    let USERNAME = user.username;
     let IS_LOGGED_IN = true;
     function toggleNavbarLoginLogout() {
       if (IS_LOGGED_IN) {
