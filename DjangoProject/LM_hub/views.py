@@ -1,7 +1,7 @@
 import requests
 from django.http import HttpResponse
 from django.template import loader
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from itertools import chain
 
 from django.urls import reverse
@@ -23,11 +23,17 @@ def login(request):
         response = requests.post(request.build_absolute_uri(url), data)
         if response.status_code == 200:
             return render(request, 'lm-hub.html', {"LMs" : get_all_LMs()})
-
     return render(request, "registration/login.html")
 
 def register(request):
-  return render(request, "register.html")
+    if request.POST:
+        print(request.POST)
+        data = {'username': request.POST['username'], 'email': request.POST['email'], 'password': request.POST['password']}
+        url = reverse('authentication:register')
+        response = requests.post(request.build_absolute_uri(url), data)
+        if response.status_code == 201:
+            return redirect('login')
+    return render(request, "register.html")
 
 def get_all_LMs():
     scripts = LM_Script.objects.all()
