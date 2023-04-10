@@ -32,6 +32,8 @@ ALLOWED_HOSTS = [
     "zzzzz151.pythonanywhere.com"
 ]
 
+LOGIN_REDIRECT_URL = "/"
+
 
 # Application definition
 

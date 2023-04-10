@@ -24,15 +24,16 @@
                 <div class="card-body p-5">
                   <h2 class="text-uppercase text-center mb-5">LOGIN</h2>
 
-                  <form>
-
+                  <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
                     <div class="form-outline mb-4">
-                      <input type="email" id="form3Example1cg" class="form-control form-control-lg" />
+                      <input name="email" type="email" id="form3Example1cg" class="form-control form-control-lg" />
                       <label class="form-label" for="form3Example1cg">Email</label>
                     </div>
 
                     <div class="form-outline mb-4">
-                      <input type="password" id="form3Example4cg" class="form-control form-control-lg" />
+                      <input name="password" type="password" id="form3Example4cg" class="form-control form-control-lg" />
                       <label class="form-label" for="form3Example4cg">Password</label>
                     </div>
                     <div class="d-flex justify-content-center">
