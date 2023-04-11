@@ -32,5 +32,5 @@ urlpatterns = [
     path('LM-hub', lm_hub, name="lm-hub"),
     path('login', login, name="login"),
     path('register', register, name="register"),
-
+    path('logout', logout, name='logout')
 ]

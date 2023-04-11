@@ -22,7 +22,6 @@ def login(request):
         data = {'user_id': request.POST['email'], 'password': request.POST['password']}
         url = reverse('authentication:login')
         response = requests.post(request.build_absolute_uri(url), data)
-        print(response.json())
         if response.status_code == 200:
             request.session['user'] = response.json().get('user')
             return redirect('lm-hub')
@@ -30,13 +29,21 @@ def login(request):
 
 def register(request):
     if request.POST:
-        print(request.POST)
         data = {'username': request.POST['username'], 'email': request.POST['email'], 'password': request.POST['password']}
         url = reverse('authentication:register')
         response = requests.post(request.build_absolute_uri(url), data)
         if response.status_code == 201:
             return redirect('login')
     return render(request, "register.html")
+
+def logout(request):
+    print(request.POST)
+    url = reverse('authentication:logout')
+    response = requests.post(request.build_absolute_uri(url))
+    if response.status_code == 200:
+        request.session.pop('user')
+        return redirect('lm-hub')
+    return render(request, 'lm-hub.html')
 
 def get_all_LMs():
     scripts = LM_Script.objects.all()

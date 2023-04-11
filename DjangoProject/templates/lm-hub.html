@@ -53,12 +53,12 @@
           </li>
           {% else %}
             <li id="username" class="nav-item">
-              <a class="nav-link" href="registration/login.html">
+              <a class="nav-link">
                 {{ user }}
               </a>
             </li>
-            <li id="logOut" class="nav-item d-none">
-              <a class="nav-link" href="#">
+            <li id="logOut" class="nav-item">
+              <a class="nav-link" href="logout">
                 <i class="fa fa-sign-out"></i> Log Out
               </a>
             </li>
@@ -129,7 +129,7 @@
     });
 
     let USERNAME = {{ user }};
-    let IS_LOGGED_IN = {% if user %}true{% else %}false{% endif %};
+    let IS_LOGGED_IN = {% if user %} true {% else %} false {% endif %};
     function toggleNavbarLoginLogout() {
       if (IS_LOGGED_IN) {
         $("#add-LM-a-tag").attr("href", "http://localhost:8000/login")
