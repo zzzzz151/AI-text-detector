@@ -1,0 +1,14 @@
+django_rest_framework
+markdown
+django-filter
+django-cors-headers
+#transformers
+#torch
+requests
+bs4
+regex
+datetime
+pandas
+mysqlclient
+#transformers==4.27.1
+#torch==2.0.0
