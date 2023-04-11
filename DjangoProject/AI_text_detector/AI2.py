@@ -9,8 +9,8 @@ from .logger import log
 from AI_text_detector.models import LM_Script, LM_API
 
 # Clear database
-#LM_Script.objects.all().delete()
-#LM_API.objects.all().delete()
+LM_Script.objects.all().delete()
+LM_API.objects.all().delete()
 
 lm = LM_Script()
 lm.name = "chatgpt-roberta"
