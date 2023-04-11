@@ -129,7 +129,7 @@
     });
 
     let USERNAME = {% user %};
-    let IS_LOGGED_IN = {% if user %}{% endif %};
+    let IS_LOGGED_IN = {% if user %}true{% else %}false{% endif %};
     function toggleNavbarLoginLogout() {
       if (IS_LOGGED_IN) {
         $("#add-LM-a-tag").attr("href", "http://localhost:8000/login")
