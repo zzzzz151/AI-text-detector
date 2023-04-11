@@ -43,7 +43,8 @@ def logout(request):
     if response.status_code == 200:
         request.session.pop('user')
         return redirect('lm-hub')
-    return render(request, 'lm-hub.html')
+    data = {"LMs" : get_all_LMs(), 'user': user}
+    return render(request, "lm-hub.html", data)
 
 def get_all_LMs():
     scripts = LM_Script.objects.all()
@@ -52,4 +53,3 @@ def get_all_LMs():
         chain(scripts, APIs),
         key=lambda lm: lm.name,)
     return LMs
-

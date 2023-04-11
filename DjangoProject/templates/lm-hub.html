@@ -53,7 +53,7 @@
           </li>
           {% else %}
             <li id="username" class="nav-item">
-              <a class="nav-link">
+              <a class="nav-link" id="usernameDisplay">
                 {{ user }}
               </a>
             </li>
@@ -123,30 +123,17 @@
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
   <script>
-    $(document).ready(function () {
-      toggleNavbarLoginLogout();
-      $("#myModal").modal('show');
-    });
-
-    let USERNAME = {{ user }};
     let IS_LOGGED_IN = {% if user %} true {% else %} false {% endif %};
-    function toggleNavbarLoginLogout() {
-      if (IS_LOGGED_IN) {
-        $("#add-LM-a-tag").attr("href", "http://localhost:8000/login")
-        $("#signUp").addClass("d-none");
-        $("#logIn").addClass("d-none");
-        $("#logOut").removeClass("d-none");
-        $("#username-text").text(USERNAME);
-        $("#username").removeClass("d-none");
+    let USERNAME = "";
 
+    $(document).ready(function () {
+      console.log("IS_LOGGED_IN " + IS_LOGGED_IN);
+      if (IS_LOGGED_IN)
+      {
+        USERNAME = document.getElementById("usernameDisplay").textContent.trim();
       }
-      else {
-        $("#logOut").addClass("d-none");
-        $("#username").addClass("d-none");
-        $("#logIn").removeClass("d-none");
-        $("#signUp").removeClass("d-none");
-      }
-    }
+      console.log("USERNAME '" + USERNAME + "'");
+    });
 
     function onClickUploadLM() {
       if (!IS_LOGGED_IN) {
