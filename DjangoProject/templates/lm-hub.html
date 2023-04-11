@@ -128,8 +128,8 @@
       $("#myModal").modal('show');
     });
 
-    let USERNAME = 'zzzzz';
-    let IS_LOGGED_IN = true;
+    let USERNAME = {% user %};
+    let IS_LOGGED_IN = {% if user %}{% endif %};
     function toggleNavbarLoginLogout() {
       if (IS_LOGGED_IN) {
         $("#add-LM-a-tag").attr("href", "http://localhost:8000/login")
