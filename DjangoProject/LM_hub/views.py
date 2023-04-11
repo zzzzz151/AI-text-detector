@@ -13,16 +13,19 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 def lm_hub(request):
-  data = {"LMs" : get_all_LMs()}
-  return render(request, "lm-hub.html", data)
+    user = request.session.get('user')
+    data = {"LMs" : get_all_LMs(), 'user': user}
+    return render(request, "lm-hub.html", data)
 
 def login(request):
     if request.POST:
         data = {'user_id': request.POST['email'], 'password': request.POST['password']}
         url = reverse('authentication:login')
         response = requests.post(request.build_absolute_uri(url), data)
+        print(response.json())
         if response.status_code == 200:
-            return render(request, 'lm-hub.html', {"LMs" : get_all_LMs()})
+            request.session['user'] = response.json().get('user')
+            return redirect('lm-hub')
     return render(request, "registration/login.html")
 
 def register(request):

@@ -40,7 +40,7 @@
           <li class="nav-item" style="padding-right:12px">
             <button type="button" class="btn btn-primary" onclick="onClickUploadLM()">Upload LM</button>
           </li>
-          {% if not user.is_authenticated %}
+          {% if not user %}
           <li class="nav-item" id="signUp">
             <a class="nav-link" href="register">
               <i class="fa fa-user-plus"></i> Sign Up
@@ -54,7 +54,7 @@
           {% else %}
             <li id="username" class="nav-item">
               <a class="nav-link" href="registration/login.html">
-                {{ user.username }}
+                {{ user }}
               </a>
             </li>
             <li id="logOut" class="nav-item d-none">

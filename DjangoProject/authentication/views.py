@@ -31,7 +31,7 @@ class UserLogin(APIView):
         if serializer.is_valid():
             user = serializer.authenticated_user
             login(request, user)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response({"user": user.username}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
