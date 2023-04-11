@@ -128,7 +128,7 @@
       $("#myModal").modal('show');
     });
 
-    let USERNAME = {% user %};
+    let USERNAME = {{ user }};
     let IS_LOGGED_IN = {% if user %}true{% else %}false{% endif %};
     function toggleNavbarLoginLogout() {
       if (IS_LOGGED_IN) {
