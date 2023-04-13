@@ -6,7 +6,7 @@ import ListItemMessage from "~components/list-item/list-item-message";
 import ListItemSettings from "~components/list-item/list-item-settings";
 import ListItemSwitcher from "~components/list-item/list-item-switcher";
 import ListItemSelect from "~components/list-item/list-item-select";
-import useLanguageModelOptions from "~components/hooks/language-modals";
+import useLanguageModelOptions from "~components/hooks/language-models";
 
 function Popup() {
     return (
@@ -34,7 +34,7 @@ function Popup() {
                     <Divider light variant="middle" sx={{width: "100%"}}/>
                     <ListItemColorPicker default="#FF0000" id="highlight-color-strong" text="Highlight color (75-100)"/>
                     <Divider light variant="middle" sx={{width: "100%"}}/>
-                    <ListItemSelect hook={useLanguageModelOptions} id="language-model" text="Language model"/>
+                    <ListItemSelect hook={useLanguageModelOptions} id="model" text="Model"/>
                     <Divider light variant="middle" sx={{width: "100%"}}/>
                 </Box>
                 <ListItemMessage />

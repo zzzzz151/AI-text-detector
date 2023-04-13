@@ -8,7 +8,7 @@ const URL = "http://127.0.0.1:8000/api/v1";
 
 const injectHighlight = async (info) => {
   if (info.menuItemId === "scan-text") {
-    const languageModel = await storage.get("language-model");
+    const languageModel = await storage.get("model");
     callApi(URL, { "language_model": languageModel, "text": info.selectionText })
     .then(async data => {
       console.log(languageModel)

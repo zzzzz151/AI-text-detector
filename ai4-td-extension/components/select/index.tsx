@@ -8,15 +8,15 @@ function Select({ options, value, onChange }) {
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState(value);
   const inputRef = useRef(null);
+
   const trie = useMemo(() => buildTrie(options), [options]);
+  const filteredOptions = trie.search(inputValue ?? '');
 
   useEffect(() => {
     if (value) {
       setInputValue(value)
     }
   }, [value])
-
-  const filteredOptions = trie.search(inputValue ?? '');
 
   function toggleSelectOptions() {
     setIsOpen(true);
