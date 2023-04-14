@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-function useReadyState(): [(...what: Array<"success" | "error" | "loading" | "default">) => boolean, () => void, () => void, () => void, () => void] {
+function useReadyState(): [(...what: Array<"success" | "error" | "loading" | "default" | "reload">) => boolean, () => void, () => void, () => void, () => void, () => void] {
   const [state, setState] = useState(0);  
 
   const setSuccess = () => {
@@ -15,11 +15,15 @@ function useReadyState(): [(...what: Array<"success" | "error" | "loading" | "de
     setState(2)
   }
 
+  const reload = () => {
+    setState(3)
+  }
+
   const reset = () => {
     setState(0)
   }
 
-  const is = (...what: Array<"success" | "error" | "loading" | "default">) => {
+  const is = (...what: Array<"success" | "error" | "loading" | "default" | "reload">) => {
     return what.some(w => {
       switch(w) {
         case "success":
@@ -28,6 +32,8 @@ function useReadyState(): [(...what: Array<"success" | "error" | "loading" | "de
           return state == -1;
         case "loading":
           return state == 2;
+        case "reload":
+          return state == 3;
         case "default":
           return state == 0;
         default:
@@ -36,7 +42,7 @@ function useReadyState(): [(...what: Array<"success" | "error" | "loading" | "de
     });
   }
 
-  return [is, setSuccess, setError, setLoading, reset];
+  return [is, setSuccess, setError, setLoading, reset, reload];
 }
 
 export default useReadyState

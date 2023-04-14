@@ -7,17 +7,17 @@ import useReadyState from "~components/hooks/ready";
 import { analysePage, cleanPage } from "~resources/utils";
 
 function GlobalMenu() {
-    const [is, setSuccess, setError, setLoading, reset] = useReadyState();
+    const [is, setSuccess, setError, setLoading, reset, reload] = useReadyState();
     const [anchor, setAnchor] = useState(false);
     const [data, setData] = useState(null);
-    const [reload, setReload] = useState(false);
     const [autoscan] = useStorage<boolean>("scan-page-automatically");
-    const [languageModel] = useStorage<string>("language-model", v => v ?? 'openai-roberta-base');
+    const [languageModel] = useStorage<string>("model", v => v ?? 'openai-roberta-base');
  
-    const canScan = is("default");
+    const isReloading = is("reload");
+    const isDefault = is("default");
 
     const handleClick = () => {
-        if (canScan) {
+        if (isDefault || isReloading) {
             setLoading();
             analysePage(languageModel)
             .then((data: number) => {
@@ -41,21 +41,19 @@ function GlobalMenu() {
 
     /* Could have problems */
     const handleReloadClick = () => {
-        reset();
         setAnchor(false);
-        setReload(true);
+        reload();
     };
 
     useEffect(() => {
-        if (reload) {
-            setReload(false);
+        if (isReloading) {
             cleanPage();  
             handleClick();
         }
-      }, [reload]);
+      }, [isReloading]);
 
     useEffect(() => {
-        if (autoscan && canScan) {
+        if (autoscan && isDefault) {
           handleClick();
         }
     }, [autoscan]);

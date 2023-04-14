@@ -31,11 +31,7 @@ function GlobalButton({onClick, is}) {
               ...buttonSx // Include any other styles from the buttonSx object
               }}
           >
-          {is("success", "error")?
-          (<AiFillSecurityScan size={35} color={"#fff"} />)
-          :
-          (<AiFillSecurityScan size={35} color={"#6a1b9a"} />)
-          }
+          <AiFillSecurityScan size={35} color={is("success", "error") ? "#fff" : "#6a1b9a"} />
           </Fab>
           {is("loading") &&
           (<CircularProgress
