@@ -37,9 +37,7 @@ function Popup() {
                     <ListItemSelect hook={useLanguageModelOptions} id="model" text="Model"/>
                     <Divider light variant="middle" sx={{width: "100%"}}/>
                 </Box>
-                <ListItemMessage />
-                <ListItemMessage />
-                <ListItemMessage />
+                <ListItemMessage text={"AI Text Detector v1.0.0"}/>
             </Box>
             <PopupFooter />
         </List>
