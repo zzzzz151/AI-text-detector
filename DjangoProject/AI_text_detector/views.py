@@ -1,7 +1,6 @@
 import json
 import os
 import random
-import socket
 import sys
 from datetime import datetime
 
@@ -13,51 +12,19 @@ from rest_framework.renderers import TemplateHTMLRenderer, JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-import Docker.communicator.messages as m
 from AI_text_detector.AI_LMs import AI
 from Docker.test import add_communicator
-from .AI_LMs.AI import docker_compose_path
+from .AI_LMs.AI import docker_compose_path, get_prediction
 from .models import *
-
 
 
 AI.start_stored_LMs()
 
-try:
-    port = int(os.getenv('SEND_PORT'))
-except TypeError:
-    port = int(sys.argv[2])
-try:
-    host = os.getenv('SEND_HOST')
-    if not host:
-        host = sys.argv[2]
-except TypeError:
-    host = sys.argv[2]
-
-message_ID = [0]
-def increment_and_return_ID():
-    ID = message_ID[0]
-    message_ID[0] = ID + 1
-    return ID
 def log(msg):
     strDateTimeNow = str(datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
     print(strDateTimeNow + " " + str(msg))
     sys.stdout.flush()
-def create_socket():
-    lm_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    lm_socket.connect((host, port))
-    lm_socket.setblocking(True)
-    return lm_socket
-def get_prediction(text, lm):
-    lm_socket = create_socket()
-    ID = increment_and_return_ID()
-    m.send_message_object(lm_socket, m.create_django_message(ID))
-    m.send_message_object(lm_socket, m.create_predict_message(ID, lm, text))
-    response = m.receive_message_object(lm_socket)
-    lm_socket.close()
-    if response and response.probability:
-        return int(response.probability)
-    return 0
+
 def store_file(path:str, file_name:str, content):
     os.makedirs(path, exist_ok=True)
     newFile = open(path + file_name, "w")

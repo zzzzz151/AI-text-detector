@@ -1,11 +1,14 @@
+import os
+import socket
+import sys
 import time
 from datetime import datetime
-from typing import Union, List
+
 import pandas as pd
-import sys
 
 from AI_text_detector.models import LM_Script, LM_API
 from Docker.test import start_communicator
+import Docker.communicator.messages as m
 
 docker_compose_path = '/DjangoProject/Docker/communicator/docker-compose.yml'
 
@@ -19,6 +22,42 @@ def start_stored_LMs():
     if lms.exists():
         for lm_object in lms:
             start_communicator(lm_object.name)
+
+try:
+    port = int(os.getenv('SEND_PORT'))
+except TypeError:
+    port = int(sys.argv[2])
+try:
+    host = os.getenv('SEND_HOST')
+    if not host:
+        host = sys.argv[2]
+except TypeError:
+    host = sys.argv[2]
+
+message_ID = [0]
+def increment_and_return_ID():
+    ID = message_ID[0]
+    message_ID[0] = ID + 1
+    return ID
+def log(msg):
+    strDateTimeNow = str(datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
+    print(strDateTimeNow + " " + str(msg))
+    sys.stdout.flush()
+def create_socket():
+    lm_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    lm_socket.connect((host, port))
+    lm_socket.setblocking(True)
+    return lm_socket
+def get_prediction(text, lm):
+    lm_socket = create_socket()
+    ID = increment_and_return_ID()
+    m.send_message_object(lm_socket, m.create_django_message(ID))
+    m.send_message_object(lm_socket, m.create_predict_message(ID, lm, text))
+    response = m.receive_message_object(lm_socket)
+    lm_socket.close()
+    if response and response.probability:
+        return int(response.probability)
+    return 0
 
 def clear_database():
     LM_Script.objects.all().delete()
