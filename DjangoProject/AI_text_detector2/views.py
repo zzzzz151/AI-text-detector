@@ -13,7 +13,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 import Docker.communicator.messages as m
-from AI_text_detector.AI_LMs import AI
+from AI_text_detector2.AI_LMs import AI
 from Docker.test import add_communicator
 from .AI_LMs.AI import docker_compose_path
 from .models import *

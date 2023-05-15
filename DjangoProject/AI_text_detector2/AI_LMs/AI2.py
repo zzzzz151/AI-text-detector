@@ -5,7 +5,7 @@ import sys
 import importlib.util
 import requests
 
-from AI_text_detector.models import LM_Script, LM_API
+from AI_text_detector2.models import LM_Script, LM_API
 
 # Clear database
 #LM_Script.objects.all().delete()

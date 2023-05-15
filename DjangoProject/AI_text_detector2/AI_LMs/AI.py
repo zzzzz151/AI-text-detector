@@ -4,7 +4,7 @@ from typing import Union, List
 import pandas as pd
 import sys
 
-from AI_text_detector.models import LM_Script, LM_API
+from AI_text_detector2.models import LM_Script, LM_API
 from Docker.test import start_communicator
 
 docker_compose_path = '/DjangoProject/Docker/communicator/docker-compose.yml'
