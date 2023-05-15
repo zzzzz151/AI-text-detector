@@ -50,6 +50,7 @@ def handle_text_request(request):
 
     if request.content_type == 'text/plain':
         text = request.body.decode("utf-8")
+        lm_name = ""
     else:
         try:
             requestData = json.loads(request.body.decode())
@@ -64,11 +65,13 @@ def handle_text_request(request):
 
     log("Received text request for \"" + text + "\"")
 
-    #probability_AI_generated = model.probability_AI_generated_text(text, "openAIBase")
-    probability_AI_generated = get_prediction(text, lm_name)
-    if probability_AI_generated is None:
-        probability_AI_generated = 0
-    #probability_AI_generated = random.randint(0, 100)
+    # TODO: API lms arent implemented
+    if lm_name:
+        probability_AI_generated = get_prediction(text, lm_name)
+        if probability_AI_generated is None:
+            probability_AI_generated = 0
+    else:
+        probability_AI_generated = random.randint(0, 100)
 
     responseData = {
         "text": text,
