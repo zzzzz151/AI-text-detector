@@ -1,10 +1,10 @@
 import sys
-
-import lm_name.lm_submission as lm
+import lm_submission as lm
 import socket
 import os
 
-from server import messages as m
+import messages as m
+
 
 def log(text):
 	print(text)
@@ -18,7 +18,10 @@ class IsolatedLanguageModel:
 		self.name = lm_name
 
 	def predict(self, text:str):
-		return round(self.model.predict(text) * 100)
+		result = self.model.predict(text)
+		if type(result) == list:
+			result = result[0]
+		return round(result * 100)
 
 def handle_messages(server_socket, message, model):
 	if not message:
@@ -42,17 +45,21 @@ if __name__ == "__main__":
 	try:
 		host = os.getenv('LISTEN_HOST')
 		if not host:
-			host = sys.argv[2]
+			host = sys.argv[3]
 	except TypeError:
-		host = sys.argv[2]
+		host = sys.argv[3]
 
 	try:
-		lm_name = sys.argv[1]
-	except IndexError:
-		lm_name = "chatGPT_roberta"
+		lm_name = os.getenv('LM_NAME')
+	except TypeError:
+		try:
+			lm_name = sys.argv[4]
+		except IndexError:
+			lm_name = "abcd"
+	log(f"NAME: {lm_name}")
 	model = IsolatedLanguageModel(lm_name)
 
-	log(f"Connecting with port {port}")
+	log(f"Connecting LM {lm_name} with port {port}")
 	with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 		s.connect((host, port))
 		m.send_message_object(s, m.create_connect_message(lm_name))
