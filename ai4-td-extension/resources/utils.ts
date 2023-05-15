@@ -3,18 +3,50 @@ import findAndReplaceDOMText from './findAndReplaceDOMText'
 
 /* API */
 
-function callApi(url, bodyObject, type = 'application/json') {
-    return fetch(url, {
-        method: 'POST',
+interface HTTPOptions {
+    method: string,
+    headers: { [key: string]: string },
+    body?: string | FormData | Blob | ArrayBufferView | ArrayBuffer | ReadableStream<Uint8Array> | null
+}
+
+function convertToJSON(str) {
+    return JSON.stringify(str, (key, value) => {
+      if (typeof value === 'string') {
+        return value.replace(/[\u007F-\uFFFF]/g, (match) =>
+          '\\u' + ('0000' + match.charCodeAt(0).toString(16)).slice(-4)
+        );
+      }
+      return value;
+    });
+}
+  
+
+function callApi(url, bodyObject, type = 'application/json', method = 'POST') {
+    const methodsWithRequestBody = ['POST', 'PUT', 'PATCH'];
+    const options: HTTPOptions = {
+        method: method,
         headers: {
             'Content-Type': type
-        },
-        body: type == 'application/json' ? JSON.stringify(bodyObject) : bodyObject
-    })
-        .then(response => response.json())
+        }
+    };
+
+    if (methodsWithRequestBody.includes(method.toUpperCase())) {
+        options.body = type == 'application/json' ? convertToJSON(bodyObject) : bodyObject;
+    };
+
+    return fetch(url, options)
+        .then(response => {
+            if (response.status == 400) {
+                return {probability_AI_generated: 0};
+            }
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+            return response.json();
+        })
         .catch(error => {
             console.error('Error fetching data: ', error);
-            throw error;
+            throw error
         });
 }
 
@@ -61,20 +93,21 @@ function analysePage(language_model) {
         }
     });
 
-    return Promise.all(promises).then((results) => {
-        let sumCharacters = 0;
-        let weightedSum = 0;
+    return Promise.all(promises)
+        .then((results) => {
+            let sumCharacters = 0;
+            let weightedSum = 0;
 
-        for (let i = 0; i < results.length; i++) {
-            sumCharacters += results[i].length;
-            weightedSum += results[i].weight;
-        }
+            for (let i = 0; i < results.length; i++) {
+                sumCharacters += results[i].length;
+                weightedSum += results[i].weight;
+            }
 
-        let weightedAvg = sumCharacters > 0 ? weightedSum / sumCharacters : 0;
-        weightedAvg = Math.round(weightedAvg); // round to nearest int
-        console.log("Overall evaluation: " + weightedAvg + "%");
-        return weightedAvg;
-    })
+            let weightedAvg = sumCharacters > 0 ? weightedSum / sumCharacters : 0;
+            weightedAvg = Math.round(weightedAvg); // round to nearest int
+            console.log("Overall evaluation: " + weightedAvg + "%");
+            return weightedAvg;
+        })
         .catch((err) => {
             console.error(err);
         });
@@ -82,7 +115,7 @@ function analysePage(language_model) {
 
 function analyseText(url, language_model, text, elem, threshold) {
     return new Promise((resolve, reject) => {
-        callApi(url, {language_model, text})
+        callApi(url, { language_model, text })
             .then(data => {
                 if (data.probability_AI_generated < threshold) {
                     console.log("Not AI (" + data.probability_AI_generated + "%): '" + text + "'");
@@ -118,7 +151,10 @@ function analyseText(url, language_model, text, elem, threshold) {
                     "weight": text.length * data.probability_AI_generated
                 });
             })
-            .catch(error => reject(error));
+            .catch(error => {
+                reject(error);
+                console.log("Error fetching data, ", error)
+            });
     });
 };
 

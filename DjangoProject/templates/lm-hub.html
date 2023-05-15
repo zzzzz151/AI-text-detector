@@ -23,6 +23,80 @@
     #username-text {
       color: white;
     }
+
+    .toggle-switch {
+      display: inline-block;
+      position: relative;
+      font-size: 14px;
+      line-height: 1;
+      margin-left: 60px;
+      margin-bottom: 20px;
+    }
+
+    .toggle-switch .toggle-text {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #666;
+    }
+
+    .toggle-switch .toggle-text-left {
+      left: -50px;
+      font-size: 16px;
+    }
+
+    .toggle-switch .toggle-text-right {
+      right: -50px;
+      font-size: 16px;
+    }
+
+    .toggle-switch__label {
+      display: inline-block;
+      position: relative;
+      width: 60px;
+      height: 30px;
+      margin: 0 10px;
+    }
+
+    .toggle-switch__input {
+      display: none;
+    }
+
+    .toggle-switch__slider {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 34px;
+      background-color: #666;
+      transition: background-color 0.2s;
+      cursor: pointer;
+    }
+
+    .toggle-switch__slider:before {
+      content: "";
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: calc(50% - 4px);
+      height: calc(100% - 4px);
+      background-color: #fff;
+      border-radius: 34px;
+      transition: transform 0.2s;
+    }
+
+    .toggle-switch__input:checked+.toggle-switch__slider {
+      background-color: #666;
+    }
+
+    .toggle-switch__input:checked+.toggle-switch__slider:before {
+      transform: translateX(calc(100% - 0px));
+    }
+
+    #removeLM {
+      cursor: pointer;
+    }
   </style>
 </head>
 
@@ -52,16 +126,23 @@
             </a>
           </li>
           {% else %}
-            <li id="username" class="nav-item">
-              <a class="nav-link" id="usernameDisplay">
-                {{ user }}
-              </a>
-            </li>
-            <li id="logOut" class="nav-item">
-              <a class="nav-link" href="logout">
-                <i class="fa fa-sign-out"></i> Log Out
-              </a>
-            </li>
+          <!--
+          <li id="myLMs" class="nav-item">
+            <a class="nav-link" href="myLMs">
+              <i class="fa fa-robot"></i> My LMs
+            </a>
+          </li>
+          -->
+          <li id="username" class="nav-item">
+            <a class="nav-link" id="usernameDisplay">
+              {{ user }}
+            </a>
+          </li>
+          <li id="logOut" class="nav-item">
+            <a class="nav-link" href="logout">
+              <i class="fa fa-sign-out"></i> Log Out
+            </a>
+          </li>
           {% endif %}
 
         </ul>
@@ -69,12 +150,31 @@
     </div>
   </nav>
 
-  <div id="container" class="container-fluid mt-5">
+  <div id="container" class="container-fluid mt-4">
+    <!--
+    {% if user %}
+    <div class="toggle-switch" onclick="onToggleLMs()">
+      <span class="toggle-text toggle-text-left">All LMs</span>
+      <label class="toggle-switch__label">
+        <input type="checkbox" class="toggle-switch__input">
+        <span class="toggle-switch__slider"></span>
+      </label>
+      <span class="toggle-text toggle-text-right">My LMs</span>
+    </div>
+    {% endif %}
+    -->
     {% for LM in LMs %}
     <div class="card w-100">
       <div class="card-body">
+        {% if LM.author == user %}
+        <h5 class="card-title">{{LM.name}}
+          <i id="removeLM" onclick="onRemoveLmIcon('{{LM.name}}')" class="fa fa-trash" style="color:red"></i>
+        </h5>
+        <h6 class="card-subtitle mb-2 text-muted">By {{LM.author}} (you)</h6>
+        {% else %}
         <h5 class="card-title">{{LM.name}}</h5>
         <h6 class="card-subtitle mb-2 text-muted">By {{LM.author}}</h6>
+        {% endif %}
         <p class="card-text">{{LM.description}}</p>
       </div>
     </div>
@@ -82,7 +182,6 @@
     {% endfor %}
   </div>
 
-  <!-- Modal -->
   <div class="modal fade" id="upload-LM-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -121,6 +220,21 @@
     </div>
   </div>
 
+  <div class="modal fade" id="remove-LM-modal" tabindex="-1" aria-labelledby="remove-LM-modal-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="remove-LM-modal-title">Remove LM</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-danger" onclick="onRemoveLM()">Remove</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
   <script>
     let IS_LOGGED_IN = {% if user %} true {% else %} false {% endif %};
@@ -128,8 +242,7 @@
 
     $(document).ready(function () {
       console.log("IS_LOGGED_IN " + IS_LOGGED_IN);
-      if (IS_LOGGED_IN)
-      {
+      if (IS_LOGGED_IN) {
         USERNAME = document.getElementById("usernameDisplay").textContent.trim();
       }
       console.log("USERNAME '" + USERNAME + "'");
@@ -201,16 +314,46 @@
       }
       console.log("------------");
 
-      fetch("http://127.0.0.1:8000/api/v1/uploadLM",
+      fetch("http://127.0.0.1:8000/api/v1/LMs",
         {
           body: formData,
           method: "post"
         })
         .then(response => {
           if (response.status == 200)
-            alert("LM accepted!");
+            alert("LM '" + lm_name + "' accepted!");
           else
-            alert("LM refused!");
+            alert("LM '" + lm_name + "' refused!");
+
+        });
+    }
+
+    function onToggleLMs() {
+
+    }
+
+    let lm_to_remove = "";
+    function onRemoveLmIcon(lm_name) {
+      lm_name = lm_name.trim();
+      lm_to_remove = lm_name;
+      $("#remove-LM-modal-title").text("Remove your LM '" + lm_name + "'?")
+      $("#remove-LM-modal").modal("show");
+      console.log(lm_name);
+
+    }
+    function onRemoveLM() {
+      fetch("http://127.0.0.1:8000/api/v1/LMs",
+        {
+          body: JSON.stringify({ name: lm_to_remove }),
+          method: "delete"
+        })
+        .then(response => {
+          if (response.status == 200) {
+            alert("LM '" + lm_to_remove + "' removed!");
+            window.location.href = "LM-hub";
+          }
+          else
+            alert("Could not remove LM '" + lm_to_remove + "'!");
 
         });
     }

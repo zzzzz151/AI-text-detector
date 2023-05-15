@@ -1,33 +1,56 @@
 import React from "react";
+import { useState } from "react";
+import { Form, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import axios from "axios";
+
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+axios.defaults.withCredentials = true;
+
+const client = axios.create({
+    baseURL: "http://127.0.0.1:8000"
+});
 
 const LoginFront = () => {
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    function submitLogin(e) {
+        e.preventDefault();
+        client.post(
+            "/authentication/login",
+            {
+                email: email,
+                password: password
+            }
+        ).then(function(res) {
+            console.log(res);
+            window.location.href = "http://127.0.0.1:3000";
+        });
+    }
+
+
+
     return (
-        <div className="hero min-h-screen bg-base-200">
-            <div className="hero-content flex-col lg:flex-row-reverse">
-                <div className="text-center lg:text-left">
-                    <h1 className="text-5xl font-bold">Login now!</h1>
-                    <p className="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
-                </div>
-                <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-                    <div className="card-body">
-                        <div className="form-control">
-                            <label className="label">
-                                <span className="label-text">Email</span>
-                            </label>
-                            <input type="text" placeholder="email" className="input input-bordered" />
-                        </div>
-                        <div className="form-control">
-                            <label className="label">
-                                <span className="label-text">Password</span>
-                            </label>
-                            <input type="text" placeholder="password" className="input input-bordered" />
-                        </div>
-                        <div className="form-control mt-6">
-                            <button className="btn btn-primary">Login</button>
-                        </div>
-                    </div>
-                </div>
+        <div className="center">
+          <Form onSubmit={e => submitLogin(e)}>
+            <Form.Group className="mb-3" controlId="formBasicEmail">
+              <Form.Label>Email</Form.Label>
+              <Form.Control type="email" placeholder="Enter email" value={email} onChange={e => setEmail(e.target.value)} />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="formBasicPassword">
+              <Form.Label>Password</Form.Label>
+              <Form.Control type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} />
+            </Form.Group>
+            <div>
+                <Link to="/registFront">Doesn't have an account. Register Now</Link>
             </div>
+            <Button className="mt-3" variant="primary" type="submit">
+              Submit
+            </Button>
+          </Form>
         </div>
     );
     }

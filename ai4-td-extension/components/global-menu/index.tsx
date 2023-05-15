@@ -2,37 +2,36 @@ import { useStorage } from "@plasmohq/storage/hook";
 import { useEffect, useState } from "react";
 import GlobalButton from "~components/global-button";
 import GlobalCard from "~components/global-card";
+import GlobalCardError from "~components/global-card-error";
+import useReadyState from "~components/hooks/ready";
 import { analysePage, cleanPage } from "~resources/utils";
 
 function GlobalMenu() {
-    const [loading, setLoading] = useState(false);
-    const [success, setSuccess] = useState(false);
-    const [error, setError] = useState(false);
+    const [is, setSuccess, setError, setLoading, reset, reload] = useReadyState();
     const [anchor, setAnchor] = useState(false);
     const [data, setData] = useState(null);
-    const [reload, setReload] = useState(false);
-    const [autoscan] = useStorage<string>("scan-page-automatically")
-    const language_model = "openai-roberta-base"
-
-    const canScan = !(loading || success || error);
+    const [autoscan] = useStorage<boolean>("scan-page-automatically");
+    const [languageModel] = useStorage<string>("model", v => v ?? 'openai-roberta-base');
+ 
+    const isReloading = is("reload");
+    const isDefault = is("default");
 
     const handleClick = () => {
-        if (canScan) {
-            setLoading(true);
-            analysePage(language_model)
-            .then(data => {
-                if (!data) {
+        if (isDefault || isReloading) {
+            setLoading();
+            analysePage(languageModel)
+            .then((data: number) => {
+                if (data === null || data === undefined || isNaN(data)) {
                     throw new Error('No data returned from API.');
                 }
-                setSuccess(true);
+                setSuccess();
                 setData(data)
-                setAnchor(true);
             })
             .catch(() => {
-                setError(true);
+                setError();
             })
             .finally(() => {
-                setLoading(false);
+                setAnchor(true);
             })
         }
         else {
@@ -40,23 +39,21 @@ function GlobalMenu() {
         }
     };
 
+    /* Could have problems */
     const handleReloadClick = () => {
         setAnchor(false);
-        setSuccess(false);
-        setError(false);
-        setReload(true);
+        reload();
     };
 
     useEffect(() => {
-        if (reload) {
-            setReload(false);
+        if (isReloading) {
             cleanPage();  
             handleClick();
         }
-      }, [reload]);
+      }, [isReloading]);
 
     useEffect(() => {
-        if (autoscan && canScan) {
+        if (autoscan && isDefault) {
           handleClick();
         }
     }, [autoscan]);
@@ -65,11 +62,10 @@ function GlobalMenu() {
         <>
             <GlobalButton
                 onClick={handleClick}
-                success={success}
-                error={error}
-                loading={loading}
+                is={is}
             />
-            {success && anchor && <GlobalCard data={data} onReloadClick={handleReloadClick} />}
+            {is("success") && anchor && <GlobalCard data={data} onReloadClick={handleReloadClick} />}
+            {is("error") && anchor && <GlobalCardError error={"Some error happened"} onReloadClick={handleReloadClick} />}
         </>
     );
 }

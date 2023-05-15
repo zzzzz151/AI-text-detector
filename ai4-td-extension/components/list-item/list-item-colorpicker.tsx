@@ -13,10 +13,6 @@ function ListItemColorPicker(props) {
     }
   }
     
-  function handleColorChange(color: string) {
-    setColor(color)
-  }
-    
   return (
     <ListItem sx={{cursor: "pointer"}} onClick={handleListItemClick}>
       <ListItemText
@@ -28,7 +24,7 @@ function ListItemColorPicker(props) {
           lineHeight: '20px'
         }}
       />
-      <SketchExample defaultColor={color} onColorChange={handleColorChange} ref={colorPickerRef} />
+      <SketchExample color={color} onColorChange={setColor} ref={colorPickerRef} />
     </ListItem>
   );
 }

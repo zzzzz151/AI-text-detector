@@ -1,0 +1,13 @@
+add to env:
+hooks/language-models.tsx
+> fetch models names api url
+> default model
+
+- global-menu/index.tsx
+> default model
+
+utils.ts - analysePage
+> analyse text url
+
+background - index.ts
+> analyse text url

@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import include, path, re_path
-from AI_text_detector2.views import handle_request, LM_Upload, get_LMs, my_LM_as_API, execute_code
+from AI_text_detector.views import handle_text_request, handle_LMs_request, my_LM_as_API, execute_code
 from authentication.views import *
 from LM_hub.views import *
 
@@ -24,9 +24,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('authentication/', include('authentication.urls', namespace='authentication')),
-    re_path(r'api/v1/?$', handle_request),
-    re_path(r'api/v1/uploadLM/?$', LM_Upload.as_view()),
-    re_path(r'api/v1/LMs/?$', get_LMs),
+    re_path(r'api/v1/?$', handle_text_request),
+    re_path(r'api/v1/LMs/?$', handle_LMs_request),
     re_path(r'api/v1/myLM/?$', my_LM_as_API),
     re_path(r'api/v1/executeCode/?$', execute_code),
     path('LM-hub', lm_hub, name="lm-hub"),

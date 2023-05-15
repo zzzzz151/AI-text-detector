@@ -1,27 +1,21 @@
 import ClickAwayListener from '@mui/material/ClickAwayListener'
-import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
+import React, { forwardRef, useImperativeHandle, useState } from 'react'
 import { TwitterPicker } from 'react-color'
 
 interface ColorPickerProps {
   onColorChange: (color: string) => void;
-  defaultColor: string;
+  color: string;
 }
 
 const SketchExample = forwardRef<void, ColorPickerProps>((props, ref) => {
   const [displayColorPicker, setDisplayColorPicker] = useState(false)
-  const [color, setColor] = useState(props.defaultColor)
-
-  useEffect(() => {
-    setColor(props.defaultColor);
-  }, [props.defaultColor]);
 
   const handleClose = () => {
     setDisplayColorPicker(false)
   }
 
   const handleChange = (newColor) => {
-    if (newColor.hex !== color) {
-      setColor(newColor.hex)
+    if (newColor.hex !== props.color) {
       props.onColorChange(newColor.hex);
     }
   }
@@ -33,7 +27,7 @@ const SketchExample = forwardRef<void, ColorPickerProps>((props, ref) => {
         width: '36px',
         height: '14px',
         borderRadius: '2px',
-        background: color,
+        background: props.color,
     } as React.CSSProperties,
     swatch: {
         padding: '5px',
@@ -70,7 +64,7 @@ const SketchExample = forwardRef<void, ColorPickerProps>((props, ref) => {
         <div style={ styles.popover }>
         <TwitterPicker
           triangle='top-right'
-          color={color}
+          color={props.color}
           onChange={handleChange}
         />
         </div>

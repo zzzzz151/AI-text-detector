@@ -14,7 +14,7 @@ from rest_framework.views import APIView
 
 def lm_hub(request):
     user = request.session.get('user')
-    data = {"LMs" : get_all_LMs(), 'user': user}
+    data = {"LMs" : get_all_LMs(user=user), 'user': user}
     return render(request, "lm-hub.html", data)
 
 def login(request):
@@ -24,6 +24,7 @@ def login(request):
         response = requests.post(request.build_absolute_uri(url), data)
         if response.status_code == 200:
             request.session['user'] = response.json().get('user')
+            #request.session['LMs'] = get_all_LMs(user=response.json().get('user'))
             return redirect('lm-hub')
     return render(request, "registration/login.html")
 
@@ -43,7 +44,7 @@ def logout(request):
     if response.status_code == 200:
         request.session.pop('user')
         return redirect('lm-hub')
-    data = {"LMs" : get_all_LMs(), 'user': user}
+    data = {"LMs" : get_all_LMs(user=user), 'user': user}
     return render(request, "lm-hub.html", data)
 
 def get_all_LMs():
@@ -52,4 +53,19 @@ def get_all_LMs():
     LMs = sorted(
         chain(scripts, APIs),
         key=lambda lm: lm.name,)
+    return LMs
+
+def get_all_LMs(user=None):
+    scripts = LM_Script.objects.all()
+    APIs = LM_API.objects.all()
+    
+    LMs = list(chain(scripts, APIs))
+    
+    LMs = sorted(LMs, key=lambda lm: lm.name.lower())
+    
+    if user:
+        user_LMs = [lm for lm in LMs if lm.author == user]
+        other_LMs = [lm for lm in LMs if lm.author != user]
+        LMs = user_LMs + other_LMs
+    
     return LMs

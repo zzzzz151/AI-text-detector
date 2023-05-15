@@ -16,8 +16,8 @@ const SINGLE_CARD_HEIGHT = 50;
 const OBSERVER_CONFIG = { childList: true, subtree: true };
 
 function Highlight() {
-  const [colorRegular] = useStorage<string>("highlight-color-regular", v => (v && (v.length == 4 || v.length == 7)) ? v : "#FFFF00")
-  const [colorStrong] = useStorage<string>("highlight-color-strong", v => (v && (v.length == 4 || v.length == 7)) ? v : "#FF0000")
+  const [colorRegular] = useStorage<string>("highlight-color-regular", v => v ?? "#FFFF00")
+  const [colorStrong] = useStorage<string>("highlight-color-strong", v => v ?? "#FF0000")
   const [clickedElement, setClickedElement] = useState<HTMLElement | null>(null);
   const [clickedElementPosition, setClickedElementPosition] = useState({
     top: 0,
@@ -26,11 +26,11 @@ function Highlight() {
 
   useEffect(() => {
     const elements: NodeListOf<HTMLElement> = document.querySelectorAll(ELEMENT);
-  
+
     for (let i = 0; i < elements.length; i++) {
       const el = elements[i];
       const probability = parseFloat(el.getAttribute("probability"));
-  
+
       // Set the background color and border color based on the probability value
       if (probability >= 75) {
         el.style.backgroundColor = `${colorStrong}40`;
@@ -40,9 +40,36 @@ function Highlight() {
         el.style.borderBottom = `2px solid ${colorRegular}`;
       }
     }
+
+    // Mutation observer
+    const observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        const addedNodes = mutation.addedNodes;
+        addedNodes.forEach(function(node: HTMLElement) {
+          if (node.nodeType === Node.ELEMENT_NODE && node.matches(ELEMENT)) {
+            const probability = parseFloat(node.getAttribute("probability"));
+          
+            if (probability >= 75) {
+              node.style.backgroundColor = `${colorStrong}40`;
+              node.style.borderBottom = `2px solid ${colorStrong}`;
+            } else if (probability >= 50) {
+              node.style.backgroundColor = `${colorRegular}40`;
+              node.style.borderBottom = `2px solid ${colorRegular}`;
+            }
+          
+            node.addEventListener("click", handleElementClick);
+          }
+        });
+      });    
+    });
+
+    observer.observe(document.body, OBSERVER_CONFIG);   
+
+    return () => {
+      // Clean up
+      observer.disconnect();
+    }
   }, [colorRegular, colorStrong]);
-  
-  
 
   const handleElementClick = (e) => {
     e.stopPropagation();
@@ -87,45 +114,23 @@ function Highlight() {
     setClickedElement(clickedElement);
   };  
 
-  const observer = new MutationObserver(function(mutations) {
-    mutations.forEach(function(mutation) {
-      const addedNodes = mutation.addedNodes;
-      addedNodes.forEach(function(node: HTMLElement) {
-        if (node.nodeType === Node.ELEMENT_NODE && node.matches(ELEMENT)) {
-          const probability = parseFloat(node.getAttribute("probability"));
-    
-          if (probability >= 75) {
-            node.style.backgroundColor = `${colorStrong}40`;
-            node.style.borderBottom = `2px solid ${colorStrong}`;
-          } else if (probability >= 50) {
-            node.style.backgroundColor = `${colorRegular}40`;
-            node.style.borderBottom = `2px solid ${colorRegular}`;
-          }
-            
-          node.addEventListener("click", handleElementClick);
-        }
-      });
-    });    
-  });
-  
-  observer.observe(document.body, OBSERVER_CONFIG);
-  
-
   const handleClickAway = () => {
     setClickedElement(null);
   }
 
   useEffect(() => {
+    // Handle resize and scroll
     const handleResize = () => {
       setClickedElement(null);
     }
-    
+  
     window.addEventListener('resize', handleResize);
-    
+
     return () => {
+      // Clean up
       window.removeEventListener('resize', handleResize);
     }
-  }, []);
+  }, []);  
 
   return (
     <>

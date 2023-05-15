@@ -1,15 +1,87 @@
 import { useState, useRef } from "react";
+import { NavLink } from "react-router-dom";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import axios from "axios";
+import FormLabel from "react-bootstrap/esm/FormLabel";
 
-function NavBar() {
+
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+axios.defaults.withCredentials = true;
+
+const client = axios.create({
+  baseURL: "http://127.0.0.1:8000"
+});
+
+function NavBar( props ) {
     const [navbar, setNavbar] = useState(false);    
     const [selectedOption, setSelectedOption] = useState(null);
     const [showLinkInput, setShowLinkInput] = useState(false);
     const [showScriptInput, setShowScriptInput] = useState(false);
-    const [file, setFile] = useState(null);
     const fileInputRef = useRef(null);
+    const username = "test"
 
-    const handleFileChange = (event) => {
-        setFile(event.target.files[0]);
+    const currentUser = props.isLogged;
+
+    const [name, setName] = useState('');
+    const [description, setDescription] = useState('');
+    const [type, setType] = useState('url');
+    const [url, setUrl] = useState('');
+    const [scriptFile, setScriptFile] = useState(null);
+
+    const handleNameChange = (event) => {
+        setName(event.target.value);
+    };
+
+    const handleDescriptionChange = (event) => {
+        setDescription(event.target.value);
+    };
+
+    const handleTypeChange = (event) => {
+        setType(event.target.value);
+    };
+
+    const handleUrlChange = (event) => {
+        setUrl(event.target.value);
+    };
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('author', username);
+        formData.append('description', description);
+        formData.append('type', type);
+        if (type === 'url') {
+            formData.append('api', url);
+        } else {
+            formData.append('script', scriptFile);
+        }
+        console.log("FormDate: ",formData);
+        client.post("/api/v1/uploadLM", formData, { withCredentials: true })
+        .then(function(res) {
+            console.log(res);
+        })
+        .catch(function(error) {
+            console.log(error);
+        });
+
+    };
+
+    const handleLogout = async () => {
+        client.post(
+            "/authentication/logout",
+            {withCredentials: true}
+          ).then((response) => {
+            window.location.reload();
+            });
+    }
+      
+
+    function handleFileChange(event) {
+        setScriptFile(event.target.files[0]);
+        console.log(event.target.files[0]);
       }
     
     const handleOptionChange = (event) => {
@@ -27,6 +99,7 @@ function NavBar() {
     }
 
     return (
+        
         <div className="navbar bg-base-100 border-slate-400">
             <div className="navbar-start">
                 <div className="dropdown">
@@ -43,73 +116,62 @@ function NavBar() {
             <div className="navbar-center">
                 <a className="btn btn-ghost normal-case text-xl">Language Model Hub</a>
             </div>
-            <div className="navbar-end">
-                {/* The button to open modal */}
-                <label htmlFor="my-modal" className="btn btn-outline btn-primary ">Add Language Model</label>
+            {/* if currentuser */}
+            {currentUser ? (
+                <div className="navbar-end">
+                    {/* The button to open modal */}
+                    <label htmlFor="my-modal" className="btn btn-outline btn-primary ">Add Language Model</label>
 
-                {/* Put this part before </body> tag */}
-                <input type="checkbox" id="my-modal" className="modal-toggle" />
-                <div className="modal pr-3">
-                    <div className="modal-box">
-                        <h3 className="font-bold text-lg">Add Language Modal</h3>
-                        <div className="form-control w-full max-w-xs">
-                            <label className="label">
-                                <span className="label-text">Language Model Name</span>
-                            </label>
-                            <input type="text" placeholder="Type here" className="input input-bordered w-full max-w-xs" />
-                            <label className="label">
-                            </label>
-                        </div>
-                        <div className="form-control w-full max-w-xs pb-5">
-                            <label className="label">
-                                <span className="label-text">Description</span>
-                            </label>
-                            <input type="text" placeholder="Type here" className="input input-bordered w-full max-w-xs" />
-                            <label className="label">
-                            </label>
-                        </div>
-                        <label htmlFor="option-select">Language Model Type:</label>
-                        <select className=" select w-full max-w-xs" id="option-select" value={selectedOption} onChange={handleOptionChange}>
-                            <option value="">-- Select an option --</option>
-                            <option value="link">API Link</option>
-                            <option value="script">Python script</option>
-                        </select>
-                        
-                        {showLinkInput && (
-                            <div className="pb-5 pt-5">
-                                <input type="text" placeholder="API Link" className="input input-bordered w-full max-w-xs" />
-                            </div>
-                        )}
-                        
-                        {showScriptInput && (
-                            <div className="pt-5">
-                                <label htmlFor="script-input">Script:</label>
-                                <div>
-                                    <input type="file" id="script-input" accept=".py" onChange={handleFileChange} ref={fileInputRef} />
-                                    <label htmlFor="script-input" className="button" onClick={handleBrowseButtonClick}></label>
-                                    {file && <span>{file.name}</span>}
-                                </div>
-                            </div>
-                        )}
-                        <div className="modal-action">
-                            <label htmlFor="my-modal" className="btn">Add!</label>
+                    {/* Put this part before </body> tag */}
+                    <input type="checkbox" id="my-modal" className="modal-toggle" />
+                    <div className="modal pr-3">
+                        <div className="modal-box">
+                            <h3 className="font-bold text-lg">Add Language Modal</h3>
+                            <Form onSubmit={handleSubmit}>
+                                <Form.Group className="mb-3" controlId="formName">
+                                    <Form.Label>LM Name</Form.Label>
+                                    <Form.Control type="text" placeholder="Enter LM Name" value={name} onChange={handleNameChange} />                                
+                                </Form.Group>
+                                <Form.Group className="mb-3" controlId="formDescription">
+                                    <Form.Label>LM Description</Form.Label>
+                                    <Form.Control type="text" placeholder="Enter LM Description" value={description} onChange={handleDescriptionChange} />
+                                </Form.Group>
+                                <Form.Group className="mb-3" controlId="formType">
+                                    <Form.Label>LM Type</Form.Label>
+                                    <Form.Select aria-label="Default select example" value={type} onChange={handleTypeChange}>
+                                        <option value="url">API url</option>
+                                        <option value="script">Script</option>
+                                    </Form.Select>
+                                </Form.Group>
+                                {type === 'url' && (
+                                    <Form.Group className="mb-3" controlId="formUrl">
+                                        <Form.Label>LM Url</Form.Label>
+                                        <Form.Control type="text" placeholder="Enter LM Url" value={url} onChange={handleUrlChange} />
+                                    </Form.Group>
+                                )}
+                                {type === 'script' && (
+                                    <Form.Group className="mb-3" controlId="formScriptFile">
+                                        <Form.Label>LM Script File</Form.Label>
+                                        <Form.Control type="file" name="file" placeholder="Enter LM Script File" onChange={handleFileChange} />
+                                    </Form.Group>
+                                )}   
+                                <button type="submit">Submit</button>
+                            </Form>
                         </div>
                     </div>
+                    <button type="button" className="btn btn-primary ml-5" onClick={handleLogout}> Logout </button>
+                    <button className="btn btn-ghost btn-circle">
+                    <div className="indicator">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                    </div>
+                    </button>
                 </div>
-                <button className="btn btn-ghost btn-circle">
-                    <svg className="h-8 w-8" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" stroke-linecap="round" stroke-linejoin="round"></path>
-                    </svg>                
-                </button>
-                <button className="btn btn-ghost btn-circle">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-                </button>
-                <button className="btn btn-ghost btn-circle">
-                <div className="indicator">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            ) : ( 
+                <div className="navbar-end">
+                    <button className="btn btn-primary btn-sm mr-10"><NavLink to="/registFront">Register</NavLink></button>
+                    <button className="btn btn-primary btn-sm mr-5"><NavLink to="/loginFront" >Login</NavLink></button>
                 </div>
-                </button>
-            </div>
+            )}
         </div>
     );
 }

@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import SelectItem from '~components/select-item';
 import '~/components/select/styles.css';
 import { ClickAwayListener } from '@mui/material';
@@ -8,10 +8,16 @@ function Select({ options, value, onChange }) {
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState(value);
   const inputRef = useRef(null);
-  const trie = useMemo(() => buildTrie(options), [options]);
 
-  const filteredOptions = trie.search(inputValue);
-  
+  const trie = useMemo(() => buildTrie(options), [options]);
+  const filteredOptions = trie.search(inputValue ?? '');
+
+  useEffect(() => {
+    if (value) {
+      setInputValue(value)
+    }
+  }, [value])
+
   function toggleSelectOptions() {
     setIsOpen(true);
     setInputValue("");
@@ -61,16 +67,8 @@ function Select({ options, value, onChange }) {
         </div>
         {isOpen && (
         <div className="select-options">
-          {filteredOptions.length > 0 ? (
+          {filteredOptions.length > 0 && (
             filteredOptions.map((option, index) => (
-              <SelectItem
-                key={index}
-                title={option}
-                onClick={() => handleSelectOption(option)}
-              />
-            ))
-          ) : (
-            options.map((option, index) => (
               <SelectItem
                 key={index}
                 title={option}

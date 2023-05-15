@@ -1,34 +1,34 @@
-import { ButtonBase, keyframes } from "@mui/material";
+import { ButtonBase } from "@mui/material";
 
-const enterKeyframe = keyframes`
-  0% {
-    transform: scale(0);
-  }
-  100% {
-    transform: scale(1);
-  }
-`;
-
-function SelectItem(props) {
+function SelectItem({title, onClick}) {
   return (
     <ButtonBase 
       component="div" 
       className="select-option" 
-      onClick={props.onClick} // Add onClick prop
+      onClick={onClick}
       sx={{
         padding: '0 8px',
         justifyContent: 'unset',
         '&& .MuiTouchRipple-rippleVisible': {
           animationDuration: '200ms',
-          animationName: enterKeyframe,
           opacity: 0.1,
+          animationName: 'rippleEffect',
           animationTimingFunction: "ease-in-out"
+        },
+        "@keyframes rippleEffect": {
+          "0%": {
+            transform: "scale(0)",
+          },
+          "100%": {
+            transform: "scale(1)",
+          }
         }
       }}
     >
-      <span className="select-option-text">{props.title}</span>
+      <span className="select-option-text">{title}</span>
     </ButtonBase>
   );
 }
+
 
 export default SelectItem;
