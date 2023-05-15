@@ -1,10 +1,12 @@
 import os
 import socket
+import subprocess
 import sys
 import time
 from datetime import datetime
 
 import pandas as pd
+from django.db import OperationalError
 
 from AI_text_detector.models import LM_Script, LM_API
 from Docker.test import start_communicator
@@ -19,9 +21,16 @@ def log(msg):
 
 def start_stored_LMs():
     lms = LM_Script.objects.all()
-    if lms.exists():
-        for lm_object in lms:
-            start_communicator(lm_object.name)
+    try:
+        if lms.exists():
+            for lm_object in lms:
+                start_communicator(lm_object.name)
+    except OperationalError:
+        try:
+            subprocess.run(['python', '../../manage.py', 'migrate'], check=True)
+            print("Migrations completed successfully.")
+        except subprocess.CalledProcessError as e:
+            print(f"An error occurred while running migrations: {e}")
 
 try:
     port = int(os.getenv('SEND_PORT'))
