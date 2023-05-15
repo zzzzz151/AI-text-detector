@@ -106,8 +106,40 @@ class LM_Upload(APIView):
     @permission_classes([])
     def post(self, request):
         try:
-            process_lm(request)
-        except:
+            lm_name = request.data["name"]
+            lm_author = request.data["author"]
+            lm_description = request.data["description"]
+            log("Received LM '" + lm_name + "'")
+            assert len(LM_Script.objects.filter(name=lm_name)) == 0  # Assert this LM name doesnt exist in database
+            assert len(LM_API.objects.filter(name=lm_name)) == 0  # Assert this LM name doesnt exist in database
+
+            if "script" in request.data:
+                save_path = f"Docker/communicator/LMs/{lm_name}/"
+                script = request.data["script"]
+
+                store_file(save_path, 'lm_submission.py', script)
+                store_file(save_path, 'requirements.txt', "")
+
+                add_communicator(docker_compose_path, lm_name)
+
+                # assert not Path(save_path).is_file() # Assert a file with this name doesnt exist
+                save_lm(lm_name, lm_author, lm_description, save_path)
+
+
+            if "API" in request.data or "api" in request.data:
+                api_url = request.data["API"] if "API" in request.data else request.data["api"]
+                newLM = LM_API()
+                newLM.name = lm_name
+                newLM.author = lm_author
+                newLM.description = lm_description
+                newLM.API = api_url
+                newLM.save()
+
+            log("Accepted LM '" + lm_name + "'")
+            # log(AI.probability_AI_generated_text("Hello", lm_name))
+        except Exception as e:
+            log(e)
+            log("Refused LM '" + lm_name + "'")
             return Response(status=500)  # Internal server error
 
         return Response(status=200)  # Ok
@@ -131,10 +163,22 @@ def get_LMs(request):
 
     lms = []
 
+    def whitelistByAuthor(argLm):
+        if "author" not in request.GET:
+            return True
+        author = request.GET["author"].lower()
+        if argLm.author.lower() == author.lower():
+            return True
+        if argLm.author.lower() == author.strip().lower():
+            return True
+        return False
+
     for model in [LM_Script, LM_API]:
         if lm_type_filter and lm_type_filter.lower() != model.TYPE:
             continue
         for lm in model.objects.all():
+            if not whitelistByAuthor(lm):
+                continue
             lm_dict = {field: getattr(lm, field) for field in filter_fields if hasattr(lm, field)}
             if include_type:
                 lm_dict['type'] = model.TYPE
