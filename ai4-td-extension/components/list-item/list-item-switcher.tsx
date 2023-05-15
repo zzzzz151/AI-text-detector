@@ -9,11 +9,13 @@ function ListItemSwitcher(props) {
 
   function handleClick(e) {
     e.preventDefault;
-    let animation = checked? "pulseOFF" : "pulseON"
-    setChecked((prevChecked) => !prevChecked); // toggle checked state
-    switcherRef.current.classList.remove("pulseON", "pulseOFF"); 
-    void switcherRef.current.offsetWidth;
-    switcherRef.current.classList.add(animation);
+    if (checked !== undefined) {
+      let animation = checked? "pulseOFF" : "pulseON"
+      switcherRef.current.classList.remove("pulseON", "pulseOFF"); 
+      void switcherRef.current.offsetWidth;
+      switcherRef.current.classList.add(animation);
+    }
+    setChecked((prevChecked) => !prevChecked);
   }
   
   return (

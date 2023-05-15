@@ -48,6 +48,9 @@
     border-radius: 50%;
     top: 50%;
     transform: translateY(-50%);
+}
+
+.ui-switcher.pulseON:after, .ui-switcher.pulseOFF:after {
     transition: left 0.25s;
 }
 

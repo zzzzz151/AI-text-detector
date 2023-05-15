@@ -7,6 +7,7 @@ import ListItemSettings from "~components/list-item/list-item-settings";
 import ListItemSwitcher from "~components/list-item/list-item-switcher";
 import ListItemSelect from "~components/list-item/list-item-select";
 import useLanguageModelOptions from "~components/hooks/language-models";
+import TextArea from "~components/textarea";
 
 function Popup() {
     return (
@@ -21,7 +22,7 @@ function Popup() {
                     fontSize: "14px",
                     color: "#0e101a",
                 }}>
-                    AI TEXT DETECTOR
+                    AI TEXT DETECTOR v1.0.0
                 </ListSubheader>}
         >
             <Divider />
@@ -37,7 +38,7 @@ function Popup() {
                     <ListItemSelect hook={useLanguageModelOptions} id="model" text="Model"/>
                     <Divider light variant="middle" sx={{width: "100%"}}/>
                 </Box>
-                <ListItemMessage text={"AI Text Detector v1.0.0"}/>
+                <TextArea />
             </Box>
             <PopupFooter />
         </List>

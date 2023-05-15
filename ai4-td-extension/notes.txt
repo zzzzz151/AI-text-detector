@@ -6,6 +6,10 @@ hooks/language-models.tsx
 - global-menu/index.tsx
 > default model
 
+- textarea/index.tsx
+> default model
+> analyse text url
+
 utils.ts - analysePage
 > analyse text url
 

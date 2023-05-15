@@ -1,0 +1,40 @@
+.scanned-text-container {
+    display: flex;
+    flex-direction: column;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    width: calc(100% - 24px);
+}
+
+.scanned-text-container::-webkit-scrollbar {
+    width: 10px;
+}
+
+.scanned-text-container::-webkit-scrollbar-thumb {
+    background: #c9d6df;
+    border-radius: 5px;
+}
+
+.scanned-text-container::-webkit-scrollbar-track {
+    background: #f2f6f9;
+    border-radius: 5px;
+}
+
+.scanned-text {
+    border-radius: 4px;
+    background-color: #e4e6f3;
+    min-height: 186px;
+    padding: 8px;
+    box-sizing: border-box;
+    font-size: 14px;
+    color: #040f21;
+    width: 100%;
+    resize: none;
+    border: none;
+    outline: 0px none transparent;
+}
+
+.error-msg {
+    color: #fa3a36;
+    font-size: 14px;
+}
