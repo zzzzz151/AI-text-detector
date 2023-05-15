@@ -6,6 +6,8 @@ import { callApi } from "~resources/utils";
 const blueTheme = createTheme({ palette: { primary: {main:'#181b21'} } })
 
 const URL = "http://127.0.0.1:8000/api/v1";
+const characterLimit = 5000;
+
 function TextArea() {
     const [languageModel] = useStorage<string>("model", v => v ?? 'openai-roberta-base');
     const [textareaValue, setTextareaValue] = useState("");
@@ -21,17 +23,29 @@ function TextArea() {
         });
     }
 
+    const handleTextareaChange = (e) => {
+        const value = e.target.value;
+        if (value.length <= characterLimit) {
+          setTextareaValue(value);
+        }
+    };
+
+    const characterCount = textareaValue.length;
+
     return (
         <ThemeProvider theme={blueTheme}>
             <div className="scanned-text-container">
-                <textarea 
-                    className="scanned-text"
-                    name="message" 
-                    placeholder="Paste text here" 
-                    autoFocus
-                    value={textareaValue}
-                    onChange={(e) => setTextareaValue(e.target.value)}
-                ></textarea>
+                <div className="scanned-text-wrapper">
+                    <textarea 
+                        className="scanned-text"
+                        name="message" 
+                        placeholder="Paste text here" 
+                        autoFocus
+                        value={textareaValue}
+                        onChange={handleTextareaChange}
+                    ></textarea>
+                    <span className="scanned-text-limit">{characterCount}/{characterLimit} characters</span>
+                </div>
                 <span className="error-msg"></span>
                 <Button color="primary" variant="contained" sx={{
                     padding: 0,

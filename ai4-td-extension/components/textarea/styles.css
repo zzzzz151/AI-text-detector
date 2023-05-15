@@ -23,8 +23,9 @@
 .scanned-text {
     border-radius: 4px;
     background-color: #e4e6f3;
-    min-height: 186px;
+    min-height: 126px;
     padding: 8px;
+    padding-bottom: 20px;
     box-sizing: border-box;
     font-size: 14px;
     color: #040f21;
@@ -32,6 +33,9 @@
     resize: none;
     border: none;
     outline: 0px none transparent;
+}
+
+.scanned-text-limit {
 }
 
 .error-msg {
