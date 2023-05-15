@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import include, path, re_path
-from AI_text_detector.views import handle_text_request, handle_LMs_request, my_LM_as_API, execute_code
+from AI_text_detector.views import  my_LM_as_API, execute_code, handle_text_request, handle_LMs_request
 from authentication.views import *
 from LM_hub.views import *
 
