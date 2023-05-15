@@ -15,3 +15,6 @@ utils.ts - analysePage
 
 background - index.ts
 > analyse text url
+
+- popup-footer/index.tsx
+> links
