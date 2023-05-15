@@ -1,6 +1,6 @@
 import { Button, ThemeProvider, createTheme } from "@mui/material";
 import { useStorage } from "@plasmohq/storage/hook";
-import { useState } from "react";
+import { LegacyRef, useRef, useState } from "react";
 import "~/components/textarea/styles.css"
 import { callApi } from "~resources/utils";
 const blueTheme = createTheme({ palette: { primary: {main:'#181b21'} } })
@@ -11,6 +11,7 @@ const characterLimit = 5000;
 function TextArea() {
     const [languageModel] = useStorage<string>("model", v => v ?? 'openai-roberta-base');
     const [textareaValue, setTextareaValue] = useState("");
+    const taElement: LegacyRef<HTMLTextAreaElement> = useRef();
 
     function analyseBlock() {
         if (textareaValue.trim() === "") {
@@ -30,21 +31,30 @@ function TextArea() {
         }
     };
 
+    const clearTextarea = () => {
+        setTextareaValue("")
+        if (taElement.current) {
+            taElement.current.focus();
+        }
+    }
+
     const characterCount = textareaValue.length;
 
     return (
         <ThemeProvider theme={blueTheme}>
             <div className="scanned-text-container">
-                <div className="scanned-text-wrapper">
-                    <textarea 
-                        className="scanned-text"
-                        name="message" 
-                        placeholder="Paste text here" 
-                        autoFocus
-                        value={textareaValue}
-                        onChange={handleTextareaChange}
-                    ></textarea>
+                <textarea
+                    ref={taElement}
+                    className="scanned-text"
+                    name="message" 
+                    placeholder="Paste text here" 
+                    autoFocus
+                    value={textareaValue}
+                    onChange={handleTextareaChange}
+                ></textarea>
+                <div className="scanned-text-footer">
                     <span className="scanned-text-limit">{characterCount}/{characterLimit} characters</span>
+                    {characterCount > 0 && <span className="scanned-text-clear" onClick={clearTextarea}>Clear</span>}
                 </div>
                 <span className="error-msg"></span>
                 <Button color="primary" variant="contained" sx={{
