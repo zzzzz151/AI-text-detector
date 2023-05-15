@@ -7,7 +7,7 @@ import useReadyState from "~components/hooks/ready";
 import { analysePage, cleanPage } from "~resources/utils";
 
 function GlobalMenu() {
-    const [is, setSuccess, setError, setLoading, reset, reload] = useReadyState();
+    const [is, setSuccess, setError, setLoading, _, reload] = useReadyState();
     const [anchor, setAnchor] = useState(false);
     const [data, setData] = useState(null);
     const [autoscan] = useStorage<boolean>("scan-page-automatically");
