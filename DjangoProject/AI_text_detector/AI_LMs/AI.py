@@ -20,18 +20,10 @@ def log(msg):
     sys.stdout.flush()
 
 def start_stored_LMs():
-    # FIXME: When we migrate to a containerized MySQL database, get rid of all these trys, excepts and subprocesses, they are no longer needed
     lms = LM_Script.objects.all()
-    try:
-        if lms.exists():
-            for lm_object in lms:
-                start_communicator(lm_object.name)
-    except OperationalError:
-        try:
-            subprocess.run(['python', '../../manage.py', 'migrate'], check=True)
-            print("Migrations completed successfully.")
-        except subprocess.CalledProcessError as e:
-            print(f"An error occurred while running migrations: {e}")
+    if lms.exists():
+        for lm_object in lms:
+            start_communicator(lm_object.name)
 
 try:
     port = int(os.getenv('SEND_PORT'))
