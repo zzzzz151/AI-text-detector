@@ -91,13 +91,6 @@
               </a>
             </li>
             {% else %}
-            <!--
-              <li id="myLMs" class="nav-item">
-                <a class="nav-link" href="myLMs">
-                  <i class="fa fa-robot"></i> My LMs
-                </a>
-              </li>
-              -->
             <li id="username" class="nav-item">
               <a class="nav-link" id="usernameDisplay">
               {{ user }}
@@ -113,15 +106,16 @@
         </div>
       </div>
     </nav>
+
     <div id="container" class="container-fluid mt-4">
       {% for LM in LMs %}
       <div class="card w-100">
+        <div class="card-body">
           <h5 class="card-title">{{LM.name}}
             {% if LM.author == user %}
             <i id="removeLM" onclick="onRemoveLmIcon('{{LM.name}}')" class="fa fa-trash" style="color:red"></i>
             {% endif %}
           </h5>
-
           <p class="mt-2">
             <i class="fa fa-star star"></i>
             <i class="fa fa-star star"></i>
@@ -130,15 +124,12 @@
             <i class="far fa-star star"></i>
             (177 ratings)
           </p>
-
           {% if LM.author == user %}
           <h6 class="card-subtitle text-muted">By {{LM.author}} (you)</h6>
           {% else %}
           <h6 class="card-subtitle text-muted">By {{LM.author}}</h6>
           {% endif %}
-
           <p class="card-text mt-2">{{LM.description}}</p>
-
           {% if user %}
           <fieldset class="rate mt-2">
             <span>Add a rating:</span>
@@ -159,6 +150,7 @@
       <br />
       {% endfor %}
     </div>
+
     <div class="modal fade" id="upload-LM-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -221,7 +213,7 @@
           USERNAME = document.getElementById("usernameDisplay").textContent.trim();
         }
         console.log("USERNAME '" + USERNAME + "'");
-
+      
         $('.rate input[type="radio"]').each(function(index) {
           for (let j = 1; j <= 10; j++)
             $(this).attr("id", "rating" + (index+1) * j);
@@ -229,7 +221,7 @@
           label.attr('for', $(this).attr("id"));
         });
       });
-
+      
       function onClickUploadLM() {
         if (!IS_LOGGED_IN) {
           window.location.href = "login";
@@ -303,9 +295,9 @@
           })
           .then(response => {
             if (response.status == 200)
-              alert("LM '" + lm_name + "' accepted!");
+              alert("Model '" + lm_name + "' accepted!");
             else
-              alert("LM '" + lm_name + "' refused!");
+              alert("Model '" + lm_name + "' refused!");
       
           });
       }
@@ -318,7 +310,7 @@
       function onRemoveLmIcon(lm_name) {
         lm_name = lm_name.trim();
         lm_to_remove = lm_name;
-        $("#remove-LM-modal-title").text("Remove your LM '" + lm_name + "'?")
+        $("#remove-LM-modal-title").text("Remove your model '" + lm_name + "'?")
         $("#remove-LM-modal").modal("show");
         console.log(lm_name);
       
@@ -331,11 +323,11 @@
           })
           .then(response => {
             if (response.status == 200) {
-              alert("LM '" + lm_to_remove + "' removed!");
-              window.location.href = "LM-hub";
+              alert("Model '" + lm_to_remove + "' removed!");
+              window.location.href = "model-hub";
             }
             else
-              alert("Could not remove LM '" + lm_to_remove + "'!");
+              alert("Could not remove model '" + lm_to_remove + "'!");
       
           });
       }
