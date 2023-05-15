@@ -20,6 +20,7 @@ def log(msg):
     sys.stdout.flush()
 
 def start_stored_LMs():
+    # FIXME: When we migrate to a containerized MySQL database, get rid of all these trys, excepts and subprocesses, they are no longer needed
     lms = LM_Script.objects.all()
     try:
         if lms.exists():
