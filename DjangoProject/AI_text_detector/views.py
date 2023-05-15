@@ -8,7 +8,8 @@ from datetime import datetime
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import parsers
-from rest_framework.decorators import authentication_classes, permission_classes
+from rest_framework.decorators import authentication_classes, permission_classes, renderer_classes, api_view
+from rest_framework.renderers import TemplateHTMLRenderer, JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -74,7 +75,7 @@ def save_lm(lm_name, author, description, script):
     newLM.save()
 
 @csrf_exempt
-def handle_request(request):
+def handle_text_request(request):
     # JsonResponse normally returns HTTP 200, which is the status code for 'OK'
     # 400 means bad request and 404 means resource not found
     # 500 means an internal server error
@@ -110,6 +111,24 @@ def handle_request(request):
         responseData,
         status=200,
         json_dumps_params={'indent': 2})
+
+@csrf_exempt
+@renderer_classes((TemplateHTMLRenderer, JSONRenderer))
+@api_view(("GET","POST","DELETE"))
+@authentication_classes([])
+@permission_classes([])
+def handle_LMs_request(request):
+    method = request.method.upper()
+
+    if method == "GET":
+        return get_LMs(request)
+    elif method == "POST":
+        lmUploadView = LM_Upload.as_view()
+        return lmUploadView(request._request)
+    elif method == "DELETE":
+        return delete_LM(request)
+
+    return Response(status=500)
 
 @authentication_classes([])
 @permission_classes([])
@@ -215,3 +234,30 @@ def process_lm(request):
 
     print("Accepted LM d" + lm_name)
     ##print(AI.probability_AI_generated_text("Hello", lm_name))
+
+@renderer_classes((TemplateHTMLRenderer, JSONRenderer))
+def delete_LM(request):
+    data = json.loads(request.body)
+    if "name" not in data:
+        return Response(status=500)
+    lm_name = data["name"]
+    try:
+        lm = LM_Script.objects.get(name=lm_name)
+        AI.unloadLM(lm_name)
+        lm.delete()
+        if os.path.exists(lm.script):
+            os.remove(lm.script)
+        log("Deleted LM '" + lm_name + "'")
+        return Response(status=200)
+    except Exception as e:
+        pass
+
+    try:
+        lm = LM_API.objects.get(name=lm_name)
+        lm.delete()
+        log("Deleted LM '" + lm_name + "'")
+        return Response(status=200)
+    except:
+        pass
+
+    return Response(status=500)

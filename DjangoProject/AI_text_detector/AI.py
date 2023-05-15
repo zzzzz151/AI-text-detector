@@ -3,7 +3,7 @@ from typing import Union, List
 import pandas as pd
 import sys
 
-from .language_models.chatgpt_detector_roberta import LM as chatgpt
+from .language_models.chatgpt_detector_roberta import LanguageModel as chatgpt
 from .language_models.openai_base_roberta import LM as base
 from .language_models.openai_large_roberta import LM as large
 from models import LM_Script, LM_API
@@ -13,10 +13,6 @@ language_models = {
         "openAIBase": base,
         #"openAILarge": OpenAILargeRobertaGPT2DetectorModel
     }
-
-def clear_database():
-    LM_Script.objects.all().delete()
-    LM_API.objects.all().delete()
 
 class LanguageModel:
     def __init__(self):

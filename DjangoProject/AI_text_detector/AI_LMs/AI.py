@@ -24,6 +24,8 @@ def clear_database():
     LM_Script.objects.all().delete()
     LM_API.objects.all().delete()
 
+#clear_database()
+
 class TestLanguageModel:
     def __init__(self, model_class):
         print("Loading model...")
