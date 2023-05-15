@@ -7,6 +7,7 @@ import os
 
 import messages as m
 
+
 def log(text):
 	print(text)
 	sys.stdout.flush()
@@ -80,7 +81,8 @@ def handle_messages(client_socket, selector):
 
 	# Django server is asking us to create a container
 	if message_type == 'create_container':
-		create_container(lm)
+		...
+		#create_container(lm)
 	# At this point, container is setup and working.
 	elif message_type == 'connect':
 		add_lm(lm, client_socket)
@@ -95,9 +97,14 @@ def handle_messages(client_socket, selector):
 		predict(ID, text, lm)
 
 def predict(ID, text, lm_name):
-	predict_message = m.create_predict_message(ID, lm_name, text)
-	lm_socket = lm_name_dictionary[lm_name][0]
-	m.send_message_object(lm_socket, predict_message)
+	if lm_name in lm_name_dictionary.keys():
+		predict_message = m.create_predict_message(ID, lm_name, text)
+		lm_socket = lm_name_dictionary[lm_name][0]
+		m.send_message_object(lm_socket, predict_message)
+	else:
+		sock = django_sockets.pop(ID)
+		prob_message = m.create_probability_message(ID, lm_name, 0)
+		m.send_message_object(sock, prob_message)
 
 def add_lm(lm_name, client_socket):
 	log(f"Submitting {lm_name}")
@@ -105,8 +112,7 @@ def add_lm(lm_name, client_socket):
 
 
 
-def create_container(lm_name):
-	...
+
 
 if __name__ == "__main__":
 	try:
@@ -124,21 +130,3 @@ if __name__ == "__main__":
 		server_socket.bind((host, port))
 		server_socket.listen()
 		start(server_socket)
-
-	"""
-	client = docker.from_env()
-	compose_file = 'Docker/server/docker-compose.yml'
-	project_name = 'AI-text-detector'
-	services = ['service1', 'service2']
-
-	options = docker.types.ComposeProjectOptions()
-	options.working_dir = '/path/to/project'
-	options.project_name = project_name
-
-	project = docker.types.Project.from_config(
-		project_name, docker.types.ComposeFile(compose_file), client
-	)
-
-	project.up(services=services, options=options)
-
-	"""
