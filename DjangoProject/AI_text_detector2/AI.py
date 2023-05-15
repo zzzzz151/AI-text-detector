@@ -6,10 +6,7 @@ import sys
 from .language_models.chatgpt_detector_roberta import LM as chatgpt
 from .language_models.openai_base_roberta import LM as base
 from .language_models.openai_large_roberta import LM as large
-<<<<<<<< HEAD:DjangoProject/AI_text_detector2/AI.py
-========
 from models import LM_Script, LM_API
->>>>>>>> main:DjangoProject/AI_text_detector/AI.py
 
 language_models = {
         #"chatGPT": ChatGPTRobertaDetectorModel,

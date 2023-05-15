@@ -1,8 +1,8 @@
 import random
 
-class LanguageModel:
+class LM:
     def __init__(self):
         print("RandomLM loaded")
 
     def predict(self, text):
-        return 1
+        return random.uniform(0, 1)
