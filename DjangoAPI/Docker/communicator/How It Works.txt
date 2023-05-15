@@ -1,3 +1,0 @@
-Submit a python script called "lm_submission"
-The python script must have a class called "LanguageModel" with the function "predict()" that accepts a string and returns a float between 0 and 1
-Must also provide a requirements.txt file with all the dependencies needed for the script to run
