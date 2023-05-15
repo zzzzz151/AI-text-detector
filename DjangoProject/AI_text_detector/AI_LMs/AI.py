@@ -14,78 +14,15 @@ def log(msg):
     print(strDateTimeNow + " " + str(msg))
     sys.stdout.flush()
 
-language_models = [
-    "chatGPT",
-    "openAIBase",
-    "openAILarge"
-]
-
-"""
-class LanguageModel:
-    def __init__(self):
-        # Warning: Takes time to load
-        print("Loading models")
-        self.models = {language_model_name:language_model() for language_model_name, language_model in list(language_models.items())}
-        self.models_name = [model.__class__.__name__ for model in self.models]
-
-    def probability_AI_generated_text(self, text:Union[str, List[str]], model_name):
-        if model_name not in self.models.keys():
-            raise ValueError(f"The model {model_name} does not exist.")
-
-        try:
-            ret = [round(prob*100) for prob in self.models[model_name](text)]
-        except RuntimeError:
-            # Too many tokens
-            return None
-        if len(ret) == 1:
-            return ret[0]
-        if len(ret) == 0:
-            return None
-        return ret
-
-class IsolatedLanguageModel:
-    def __init__(self, className, lm_name):
-        # Warning: Takes time to load
-        print("Loading model")
-        self.model = className()
-        self.name = lm_name
-"""
-
-# Clear database
-#LM_Script.objects.all().delete()
-#LM_API.objects.all().delete()
-
-"""
-lm = LM_Script()
-lm.name = "chatgpt-roberta"
-lm.author = "OpenAI"
-lm.description = "ChatGPT Roberta by OpenAI"
-lm.script = "chatgpt_detector_roberta.py"
-lm.save()
-
-lm = LM_Script()
-lm.name = "openai-roberta-base"
-lm.author = "OpenAI"
-lm.description = "Base Roberta by OpenAI"
-lm.script = "openai_base_roberta.py"
-lm.save()
-
-lm = LM_Script()
-lm.name = "openai-roberta-large"
-lm.author = "OpenAI"
-lm.description = "Large Roberta by OpenAI"
-lm.script = "openai_large_roberta.py"
-lm.save()
-"""
-
 def start_stored_LMs():
     lms = LM_Script.objects.all()
     if lms.exists():
-        log(f"LMs: {lms}")
         for lm_object in lms:
             start_communicator(lm_object.name)
 
-
+def clear_database():
+    LM_Script.objects.all().delete()
+    LM_API.objects.all().delete()
 
 class TestLanguageModel:
     def __init__(self, model_class):

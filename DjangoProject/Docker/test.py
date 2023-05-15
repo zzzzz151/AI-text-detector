@@ -1,28 +1,3 @@
-from time import sleep
-"""
-import subprocess
-import docker_compose
-
-# Load the Docker Compose file
-compose_file = 'path/to/docker-compose.yml'
-project = docker_compose.Project.from_file(compose_file)
-
-compose_file_path = './communicator/docker-compose.yml'
-
-var = 'LISTEN_PORT=3131'
-
-for i in range(5):
-    env_var = f"MY_ENV_VAR_{i}"
-    subprocess.run(["docker-compose", '-f', compose_file_path, "up", "-d", "--scale", "communicator=5", "--no-recreate"], env={env_var: "some_value"})
-
-
-
-subprocess.run(['docker-compose', '-f', compose_file_path, 'up', 'communicator', '--detach'], env={'LISTEN_PORT': '3131'})
-sleep(10)
-subprocess.run(['docker-compose', '-f', compose_file_path, 'stop', 'communicator'])
-subprocess.run(['docker-compose', '-f', compose_file_path, 'stop', 'server'])
-"""
-
 import subprocess
 import docker
 import os
@@ -51,13 +26,6 @@ def build_image(compose_file_path:str, build_args:dict):
         command.append(f"{env_name}={env_value}")
 
     subprocess.run(command, check=True)
-    """
-    try:
-        output = subprocess.check_output(command, stderr=subprocess.STDOUT, universal_newlines=True)
-        print(output)
-    except subprocess.CalledProcessError as e:
-        print(e.output)
-    """
 def run_image(compose_file_path:str, service_name:str, container_name:str, extra_options:list):
     command = [
         "docker", "compose",
