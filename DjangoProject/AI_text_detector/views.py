@@ -1,6 +1,7 @@
 import json
 import os
 import random
+import shutil
 import sys
 from datetime import datetime
 
@@ -13,7 +14,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from AI_text_detector.AI_LMs import AI
-from Docker.test import add_communicator
+from Docker.test import add_communicator, delete_container
 from .AI_LMs.AI import docker_compose_path, get_prediction
 from .models import *
 
@@ -254,13 +255,14 @@ def delete_LM(request):
     lm_name = data["name"]
     try:
         lm = LM_Script.objects.get(name=lm_name)
-        AI.unloadLM(lm_name)
+        delete_container(lm_name)
         lm.delete()
         if os.path.exists(lm.script):
-            os.remove(lm.script)
+            shutil.rmtree(lm.script)
         log("Deleted LM '" + lm_name + "'")
         return Response(status=200)
     except Exception as e:
+        log(e)
         pass
 
     try:

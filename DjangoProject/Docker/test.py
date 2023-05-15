@@ -58,6 +58,14 @@ def create_or_run_container(client, compose_file_path:str, service_name:str, con
         run_image(compose_file_path, service_name, container_name, extra_options)
     elif not container_is_running(client, container_name):
         start_container(container_name)
+def delete_container(container_name:str):
+    """docker rm -f < Container_ID>"""
+    client = docker.from_env()
+    if container_exists(client, container_name):
+        subprocess.run(['docker', 'rm', '-f', container_name])
+
+    client.close()
+
 def store_file(path, file_name, file):
     os.makedirs(path, exist_ok=True)
     newFile = open(file_name, "w")
