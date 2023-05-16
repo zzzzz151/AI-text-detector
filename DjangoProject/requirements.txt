@@ -9,7 +9,9 @@ bs4
 regex
 datetime
 pandas
-mysqlclient
 docker
+django
 #transformers==4.27.1
 #torch==2.0.0
+mysql-connector-python
+mysqlclient

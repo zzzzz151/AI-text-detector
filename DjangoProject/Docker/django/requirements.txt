@@ -9,3 +9,4 @@ datetime
 pandas
 mysqlclient
 docker
+mysql-connector-python

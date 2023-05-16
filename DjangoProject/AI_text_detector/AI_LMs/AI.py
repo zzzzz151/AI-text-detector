@@ -21,23 +21,12 @@ def log(msg):
 
 def start_stored_LMs():
     lms = LM_Script.objects.all()
-    if lms.exists():
-        for lm_object in lms:
-            start_communicator(lm_object.name)
-
-    # FIXME: When we migrate to a containerized MySQL database, get rid of all these trys, excepts and subprocesses, they are no longer needed
-    """
     try:
         if lms.exists():
             for lm_object in lms:
                 start_communicator(lm_object.name)
-    except OperationalError:
-        try:
-            subprocess.run(['python', 'manage.py', 'migrate'], check=True)
-            print("Migrations completed successfully.")
-        except subprocess.CalledProcessError as e:
-            print(f"An error occurred while running migra tions: {e}")
-    """
+    except:
+        print("Failed to access database. Have Django's migrations been applied?")
 
 try:
     port = int(os.getenv('SEND_PORT'))

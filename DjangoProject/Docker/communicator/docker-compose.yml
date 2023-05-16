@@ -21,16 +21,26 @@ services:
       - '5555:5555'
 
   db:
-    build: ../mysql
+    image: xela10001/ai-text-detector-db:0.0.1
+    restart: always
     ports:
       - "3306:3306"
-    command: --init-file /docker-entrypoint-initdb.d/data.sql
+    #command: --init-file /docker-entrypoint-initdb.d/data.sql
     container_name: mysql_container
     environment:
-      MYSQL_ROOT_PASSWORD: password
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=ai
+    volumes:
+      - .:/app
+      - /tmp/app/mysqld:/run/mysqld
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3306"]
+      interval: 1s
+      retries: 120
 
   api:
-    build: ../django
+    image: xela10001/ai-text-detector-api
+    #build: ../django
     volumes:
       - ../../../DjangoProject:/DjangoProject
       - /var/run/docker.sock:/var/run/docker.sock
@@ -42,7 +52,8 @@ services:
       - "8000:8000"
     container_name: django_container
     command:
-      sh -c "pip3 install -r requirements.txt; python manage.py runserver 0.0.0.0:8000"
+      sh -c "pip3 install -r requirements.txt; python manage.py migrate; python manage.py runserver 0.0.0.0:8000"
     depends_on:
-      #- db
-      - server
+      db:
+        condition: service_healthy
+

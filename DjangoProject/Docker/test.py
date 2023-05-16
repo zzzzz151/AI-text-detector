@@ -80,7 +80,9 @@ def add_communicator(compose_file_path, lm_name):
         #('v', "/DjangoAPI/Docker/communicator/messages.py:/usr/app/src/messages.py"),
         #('pip3', 'install', '-r', f'/usr/app/src/lm_name/requirements.txt')
     ]
+
     create_or_run_container(client, compose_file_path, service_name, create_container_name(service_name, lm_name), env_vars)
+
     client.close()
 def start_communicator(lm_name):
     client = docker.from_env()

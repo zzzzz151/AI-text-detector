@@ -5,6 +5,7 @@ import shutil
 import sys
 from datetime import datetime
 
+import requests
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import parsers
@@ -64,14 +65,15 @@ def handle_text_request(request):
                 json_dumps_params={'indent': 2})
 
     log("Received text request for \"" + text + "\"")
-
-    # TODO: API lms arent implemented
     if lm_name:
-        probability_AI_generated = get_prediction(text, lm_name)
-        if probability_AI_generated is None:
-            probability_AI_generated = 0
+        if lm_name in [x.name for x in LM_API.objects.all()]:
+            probability_AI_generated = get_LM_API_prediction(text, lm_name)
+        else:
+            probability_AI_generated = get_prediction(text, lm_name)
     else:
         probability_AI_generated = random.randint(0, 100)
+    if probability_AI_generated is None:
+        probability_AI_generated = 0
 
     responseData = {
         "text": text,
@@ -123,7 +125,6 @@ class LM_Upload(APIView):
 
                 store_file(save_path, 'lm_submission.py', script)
                 store_file(save_path, 'requirements.txt', "")
-
                 add_communicator(docker_compose_path, lm_name)
 
                 # assert not Path(save_path).is_file() # Assert a file with this name doesnt exist
@@ -190,6 +191,20 @@ def get_LMs(request):
 
     return JsonResponse(lms, safe=False, status=200, json_dumps_params={'indent': 2})
 
+def get_LM_API_prediction(text, lm_name):
+    if text.strip() == "":
+        return None
+
+    try:
+        api_url = LM_API.objects.get(pk=lm_name).API
+        response = requests.post(api_url, data=text)
+        probability = response.json()["probability_AI_generated"]
+        probability *= 100
+        probability = round(probability)
+        return probability
+    except Exception as e:
+        return None
+
 @csrf_exempt
 def my_LM_as_API(request):
     try:
@@ -222,33 +237,6 @@ def execute_code(request):
         {},
         status=200,
         json_dumps_params={'indent': 2})
-
-def process_lm(request):
-    lm_name = request.data["name"]
-    log("Received LM " + lm_name)
-
-    if "script" in request.data:
-        save_path = f"Docker/communicator/LMs/{lm_name}/"
-        script = request.data["script"]
-
-        store_file(save_path, 'lm_submission.py', script)
-        store_file(save_path, 'requirements.txt', "")
-
-        save_lm(lm_name, "author here", "description here", script)
-
-        add_communicator(docker_compose_path, lm_name)
-
-    if "API" in request.data or "api" in request.data:
-        api_url = request.data["API"] if "API" in request.data else request.data["api"]
-        newLM = LM_API()
-        newLM.name = lm_name
-        newLM.author = "author here"
-        newLM.description = "description here"
-        newLM.API = api_url
-        newLM.save()
-
-    print("Accepted LM d" + lm_name)
-    ##print(AI.probability_AI_generated_text("Hello", lm_name))
 
 @renderer_classes((TemplateHTMLRenderer, JSONRenderer))
 def delete_LM(request):
