@@ -36,11 +36,9 @@ function callApi(url, bodyObject, type = 'application/json', method = 'POST') {
 
     return fetch(url, options)
         .then(response => {
-            if (response.status == 400) {
-                return {probability_AI_generated: 0};
-            }
             if (!response.ok) {
-                throw Error(response.statusText);
+                return {probability_AI_generated: 0};
+                //throw Error(response.statusText);
             }
             return response.json();
         })
@@ -53,6 +51,11 @@ function callApi(url, bodyObject, type = 'application/json', method = 'POST') {
 /* Analyzer */
 
 function analysePage(language_model) {
+    const URL = "http://127.0.0.1:8000/api/v1";
+    const HIGHLIGHT_THRESHOLD_PROBABILITY = 50;
+    const MIN_WORDS = 8;
+    const ANALYSE_BY_PARAGRAPH = false;
+
     const exclude = ['base', 'head', 'meta', 'title', 'link', 'style',
         'script', 'noscript', 'audio', 'video', 'source',
         'track', 'canvas', 'svg', 'img', 'iframe',
@@ -61,9 +64,6 @@ function analysePage(language_model) {
     ];
     const strExclude = exclude.join(", ")
 
-    const URL = "http://127.0.0.1:8000/api/v1";
-    const HIGHLIGHT_THRESHOLD_PROBABILITY = 50;
-    const MIN_WORDS = 7;
     let promises = []; // array to save fetch promises
 
     // Iterate elements with relevant tag
@@ -76,6 +76,18 @@ function analysePage(language_model) {
             v.remove();
         });
         let text = clone.textContent;
+
+        if (ANALYSE_BY_PARAGRAPH)
+        {
+            text = text.trim();
+            if (text.length == 0)
+                return;
+            if (text.split(" ").length < MIN_WORDS)
+                return;
+            let promise = analyseText(URL, language_model, text, elem, HIGHLIGHT_THRESHOLD_PROBABILITY);
+            promises.push(promise);
+            return;
+        }
 
         let lines = splitByLines(text);
         for (let line of lines) {
@@ -153,7 +165,7 @@ function analyseText(url, language_model, text, elem, threshold) {
             })
             .catch(error => {
                 reject(error);
-                console.log("Error fetching data, ", error)
+                //console.log("Error fetching data, ", error)
             });
     });
 };
