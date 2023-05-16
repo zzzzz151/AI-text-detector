@@ -179,7 +179,7 @@
             <div id="apiDiv" class="d-none">
               <label for="id">API</label>
               <input type="text" class="form-control" id="api" placeholder="Your API endpoint/URL"
-                value="http://localhost:8000/api/v1/myLM">
+                value="http://localhost:8000/api/v1/my-model">
             </div>
           </div>
           <div class="modal-footer">
@@ -289,7 +289,7 @@
         }
         console.log("------------");
       
-        fetch("http://127.0.0.1:8000/api/v1/LMs",
+        fetch("http://127.0.0.1:8000/api/v1/models",
           {
             body: formData,
             method: "post"
@@ -317,7 +317,7 @@
       
       }
       function onRemoveLM() {
-        fetch("http://127.0.0.1:8000/api/v1/LMs",
+        fetch("http://127.0.0.1:8000/api/v1/models",
           {
             body: JSON.stringify({ name: lm_to_remove }),
             method: "delete"
