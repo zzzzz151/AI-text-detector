@@ -122,7 +122,6 @@
             <i class="fa fa-star star"></i>
             <i class="fa fa-star-half-o star"></i>
             <i class="far fa-star star"></i>
-            (177 ratings)
           </p>
           {% if LM.author == user %}
           <h6 class="card-subtitle text-muted">By {{LM.author}} (you)</h6>
@@ -131,6 +130,7 @@
           {% endif %}
           <p class="card-text mt-2">{{LM.description}}</p>
           {% if user %}
+          <!--
           <fieldset class="rate mt-2">
             <span>Add a rating:</span>
             <input type="radio" id="rating10" name="rating" value="10" /><label for="rating10" title="5 stars"></label>
@@ -144,6 +144,7 @@
             <input type="radio" id="rating2" name="rating" value="2" /><label for="rating2" title="1 star"></label>
             <input type="radio" id="rating1" name="rating" value="1" /><label class="half" for="rating1" title="1/2 star"></label>
           </fieldset>
+          -->
           {% endif %}
         </div>
       </div>
@@ -178,7 +179,7 @@
             <div id="apiDiv" class="d-none">
               <label for="id">API</label>
               <input type="text" class="form-control" id="api" placeholder="Your API endpoint/URL"
-                value="http://localhost:8000/api/v1/myLM">
+                value="http://localhost:8000/api/v1/my-model">
             </div>
           </div>
           <div class="modal-footer">
@@ -288,7 +289,7 @@
         }
         console.log("------------");
       
-        fetch("http://127.0.0.1:8000/api/v1/LMs",
+        fetch("http://127.0.0.1:8000/api/v1/models",
           {
             body: formData,
             method: "post"
@@ -316,7 +317,7 @@
       
       }
       function onRemoveLM() {
-        fetch("http://127.0.0.1:8000/api/v1/LMs",
+        fetch("http://127.0.0.1:8000/api/v1/models",
           {
             body: JSON.stringify({ name: lm_to_remove }),
             method: "delete"
