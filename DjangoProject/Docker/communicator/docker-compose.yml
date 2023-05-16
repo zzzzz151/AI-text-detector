@@ -27,10 +27,7 @@ services:
     command: --init-file /docker-entrypoint-initdb.d/data.sql
     container_name: mysql_container
     environment:
-      MYSQL_ROOT_USER: root
-      MYSQL_ROOT_PASSWORD: ai
-      MYSQL_USER: non_root
-      MYSQL_PASSWORD: ai
+      MYSQL_ROOT_PASSWORD: password
 
   api:
     build: ../django
@@ -45,7 +42,7 @@ services:
       - "8000:8000"
     container_name: django_container
     command:
-      sh -c "pip3 install -r requirements.txt; python manage.py makemigrations; python manage.py migrate; python manage.py runserver 0.0.0.0:8000"
+      sh -c "pip3 install -r requirements.txt; python manage.py runserver 0.0.0.0:8000"
     depends_on:
       #- db
       - server
