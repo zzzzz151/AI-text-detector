@@ -21,7 +21,7 @@ services:
       - '5555:5555'
 
   db:
-    image: xela10001/ai-text-detector-db:0.0.1
+    build: ../mysql
     restart: always
     ports:
       - "3306:3306"
@@ -39,8 +39,7 @@ services:
       retries: 40
 
   api:
-    image: xela10001/ai-text-detector-api
-    #build: ../django
+    build: ../django
     volumes:
       - ../../../DjangoProject:/DjangoProject
       - /var/run/docker.sock:/var/run/docker.sock
