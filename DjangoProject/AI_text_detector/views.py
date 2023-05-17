@@ -14,13 +14,13 @@ from rest_framework.renderers import TemplateHTMLRenderer, JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from AI_text_detector.AI_LMs import AI
+from AI_text_detector.AI_LMs import prediction_models
 from Docker.docker_commands import add_communicator, delete_container
-from .AI_LMs.AI import docker_compose_path, get_prediction
+from .AI_LMs.prediction_models import docker_compose_path, get_prediction
 from .models import *
 
 
-AI.start_stored_LMs()
+prediction_models.start_stored_LMs()
 
 def log(msg):
     strDateTimeNow = str(datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
