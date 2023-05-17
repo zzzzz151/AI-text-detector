@@ -1,6 +1,4 @@
-# AI Text Detector
-
-# Project for Projeto em Informática 2023
+# AI Text Detector - Project for Projeto em Informática 2023
 
 # Team
 
