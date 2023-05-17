@@ -28,9 +28,6 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=password
       - MYSQL_DATABASE=ai
-    #volumes:
-    #  - .:/app
-    #  - /tmp/app/mysqld:/run/mysqld
     volumes:
       - my-datavolume:/var/lib/mysql
     healthcheck:

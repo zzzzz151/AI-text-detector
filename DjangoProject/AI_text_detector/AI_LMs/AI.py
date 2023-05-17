@@ -9,7 +9,7 @@ import pandas as pd
 from django.db import OperationalError
 
 from AI_text_detector.models import LM_Script, LM_API
-from Docker.test import start_communicator
+from Docker.docker_commands import start_communicator
 import Docker.communicator.messages as m
 
 docker_compose_path = '/DjangoProject/Docker/communicator/docker-compose.yml'

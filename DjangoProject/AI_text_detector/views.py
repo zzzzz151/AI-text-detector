@@ -15,7 +15,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from AI_text_detector.AI_LMs import AI
-from Docker.test import add_communicator, delete_container
+from Docker.docker_commands import add_communicator, delete_container
 from .AI_LMs.AI import docker_compose_path, get_prediction
 from .models import *
 
