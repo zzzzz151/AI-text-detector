@@ -80,7 +80,7 @@ class Message:
 	def __str__(self):
 		return f"Message->\n\tid:{self.identification},\n\ttype:{self.message_type}\n\t" \
 			   f"'{self.text}',\n\t" \
-			   f"lm:{self.language_model},\n\tprob:{self.probability}\n"
+			   f"model:{self.language_model},\n\tprob:{self.probability}\n"
 
 	def __repr__(self):
 		return str(self)
@@ -101,19 +101,11 @@ class Message:
 					  'language_model': self.language_model, 'probability': self.probability}
 		return dictionary
 
-def create_connect_message(lm_name)->Message:
-	return Message(None, 'connect', None, lm_name, None)
-def create_predict_message(ID, lm_name, text)->Message:
-	return Message(ID, 'predict', text, lm_name, None)
-def create_probability_message(ID, lm_name, prob)->Message:
-	return Message(ID, 'probability', None, lm_name, prob)
+def create_connect_message(model_name)->Message:
+	return Message(None, 'connect', None, model_name, None)
+def create_predict_message(ID, model_name, text)->Message:
+	return Message(ID, 'predict', text, model_name, None)
+def create_probability_message(ID, model_name, prob)->Message:
+	return Message(ID, 'probability', None, model_name, prob)
 def create_django_message(ID)->Message:
 	return Message(ID, 'django', None, None, None)
-
-
-if __name__ == "__main__":
-	# ignroe this, this is just for testing
-	text = "hi hello"
-	bytes_stuff = encode(text)
-	print(bytes_stuff)
-	print(decode(bytes_stuff))
