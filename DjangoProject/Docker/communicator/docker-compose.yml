@@ -22,16 +22,17 @@ services:
 
   db:
     build: ../mysql
-    restart: always
     ports:
       - "3306:3306"
     container_name: mysql_container
     environment:
       - MYSQL_ROOT_PASSWORD=password
       - MYSQL_DATABASE=ai
+    #volumes:
+    #  - .:/app
+    #  - /tmp/app/mysqld:/run/mysqld
     volumes:
-      - .:/app
-      - /tmp/app/mysqld:/run/mysqld
+      - my-datavolume:/var/lib/mysql
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3306"]
       interval: 1s
@@ -55,3 +56,5 @@ services:
       db:
         condition: service_healthy
 
+volumes:
+  my-datavolume:
