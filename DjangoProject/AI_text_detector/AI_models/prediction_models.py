@@ -11,7 +11,10 @@ from AI_text_detector.models import LM_Script, LM_API
 from Docker.docker_commands import start_communicator, add_communicator, delete_container, \
     create_communicator_container_name, container_exists, container_is_running
 
-docker_compose_path = '/DjangoProject/Docker/communicator/docker-compose.yml'
+docker_path = '/DjangoProject/Docker/communicator/'
+docker_compose_path = docker_path + 'docker-compose.yml'
+model_path = docker_path + 'LMs/'
+
 
 def get_port_and_host():
     try:
@@ -36,13 +39,28 @@ def log(msg):
 def start_stored_LMs():
     models = LM_Script.objects.all()
     try:
+        # For every model in our database
         for model_object in models:
             model_name = model_object.name
             container_name = create_communicator_container_name(model_name)
+            log(f"Model {model_name} selected.")
 
-            # If it doesnt exist, create the container
+            # If a corresponding folder doesn't exist, remove this from our database instead of starting a container
+            if not os.path.isdir(model_path + model_name):
+                log(f"Model {model_name} will be deleted from the database for lacking a file.")
+                delete_model_from_database(model_name)
+
+                if container_exists(container_name):
+                    log(f"Container for {model_name} will be deleted.")
+                    delete_container(container_name)
+
+                continue
+
+            # If a container for this model doesn't exist
             if not container_exists(container_name):
                 log(f"Model {model_name} in database lacks corresponding container. Creating {container_name}.")
+
+            # If a container for this model exists but isn't running
             elif not container_is_running(container_name):
                 log(f"Starting {container_name}.")
 
@@ -103,7 +121,6 @@ def process_model_script_submission(model_name, model_author, model_description,
     store_file(save_path, 'requirements.txt', "")
     add_communicator(docker_compose_path, model_name)
 
-    # assert not Path(save_path).is_file() # Assert a file with this name doesnt exist
     save_model_script_in_database(model_name, model_author, model_description, save_path)
 
 def process_model_API_submission(model_name, model_author, model_description, request):
@@ -164,9 +181,12 @@ def predict_text(model_name, text):
 def delete_model_script(model_name):
     model = LM_Script.objects.get(name=model_name)
     delete_container(create_communicator_container_name(model_name))
-    model.delete()
+    delete_model_from_database(model_name)
     if os.path.exists(model.script):
         shutil.rmtree(model.script)
 
 def does_model_container_exist(model_name):
     return container_exists(create_communicator_container_name(model_name))
+
+def delete_model_from_database(model_name):
+    LM_Script.objects.get(name=model_name).delete()
