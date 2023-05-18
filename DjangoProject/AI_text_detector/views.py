@@ -28,7 +28,7 @@ def handle_text_request(request):
         else:
             request_data = json.loads(request.body.decode())
             text = request_data["text"]
-            model_name = request_data['language_model']
+            model_name = request_data['model']
     except:
         log("Received invalid request")
         return JsonResponse(
@@ -178,7 +178,6 @@ def delete_model(request):
         try:
             delete_model_script(model_name)
             log("Deleted model '" + model_name + "'")
-
             return Response(status=200)
         except Exception as e:
             log(e)
