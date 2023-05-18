@@ -37,7 +37,7 @@ function callApi(url, bodyObject, type = 'application/json', method = 'POST') {
     return fetch(url, options)
         .then(response => {
             if (!response.ok) {
-                return {probability_AI_generated: 0};
+                return {probability_AI_generated: -1};
                 //throw Error(response.statusText);
             }
             return response.json();
@@ -54,7 +54,7 @@ function analysePage(language_model) {
     const URL = "http://127.0.0.1:8000/api/v1";
     const HIGHLIGHT_THRESHOLD_PROBABILITY = 50;
     const MIN_WORDS = 8;
-    const ANALYSE_BY_PARAGRAPH = false;
+    const ANALYSE_BY_PARAGRAPH = true; // if false, it will analyse by sentence
 
     const exclude = ['base', 'head', 'meta', 'title', 'link', 'style',
         'script', 'noscript', 'audio', 'video', 'source',
@@ -77,12 +77,12 @@ function analysePage(language_model) {
         });
         let text = clone.textContent;
 
-        if (ANALYSE_BY_PARAGRAPH)
+        if (ANALYSE_BY_PARAGRAPH && window.location.href != "https://mozilla.github.io/pdf.js/web/viewer.html")
         {
             text = text.trim();
             if (text.length == 0)
                 return;
-            if (text.split(" ").length < MIN_WORDS)
+            if (text.split(/\s+/).length < MIN_WORDS) // split by spaces
                 return;
             let promise = analyseText(URL, language_model, text, elem, HIGHLIGHT_THRESHOLD_PROBABILITY);
             promises.push(promise);
@@ -158,10 +158,20 @@ function analyseText(url, language_model, text, elem, threshold) {
                         });
                     }
                 }
-                resolve({
-                    "length": text.length,
-                    "weight": text.length * data.probability_AI_generated
-                });
+                if (data.probability_AI_generated >= 0)
+                {
+                    resolve({
+                        "length": text.length,
+                        "weight": text.length * data.probability_AI_generated
+                    });
+                }
+                else
+                {
+                    resolve({
+                        "length": text.length,
+                        "weight": 0
+                    });
+                }
             })
             .catch(error => {
                 reject(error);
