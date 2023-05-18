@@ -33,7 +33,7 @@ def build_image(compose_file_path:str, build_args:dict):
         command.append("--build-arg")
         command.append(f"{env_name}={env_value}")
 
-    subprocess.run(command, check=True)
+    subprocess.Popen(command)
 def run_image(compose_file_path:str, service_name:str, container_name:str, extra_options:list):
     command = [
         "docker", "compose",
@@ -57,9 +57,9 @@ def run_image(compose_file_path:str, service_name:str, container_name:str, extra
                 command.append(arg)
 
 
-    subprocess.run(command, check=True)
+    subprocess.Popen(command)
 def start_container(container_name):
-    subprocess.run(['docker', 'start', container_name])
+    subprocess.Popen(['docker', 'start', container_name])
 def create_or_run_container(compose_file_path:str, service_name:str, container_name:str, extra_options:list):
     if not container_exists(container_name):
         build_image(compose_file_path, {"LM_NAME":extra_options[0][2]})
@@ -69,7 +69,7 @@ def create_or_run_container(compose_file_path:str, service_name:str, container_n
 def delete_container(container_name:str):
     """docker rm -f < Container_ID>"""
     if container_exists(container_name):
-        subprocess.run(['docker', 'rm', '-f', container_name])
+        subprocess.Popen(['docker', 'rm', '-f', container_name])
 
 def store_file(path, file_name, file):
     os.makedirs(path, exist_ok=True)

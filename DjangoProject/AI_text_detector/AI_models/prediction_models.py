@@ -43,12 +43,10 @@ def start_stored_LMs():
             # If it doesnt exist, create the container
             if not container_exists(container_name):
                 log(f"Model {model_name} in database lacks corresponding container. Creating {container_name}.")
-                add_communicator(docker_compose_path, model_name)
-
-            # If it exists but isn't running, start it
             elif not container_is_running(container_name):
                 log(f"Starting {container_name}.")
-                start_communicator(model_name)
+
+            add_communicator(docker_compose_path, model_name)
     except:
         log("Failed to access database. Have Django's migrations been applied?")
 
