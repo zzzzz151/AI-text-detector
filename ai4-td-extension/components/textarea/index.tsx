@@ -19,7 +19,7 @@ function TextArea() {
           return;
         }
     
-        callApi(URL, { languageModel, text: textareaValue }).then((data) => {
+        callApi(URL, { language_model: languageModel, text: textareaValue }).then((data) => {
           alert(data.probability_AI_generated)
         });
     }
@@ -57,7 +57,7 @@ function TextArea() {
                     {characterCount > 0 && <span className="scanned-text-clear" onClick={clearTextarea}>Clear</span>}
                 </div>
                 <span className="error-msg"></span>
-                <Button color="primary" variant="contained" sx={{
+                <Button onClick={analyseBlock} color="primary" variant="contained" sx={{
                     padding: 0,
                     margin: '8px 0',
                     cursor: 'pointer',

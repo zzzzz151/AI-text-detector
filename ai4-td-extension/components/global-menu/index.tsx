@@ -50,7 +50,7 @@ function GlobalMenu() {
             cleanPage();  
             handleClick();
         }
-      }, [isReloading]);
+    }, [isReloading]);
 
     useEffect(() => {
         if (autoscan && isDefault) {
