@@ -5,11 +5,11 @@ import "~/components/textarea/styles.css"
 import { callApi } from "~resources/utils";
 const blueTheme = createTheme({ palette: { primary: {main:'#181b21'} } })
 
-const URL = "http://127.0.0.1:8000/api/v1";
+const URL = process.env.PLASMO_PUBLIC_API_URL;
 const characterLimit = 5000;
 
 function TextArea() {
-    const [languageModel] = useStorage<string>("model", v => v ?? 'openai-roberta-base');
+    const [languageModel] = useStorage<string>("model", v => v ?? process.env.PLASMO_PUBLIC_DEFAULT_MODEL);
     const [textareaValue, setTextareaValue] = useState("");
     const taElement: LegacyRef<HTMLTextAreaElement> = useRef();
 
@@ -19,7 +19,7 @@ function TextArea() {
           return;
         }
     
-        callApi(URL, { language_model: languageModel, text: textareaValue }).then((data) => {
+        callApi(URL, { model: languageModel, text: textareaValue }).then((data) => {
           alert(data.probability_AI_generated)
         });
     }

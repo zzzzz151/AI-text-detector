@@ -11,7 +11,7 @@ function GlobalMenu() {
     const [anchor, setAnchor] = useState(false);
     const [data, setData] = useState(null);
     const [autoscan] = useStorage<boolean>("scan-page-automatically");
-    const [languageModel] = useStorage<string>("model", v => v ?? 'openai-roberta-base');
+    const [languageModel] = useStorage<string>("model", v => v ?? process.env.PLASMO_PUBLIC_DEFAULT_MODEL);
  
     const isReloading = is("reload");
     const isDefault = is("default");

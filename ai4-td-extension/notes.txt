@@ -1,20 +1,21 @@
 add to env:
 hooks/language-models.tsx
-> fetch models names api url
-> default model
+DONE > fetch models names api url
+DONE > default model
 
 - global-menu/index.tsx
-> default model
+DONE > default model
 
 - textarea/index.tsx
-> default model
-> analyse text url
+DONE > default model
+DONE > analyse text url
 
 utils.ts - analysePage
-> analyse text url
+DONE > analyse text url
 
 background - index.ts
-> analyse text url
+DONE > analyse text url
+DONE > default model
 
 - popup-footer/index.tsx
-> links
+DONE > links

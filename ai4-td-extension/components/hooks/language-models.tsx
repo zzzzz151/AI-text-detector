@@ -5,10 +5,10 @@ import { callApi } from '~resources/utils';
 function useLanguageModelOptions() {
   const [options, setOptions] = useState([]);
 
-  const [languageModel, setLanguageModel] = useStorage('model', options[0] ?? 'openai-roberta-base');
+  const [languageModel, setLanguageModel] = useStorage('model', options[0] ?? process.env.PLASMO_PUBLIC_DEFAULT_MODEL);
 
   useEffect(() => {
-    callApi('http://127.0.0.1:8000/api/v1/models?filter=name', null, 'application/json', 'GET')
+    callApi(`${process.env.PLASMO_PUBLIC_API_URL}/models?filter=name`, null, 'application/json', 'GET')
       .then(data => {
         const names = data.map(lm => lm.name);
         setOptions(names)

@@ -50,8 +50,8 @@ function callApi(url, bodyObject, type = 'application/json', method = 'POST') {
 
 /* Analyzer */
 
-function analysePage(language_model) {
-    const URL = "http://127.0.0.1:8000/api/v1";
+function analysePage(model) {
+    const URL = process.env.PLASMO_PUBLIC_API_URL;
     const HIGHLIGHT_THRESHOLD_PROBABILITY = 50;
     const MIN_WORDS = 8;
     const ANALYSE_BY_PARAGRAPH = true; // if false, it will analyse by sentence
@@ -84,7 +84,7 @@ function analysePage(language_model) {
                 return;
             if (text.split(/\s+/).length < MIN_WORDS) // split by spaces
                 return;
-            let promise = analyseText(URL, language_model, text, elem, HIGHLIGHT_THRESHOLD_PROBABILITY);
+            let promise = analyseText(URL, model, text, elem, HIGHLIGHT_THRESHOLD_PROBABILITY);
             promises.push(promise);
             return;
         }
@@ -99,7 +99,7 @@ function analysePage(language_model) {
                 if (sentence.split(" ").length < MIN_WORDS)
                     continue;
 
-                let promise = analyseText(URL, language_model, sentence, elem, HIGHLIGHT_THRESHOLD_PROBABILITY);
+                let promise = analyseText(URL, model, sentence, elem, HIGHLIGHT_THRESHOLD_PROBABILITY);
                 promises.push(promise);
             }
         }
@@ -125,9 +125,9 @@ function analysePage(language_model) {
         });
 }
 
-function analyseText(url, language_model, text, elem, threshold) {
+function analyseText(url, model, text, elem, threshold) {
     return new Promise((resolve, reject) => {
-        callApi(url, { language_model, text })
+        callApi(url, { model, text })
             .then(data => {
                 if (data.probability_AI_generated < threshold) {
                     console.log("Not AI (" + data.probability_AI_generated + "%): '" + text + "'");
