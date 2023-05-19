@@ -62,6 +62,6 @@
 }
 
 .error-msg {
+    padding-top: 4px;
     color: #fa3a36;
-    font-size: 14px;
 }

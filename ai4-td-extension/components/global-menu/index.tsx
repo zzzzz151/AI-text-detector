@@ -15,7 +15,10 @@ function GlobalMenu() {
  
     const isReloading = is("reload");
     const isDefault = is("default");
-
+    const isSuccess = is("success");
+    const isError = is("error");
+    const isLoading = is("loading");
+    
     const handleClick = () => {
         if (isDefault || isReloading) {
             setLoading();
@@ -57,10 +60,6 @@ function GlobalMenu() {
           handleClick();
         }
     }, [autoscan]);
-
-    const isSuccess = is("success");
-    const isError = is("error");
-    const isLoading = is("loading");
     
     return (
         <>
@@ -71,7 +70,7 @@ function GlobalMenu() {
                 loading={isLoading}
             />
             {isSuccess && anchor && <GlobalCard data={data} onReloadClick={handleReloadClick} />}
-            {isError && anchor && <GlobalCardError error={"Some error happened"} onReloadClick={handleReloadClick} />}
+            {isError && anchor && <GlobalCardError error={"Oops! Something went wrong."} onReloadClick={handleReloadClick} />}
         </>
     );
 }

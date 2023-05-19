@@ -14,23 +14,29 @@ function TextArea() {
     const [colorRegular] = useStorage<string>("highlight-color-regular", v => v ?? "#FFFF00")
     const [colorStrong] = useStorage<string>("highlight-color-strong", v => v ?? "#FF0000")
     const [score, setScore] = useState(null);
+    const [errorMessage, setErrorMessage] = useState('')
 
     const scoreColor = (score > 75)? colorStrong : ((score > 50)? colorRegular : "#04ae18");
 
     function analyseBlock() {
         if (textareaValue.trim() === "") {
-          // Textarea is empty, display an error message or handle it accordingly
-          return;
+          setErrorMessage('The input cannot be empty.');
         }
-    
-        callApi(URL, { model: languageModel, text: textareaValue }).then((data) => {
-            setScore(data.probability_AI_generated)
-        });
+        else {
+            callApi(URL, { model: languageModel, text: textareaValue }).then((data) => {
+                setScore(data.probability_AI_generated)
+            }).catch(() => {
+                setErrorMessage('Oops! Something went wrong.');
+            });
+        }
     }
 
     const handleTextareaChange = (e) => {
         if (score != null) {
             setScore(null);
+        }
+        if (errorMessage) {
+            setErrorMessage('');
         }
         const value = e.target.value;
         if (value.length <= characterLimit) {
@@ -39,8 +45,13 @@ function TextArea() {
     };
 
     const clearTextarea = () => {
-        setTextareaValue("");
-        setScore(null);
+        setTextareaValue('');
+        if (score != null) {
+            setScore(null);
+        }
+        if (errorMessage) {
+            setErrorMessage('');
+        }
         if (taElement.current) {
             taElement.current.focus();
         }
@@ -66,7 +77,7 @@ function TextArea() {
                     {characterCount > 0 && <span className="scanned-text-clear" onClick={clearTextarea}>Clear</span>}
                 </div>
             </div>
-            <span className="error-msg"></span>
+            { errorMessage && <span className="error-msg">{errorMessage}</span>}
             <Button onClick={analyseBlock} color="primary" variant="contained" sx={{
                 padding: 0,
                 margin: '8px 0',
