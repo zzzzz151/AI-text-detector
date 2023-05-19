@@ -226,7 +226,11 @@ function textToSentences(text) {
 /* Clean page */
 
 function cleanPage() {
-    $("highlighted-text").replaceWith(function () { return this.innerHTML; });
+    var highlightedTextElements = document.querySelectorAll("highlighted-text");
+    for (var i = 0; i < highlightedTextElements.length; i++) {
+      var element = highlightedTextElements[i];
+      element.outerHTML = element.innerHTML;
+    }
 }
 
 

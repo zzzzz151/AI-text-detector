@@ -58,14 +58,20 @@ function GlobalMenu() {
         }
     }, [autoscan]);
 
+    const isSuccess = is("success");
+    const isError = is("error");
+    const isLoading = is("loading");
+    
     return (
         <>
             <GlobalButton
                 onClick={handleClick}
-                is={is}
+                success={isSuccess}
+                error={isError}
+                loading={isLoading}
             />
-            {is("success") && anchor && <GlobalCard data={data} onReloadClick={handleReloadClick} />}
-            {is("error") && anchor && <GlobalCardError error={"Some error happened"} onReloadClick={handleReloadClick} />}
+            {isSuccess && anchor && <GlobalCard data={data} onReloadClick={handleReloadClick} />}
+            {isError && anchor && <GlobalCardError error={"Some error happened"} onReloadClick={handleReloadClick} />}
         </>
     );
 }

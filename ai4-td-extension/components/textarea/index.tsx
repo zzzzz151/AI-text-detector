@@ -1,9 +1,8 @@
-import { Button, ThemeProvider, createTheme } from "@mui/material";
+import { Button } from "@mui/material";
 import { useStorage } from "@plasmohq/storage/hook";
 import { LegacyRef, useRef, useState } from "react";
 import "~/components/textarea/styles.css"
 import { callApi } from "~resources/utils";
-const blueTheme = createTheme({ palette: { primary: {main:'#181b21'} } })
 
 const URL = process.env.PLASMO_PUBLIC_API_URL;
 const characterLimit = 5000;
@@ -41,34 +40,36 @@ function TextArea() {
     const characterCount = textareaValue.length;
 
     return (
-        <ThemeProvider theme={blueTheme}>
-            <div className="scanned-text-container">
-                <textarea
-                    ref={taElement}
-                    className="scanned-text"
-                    name="message" 
-                    placeholder="Paste text here" 
-                    autoFocus
-                    value={textareaValue}
-                    onChange={handleTextareaChange}
-                ></textarea>
-                <div className="scanned-text-footer">
-                    <span className="scanned-text-limit">{characterCount}/{characterLimit} characters</span>
-                    {characterCount > 0 && <span className="scanned-text-clear" onClick={clearTextarea}>Clear</span>}
-                </div>
-                <span className="error-msg"></span>
-                <Button onClick={analyseBlock} color="primary" variant="contained" sx={{
-                    padding: 0,
-                    margin: '8px 0',
-                    cursor: 'pointer',
-                    fontStyle: 'normal',
-                    fontWeight: 700,
-                    fontSize: '14px',
-                    lineHeight: '32px',
-                    color: '#fff',
-                }}>Scan text</Button>
+        <div className="scanned-text-container">
+            <textarea
+                ref={taElement}
+                className="scanned-text"
+                name="message" 
+                placeholder="Paste text here" 
+                autoFocus
+                value={textareaValue}
+                onChange={handleTextareaChange}
+            ></textarea>
+            <div className="scanned-text-footer">
+                <span className="scanned-text-limit">{characterCount}/{characterLimit} characters</span>
+                {characterCount > 0 && <span className="scanned-text-clear" onClick={clearTextarea}>Clear</span>}
             </div>
-        </ThemeProvider>
+            <span className="error-msg"></span>
+            <Button onClick={analyseBlock} color="primary" variant="contained" sx={{
+                padding: 0,
+                margin: '8px 0',
+                cursor: 'pointer',
+                fontStyle: 'normal',
+                backgroundColor: '#181b21',
+                fontWeight: 700,
+                fontSize: '14px',
+                lineHeight: '32px',
+                color: '#fff',
+                ':hover': {
+                    backgroundColor: '#1a1c1f',
+                }
+            }}>Scan text</Button>
+        </div>
     );
 }
 
