@@ -1,3 +1,5 @@
+# This requirements.txt file is ran by the Django container
+
 django_rest_framework
 markdown
 django-filter
@@ -9,7 +11,9 @@ bs4
 regex
 datetime
 pandas
-mysqlclient
 docker
+django
 #transformers==4.27.1
 #torch==2.0.0
+mysql-connector-python
+mysqlclient

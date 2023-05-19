@@ -36,11 +36,9 @@ function callApi(url, bodyObject, type = 'application/json', method = 'POST') {
 
     return fetch(url, options)
         .then(response => {
-            if (response.status == 400) {
-                return {probability_AI_generated: 0};
-            }
             if (!response.ok) {
-                throw Error(response.statusText);
+                return {probability_AI_generated: -1};
+                //throw Error(response.statusText);
             }
             return response.json();
         })
@@ -52,7 +50,12 @@ function callApi(url, bodyObject, type = 'application/json', method = 'POST') {
 
 /* Analyzer */
 
-function analysePage(language_model) {
+function analysePage(model) {
+    const URL = process.env.PLASMO_PUBLIC_API_URL;
+    const HIGHLIGHT_THRESHOLD_PROBABILITY = 50;
+    const MIN_WORDS = 8;
+    const ANALYSE_BY_PARAGRAPH = true; // if false, it will analyse by sentence
+
     const exclude = ['base', 'head', 'meta', 'title', 'link', 'style',
         'script', 'noscript', 'audio', 'video', 'source',
         'track', 'canvas', 'svg', 'img', 'iframe',
@@ -61,9 +64,6 @@ function analysePage(language_model) {
     ];
     const strExclude = exclude.join(", ")
 
-    const URL = "http://127.0.0.1:8000/api/v1";
-    const HIGHLIGHT_THRESHOLD_PROBABILITY = 50;
-    const MIN_WORDS = 7;
     let promises = []; // array to save fetch promises
 
     // Iterate elements with relevant tag
@@ -77,6 +77,18 @@ function analysePage(language_model) {
         });
         let text = clone.textContent;
 
+        if (ANALYSE_BY_PARAGRAPH && window.location.href != "https://mozilla.github.io/pdf.js/web/viewer.html")
+        {
+            text = text.trim();
+            if (text.length == 0)
+                return;
+            if (text.split(/\s+/).length < MIN_WORDS) // split by spaces
+                return;
+            let promise = analyseText(URL, model, text, elem, HIGHLIGHT_THRESHOLD_PROBABILITY);
+            promises.push(promise);
+            return;
+        }
+
         let lines = splitByLines(text);
         for (let line of lines) {
             let sentences = textToSentences(line);
@@ -87,7 +99,7 @@ function analysePage(language_model) {
                 if (sentence.split(" ").length < MIN_WORDS)
                     continue;
 
-                let promise = analyseText(URL, language_model, sentence, elem, HIGHLIGHT_THRESHOLD_PROBABILITY);
+                let promise = analyseText(URL, model, sentence, elem, HIGHLIGHT_THRESHOLD_PROBABILITY);
                 promises.push(promise);
             }
         }
@@ -113,9 +125,9 @@ function analysePage(language_model) {
         });
 }
 
-function analyseText(url, language_model, text, elem, threshold) {
+function analyseText(url, model, text, elem, threshold) {
     return new Promise((resolve, reject) => {
-        callApi(url, { language_model, text })
+        callApi(url, { model, text })
             .then(data => {
                 if (data.probability_AI_generated < threshold) {
                     console.log("Not AI (" + data.probability_AI_generated + "%): '" + text + "'");
@@ -146,14 +158,24 @@ function analyseText(url, language_model, text, elem, threshold) {
                         });
                     }
                 }
-                resolve({
-                    "length": text.length,
-                    "weight": text.length * data.probability_AI_generated
-                });
+                if (data.probability_AI_generated >= 0)
+                {
+                    resolve({
+                        "length": text.length,
+                        "weight": text.length * data.probability_AI_generated
+                    });
+                }
+                else
+                {
+                    resolve({
+                        "length": text.length,
+                        "weight": 0
+                    });
+                }
             })
             .catch(error => {
                 reject(error);
-                console.log("Error fetching data, ", error)
+                //console.log("Error fetching data, ", error)
             });
     });
 };
@@ -204,7 +226,11 @@ function textToSentences(text) {
 /* Clean page */
 
 function cleanPage() {
-    $("highlighted-text").replaceWith(function () { return this.innerHTML; });
+    var highlightedTextElements = document.querySelectorAll("highlighted-text");
+    for (var i = 0; i < highlightedTextElements.length; i++) {
+      var element = highlightedTextElements[i];
+      element.outerHTML = element.innerHTML;
+    }
 }
 
 

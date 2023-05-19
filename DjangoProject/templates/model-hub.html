@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Model Hub</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/90925dc0b7.js" crossorigin="anonymous"></script>
+    <style>
+      .navbar-dark .navbar-nav .nav-link:hover {
+      color: white;
+      }
+      .modal-dialog {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      }
+      #username-text {
+      color: white;
+      }
+      #removeLM {
+      cursor: pointer;
+      }
+      .star
+      {
+      color: #F4C430;
+      font-size: 18px;
+      }
+      @import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
+      /* Ratings widget */
+      .rate {
+      display: inline-block;
+      border: 0;
+      }
+      /* Hide radio */
+      .rate > input {
+      display: none;
+      }
+      /* Order correctly by floating highest to the right */
+      .rate > label {
+      float: right;
+      }
+      /* The star of the show */
+      .rate > label:before {
+      display: inline-block;
+      font-size: 1.25rem;
+      padding: .0rem .4rem;
+      margin: 0;
+      cursor: pointer;
+      font-family: FontAwesome;
+      content: "\f005 "; /* full star */
+      }
+      /* Half star trick */
+      .rate .half:before {
+      content: "\f089 "; /* half star no outline */
+      position: absolute;
+      padding-right: 0;
+      }
+      /* Click + hover color */
+      input:checked ~ label, /* color current and previous stars on checked */
+      label:hover, label:hover ~ label { color: #F4C430;  } /* color previous stars on hover */
+      /* Hover highlights */
+      input:checked + label:hover, input:checked ~ label:hover, /* highlight current and previous stars */
+      input:checked ~ label:hover ~ label, /* highlight previous selected stars for new rating */
+      label:hover ~ input:checked ~ label /* highlight previous selected stars */ { color: #F4C430;  } 
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Model Hub</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item" style="padding-right:12px">
+              <button type="button" class="btn btn-primary" onclick="onClickUploadLM()">Upload Model</button>
+            </li>
+            {% if not user %}
+            <li class="nav-item" id="signUp">
+              <a class="nav-link" href="register">
+              <i class="fa fa-user-plus"></i> Sign Up
+              </a>
+            </li>
+            <li id="logIn" class="nav-item">
+              <a class="nav-link" href="login">
+              <i class="fa fa-sign-in"></i> Log In
+              </a>
+            </li>
+            {% else %}
+            <li id="username" class="nav-item">
+              <a class="nav-link" id="usernameDisplay">
+              {{ user }}
+              </a>
+            </li>
+            <li id="logOut" class="nav-item">
+              <a class="nav-link" href="logout">
+              <i class="fa fa-sign-out"></i> Log Out
+              </a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div id="container" class="container-fluid mt-4">
+      {% for LM in LMs %}
+      <div class="card w-100">
+        <div class="card-body">
+          <h5 class="card-title">{{LM.name}}
+            {% if LM.author == user %}
+            <i id="removeLM" onclick="onRemoveLmIcon('{{LM.name}}')" class="fa fa-trash" style="color:red"></i>
+            {% endif %}
+          </h5>
+          <p class="mt-2">
+            <i class="fa fa-star star"></i>
+            <i class="fa fa-star star"></i>
+            <i class="fa fa-star star"></i>
+            <i class="fa fa-star-half-o star"></i>
+            <i class="far fa-star star"></i>
+          </p>
+          {% if LM.author == user %}
+          <h6 class="card-subtitle text-muted">By {{LM.author}} (you)</h6>
+          {% else %}
+          <h6 class="card-subtitle text-muted">By {{LM.author}}</h6>
+          {% endif %}
+          <p class="card-text mt-2">{{LM.description}}</p>
+          {% if user %}
+          <!--
+          <fieldset class="rate mt-2">
+            <span>Add a rating:</span>
+            <input type="radio" id="rating10" name="rating" value="10" /><label for="rating10" title="5 stars"></label>
+            <input type="radio" id="rating9" name="rating" value="9" /><label class="half" for="rating9" title="4 1/2 stars"></label>
+            <input type="radio" id="rating8" name="rating" value="8" /><label for="rating8" title="4 stars"></label>
+            <input type="radio" id="rating7" name="rating" value="7" /><label class="half" for="rating7" title="3 1/2 stars"></label>
+            <input type="radio" id="rating6" name="rating" value="6" /><label for="rating6" title="3 stars"></label>
+            <input type="radio" id="rating5" name="rating" value="5" /><label class="half" for="rating5" title="2 1/2 stars"></label>
+            <input type="radio" id="rating4" name="rating" value="4" /><label for="rating4" title="2 stars"></label>
+            <input type="radio" id="rating3" name="rating" value="3" /><label class="half" for="rating3" title="1 1/2 stars"></label>
+            <input type="radio" id="rating2" name="rating" value="2" /><label for="rating2" title="1 star"></label>
+            <input type="radio" id="rating1" name="rating" value="1" /><label class="half" for="rating1" title="1/2 star"></label>
+          </fieldset>
+          -->
+          {% endif %}
+        </div>
+      </div>
+      <br />
+      {% endfor %}
+    </div>
+
+    <div class="modal fade" id="upload-LM-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Upload Model</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <label for="lm-name">Model Name</label>
+            <input type="text" class="form-control" id="lm-name" maxlength="20">
+            <br />
+            <label for="lm-description">Model Description</label>
+            <textarea class="form-control" id="lm-description" rows="3"></textarea>
+            <br />
+            <label>Model Type</label>
+            <select id="select-lm-type" class="form-select" onchange="onChangeLmType(this);">
+              <option selected="selected">Python script</option>
+              <option>API</option>
+            </select>
+            <br />
+            <div id="scriptDiv">
+              <label for="script">Python script</label>
+              <input type="file" accept=".py" class="form-control" id="script">
+            </div>
+            <div id="apiDiv" class="d-none">
+              <label for="id">API</label>
+              <input type="text" class="form-control" id="api" placeholder="Your API endpoint/URL"
+                value="http://localhost:8000/api/v1/my-model">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" onclick="onSubmitLM()">Submit Model</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="remove-LM-modal" tabindex="-1" aria-labelledby="remove-LM-modal-title" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="remove-LM-modal-title">Remove LM</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-danger" onclick="onRemoveLM()">Remove</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script>
+      let IS_LOGGED_IN = {% if user %} true {% else %} false {% endif %};
+      let USERNAME = "";
+      
+      $(document).ready(function () {
+        console.log("IS_LOGGED_IN " + IS_LOGGED_IN);
+        if (IS_LOGGED_IN) {
+          USERNAME = document.getElementById("usernameDisplay").textContent.trim();
+        }
+        console.log("USERNAME '" + USERNAME + "'");
+      
+        $('.rate input[type="radio"]').each(function(index) {
+          for (let j = 1; j <= 10; j++)
+            $(this).attr("id", "rating" + (index+1) * j);
+          let label = $(this).next('label');
+          label.attr('for', $(this).attr("id"));
+        });
+      });
+      
+      function onClickUploadLM() {
+        if (!IS_LOGGED_IN) {
+          window.location.href = "login";
+          return;
+        }
+      
+        $("#upload-LM-modal").modal('show');
+      
+      }
+      
+      const SCRIPT = 0;
+      const API = 1;
+      
+      function onChangeLmType(select) {
+        let index = select.selectedIndex;
+        if (index == SCRIPT) {
+          $("#apiDiv").addClass("d-none");
+          $("#scriptDiv").removeClass("d-none");
+        }
+        else if (index == API) {
+          $("#scriptDiv").addClass("d-none");
+          $("#apiDiv").removeClass("d-none");
+        }
+      }
+      
+      function onSubmitLM() {
+        let formData = new FormData();
+      
+        let lm_name = document.getElementById("lm-name").value.trim();
+        if (lm_name.length <= 1) {
+          alert("LM Name too short!");
+          return;
+        }
+      
+        formData.append('name', lm_name);
+      
+        formData.append('author', USERNAME);
+      
+        let lm_description = document.getElementById("lm-description").value.trim();
+        formData.append('description', lm_description);
+      
+        let type = document.getElementById("select-lm-type").selectedIndex;
+        if (type == SCRIPT) {
+          let pyScript = document.getElementById("script").files[0];
+          if (pyScript == null | pyScript == undefined) {
+            alert("Add your python script!");
+            return;
+          }
+          formData.append('script', pyScript);
+        }
+        else if (type == API) {
+          let api_url = document.getElementById("api").value.trim();
+          if (api_url.length <= 3) {
+            alert("API endpoint too short!");
+            return;
+          }
+          formData.append('api', api_url);
+        }
+      
+        // Log the key/value pairs
+        console.log("------------");
+        for (var pair of formData.entries()) {
+          console.log(pair[0] + ': ' + pair[1]);
+        }
+        console.log("------------");
+      
+        fetch("http://127.0.0.1:8000/api/v1/models",
+          {
+            body: formData,
+            method: "post"
+          })
+          .then(response => {
+            if (response.status == 200)
+              alert("Model '" + lm_name + "' accepted!");
+            else
+              alert("Model '" + lm_name + "' refused!");
+            window.location.href = "model-hub";
+      
+          });
+      }
+      
+      function onToggleLMs() {
+      
+      }
+      
+      let lm_to_remove = "";
+      function onRemoveLmIcon(lm_name) {
+        lm_name = lm_name.trim();
+        lm_to_remove = lm_name;
+        $("#remove-LM-modal-title").text("Remove your model '" + lm_name + "'?")
+        $("#remove-LM-modal").modal("show");
+        console.log(lm_name);
+      
+      }
+      function onRemoveLM() {
+        fetch("http://127.0.0.1:8000/api/v1/models",
+          {
+            body: JSON.stringify({ name: lm_to_remove }),
+            method: "delete"
+          })
+          .then(response => {
+            if (response.status == 200) {
+              alert("Model '" + lm_to_remove + "' removed!");
+              window.location.href = "model-hub";
+            }
+            else
+              alert("Could not remove model '" + lm_to_remove + "'!");
+      
+          });
+      }
+    </script>
+  </body>
+</html>

@@ -4,8 +4,8 @@ import { IoReloadCircle } from "react-icons/io5";
 function GlobalCardError({error, onReloadClick}) {
 
     return (
-        <Box 
-            width={'200px'} 
+        <Box
+            minWidth={'200px'}
             fontSize={'14px'} 
             padding={'16px'} 
             borderRadius={'4px'} 
@@ -21,7 +21,7 @@ function GlobalCardError({error, onReloadClick}) {
             justifyContent={'space-between'}
         >
             <span>{error}</span>
-            <IconButton onClick={onReloadClick} sx={{padding: 0}} children={<IoReloadCircle size={32} color="#8b8bec"/>} />
+            <IconButton onClick={onReloadClick} sx={{margin: '0 0 0 10px', padding: 0}} children={<IoReloadCircle size={32} color="#8b8bec"/>} />
         </Box>
     )
 }

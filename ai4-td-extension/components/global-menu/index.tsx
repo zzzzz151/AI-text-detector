@@ -11,11 +11,14 @@ function GlobalMenu() {
     const [anchor, setAnchor] = useState(false);
     const [data, setData] = useState(null);
     const [autoscan] = useStorage<boolean>("scan-page-automatically");
-    const [languageModel] = useStorage<string>("model", v => v ?? 'openai-roberta-base');
+    const [languageModel] = useStorage<string>("model", v => v ?? process.env.PLASMO_PUBLIC_DEFAULT_MODEL);
  
     const isReloading = is("reload");
     const isDefault = is("default");
-
+    const isSuccess = is("success");
+    const isError = is("error");
+    const isLoading = is("loading");
+    
     const handleClick = () => {
         if (isDefault || isReloading) {
             setLoading();
@@ -50,22 +53,24 @@ function GlobalMenu() {
             cleanPage();  
             handleClick();
         }
-      }, [isReloading]);
+    }, [isReloading]);
 
     useEffect(() => {
         if (autoscan && isDefault) {
           handleClick();
         }
     }, [autoscan]);
-
+    
     return (
         <>
             <GlobalButton
                 onClick={handleClick}
-                is={is}
+                success={isSuccess}
+                error={isError}
+                loading={isLoading}
             />
-            {is("success") && anchor && <GlobalCard data={data} onReloadClick={handleReloadClick} />}
-            {is("error") && anchor && <GlobalCardError error={"Some error happened"} onReloadClick={handleReloadClick} />}
+            {isSuccess && anchor && <GlobalCard data={data} onReloadClick={handleReloadClick} />}
+            {isError && anchor && <GlobalCardError error={"Oops! Something went wrong."} onReloadClick={handleReloadClick} />}
         </>
     );
 }

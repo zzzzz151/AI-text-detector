@@ -16,19 +16,19 @@ Including another URLconf
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import include, path, re_path
-from AI_text_detector.views import  my_LM_as_API, execute_code, handle_text_request, handle_LMs_request
+from AI_text_detector.views import  my_model_as_API, execute_code, handle_text_request, handle_models_request
 from authentication.views import *
-from LM_hub.views import *
+from model_hub.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('authentication/', include('authentication.urls', namespace='authentication')),
     re_path(r'api/v1/?$', handle_text_request),
-    re_path(r'api/v1/LMs/?$', handle_LMs_request),
-    re_path(r'api/v1/myLM/?$', my_LM_as_API),
-    re_path(r'api/v1/executeCode/?$', execute_code),
-    path('LM-hub', lm_hub, name="lm-hub"),
+    re_path(r'api/v1/models/?$', handle_models_request),
+    re_path(r'api/v1/my-model/?$', my_model_as_API),
+    re_path(r'api/v1/execute-code/?$', execute_code),
+    path('model-hub', model_hub, name="model-hub"),
     path('login', login, name="login"),
     path('register', register, name="register"),
     path('logout', logout, name='logout')

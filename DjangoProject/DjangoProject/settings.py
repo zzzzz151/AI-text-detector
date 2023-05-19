@@ -33,7 +33,7 @@ ALLOWED_HOSTS = [
 ]
 
 LOGIN_URL = "login"
-LOGIN_REDIRECT_URL = "/LM-hub"
+LOGIN_REDIRECT_URL = "/model-hub"
 
 
 # Application definition
@@ -98,18 +98,14 @@ WSGI_APPLICATION = 'DjangoProject.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    },
-    'mysql': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'ai',
         'USER': 'root',
-        'PASSWORD': 'root',
-        'HOST': '127.0.0.1',
+        'PASSWORD': 'password',
+        'HOST': 'db',
         'PORT': '3306',
         'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+            'auth_plugin': 'mysql_native_password'
         }
     }
 }

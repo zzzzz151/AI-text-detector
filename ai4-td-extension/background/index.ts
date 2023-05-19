@@ -4,14 +4,13 @@ import { Storage } from "@plasmohq/storage"
 
 const storage = new Storage()
 
-const URL = "http://127.0.0.1:8000/api/v1";
+const URL = process.env.PLASMO_PUBLIC_API_URL;
 
 const injectHighlight = async (info) => {
   if (info.menuItemId === "scan-text") {
-    const languageModel = await storage.get("model");
-    callApi(URL, { "language_model": languageModel, "text": info.selectionText })
+    const languageModel = await storage.get("model") ?? process.env.PLASMO_PUBLIC_DEFAULT_MODEL;
+    callApi(URL, { model: languageModel, text: info.selectionText })
     .then(async data => {
-      console.log(languageModel)
       await executeInCurrentTab({ func: highlightSelection, args: [data] })
     });
   }
