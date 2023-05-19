@@ -20,7 +20,7 @@ function GlobalCard({data, onReloadClick}) {
             alignItems={'center'}
             justifyContent={'space-between'}
         >
-            <span>{`Overall evaluation ${data}%`}</span>
+            <span>{`Overall evaluation is ${data}%`}</span>
             <IconButton onClick={onReloadClick} sx={{margin: '0 0 0 10px', padding: 0}} children={<IoReloadCircle size={32} color="#8b8bec"/>} />
         </Box>
     )
