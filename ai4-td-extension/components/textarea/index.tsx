@@ -11,6 +11,11 @@ function TextArea() {
     const [languageModel] = useStorage<string>("model", v => v ?? process.env.PLASMO_PUBLIC_DEFAULT_MODEL);
     const [textareaValue, setTextareaValue] = useState("");
     const taElement: LegacyRef<HTMLTextAreaElement> = useRef();
+    const [colorRegular] = useStorage<string>("highlight-color-regular", v => v ?? "#FFFF00")
+    const [colorStrong] = useStorage<string>("highlight-color-strong", v => v ?? "#FF0000")
+    const [score, setScore] = useState(null);
+
+    const scoreColor = (score > 75)? colorStrong : ((score > 50)? colorRegular : "#04ae18");
 
     function analyseBlock() {
         if (textareaValue.trim() === "") {
@@ -19,11 +24,14 @@ function TextArea() {
         }
     
         callApi(URL, { model: languageModel, text: textareaValue }).then((data) => {
-          alert(data.probability_AI_generated)
+            setScore(data.probability_AI_generated)
         });
     }
 
     const handleTextareaChange = (e) => {
+        if (score != null) {
+            setScore(null);
+        }
         const value = e.target.value;
         if (value.length <= characterLimit) {
           setTextareaValue(value);
@@ -31,7 +39,8 @@ function TextArea() {
     };
 
     const clearTextarea = () => {
-        setTextareaValue("")
+        setTextareaValue("");
+        setScore(null);
         if (taElement.current) {
             taElement.current.focus();
         }
@@ -41,18 +50,21 @@ function TextArea() {
 
     return (
         <div className="scanned-text-container">
-            <textarea
-                ref={taElement}
-                className="scanned-text"
-                name="message" 
-                placeholder="Paste text here" 
-                autoFocus
-                value={textareaValue}
-                onChange={handleTextareaChange}
-            ></textarea>
-            <div className="scanned-text-footer">
-                <span className="scanned-text-limit">{characterCount}/{characterLimit} characters</span>
-                {characterCount > 0 && <span className="scanned-text-clear" onClick={clearTextarea}>Clear</span>}
+            <div className="scanned-text-wrapper" style={{outline: score != null && `2px solid ${scoreColor}`}}>
+                <textarea
+                    ref={taElement}
+                    className="scanned-text"
+                    name="message" 
+                    placeholder="Paste text here" 
+                    autoFocus
+                    value={textareaValue}
+                    onChange={handleTextareaChange}
+                ></textarea>
+                <div className="scanned-text-footer">
+                    <span className="scanned-text-limit">{characterCount}/{characterLimit} characters</span>
+                    {score != null && <span className="scanned-text-score" style={{color: scoreColor}}>{score}%</span>}
+                    {characterCount > 0 && <span className="scanned-text-clear" onClick={clearTextarea}>Clear</span>}
+                </div>
             </div>
             <span className="error-msg"></span>
             <Button onClick={analyseBlock} color="primary" variant="contained" sx={{
