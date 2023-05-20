@@ -17,7 +17,7 @@ function SingleCard(props) {
             fontSize: '14px',
             width: "120px",
         }}>
-            {`Probability is ${probability}%`}
+            <span>Probability is <span style={{fontWeight: 700}}>{probability}%</span></span>
         </Box>
     );
 }
