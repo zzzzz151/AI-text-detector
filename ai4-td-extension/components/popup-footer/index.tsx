@@ -32,7 +32,7 @@ function PopupFooter() {
                 target="_blank"
             >
                 <svg style={{marginRight: '4px', paddingBottom: '2px'}} stroke="currentColor" width="28" height="28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.563 21.438v-9.625L14 5.686l7.438 6.125v9.626m-9.625 0v-4.813c0-1.208.979-2.188 2.187-2.188v0c1.208 0 2.188.98 2.188 2.188v4.813" strokeWidth=".875" strokeLinecap="round" strokeLinejoin="round"></path></svg>
-                LM Hub
+                Model Hub
             </Button>
             <Button 
                 color="primary" 
