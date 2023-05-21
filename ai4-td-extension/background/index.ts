@@ -6,14 +6,16 @@ const storage = new Storage()
 
 const URL = process.env.PLASMO_PUBLIC_API_URL;
 
-const injectHighlight = async (info) => {
-  if (info.menuItemId === "scan-text") {
-    const languageModel = await storage.get("model") ?? process.env.PLASMO_PUBLIC_DEFAULT_MODEL;
-    callApi(URL, { model: languageModel, text: info.selectionText })
-    .then(async data => {
-      await executeInCurrentTab({ func: highlightSelection, args: [data] })
-    });
-  }
+const injectHighlight = async (selectionText) => {
+  const languageModel = (await storage.get("model")) ?? process.env.PLASMO_PUBLIC_DEFAULT_MODEL;
+  callApi(URL, { model: languageModel, text: selectionText })
+  .then(async data => {
+    await executeInCurrentTab({ func: highlightSelection, args: [data] })
+  });
+}
+
+const handleScanClick = async (info) => {
+  injectHighlight(info.selectionText)
 }
 
 chrome.runtime.onInstalled.addListener(() => {
@@ -25,5 +27,22 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
-  injectHighlight(info);
+  handleScanClick(info);
+});
+
+// Keyboard Shortcut Listener
+chrome.commands.onCommand.addListener(async (command) => {
+  console.log(1)
+  if (command === "scan-selection") {
+    const selectionText = await executeInCurrentTab({
+      func: () => {
+        const selection = window.getSelection();
+        return selection.toString().trim();
+      },
+    });
+    console.log(selectionText)
+    if (selectionText) {
+      injectHighlight(selectionText);
+    }
+  }
 });
