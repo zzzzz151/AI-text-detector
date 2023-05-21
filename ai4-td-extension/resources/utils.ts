@@ -180,7 +180,9 @@ function analyseText(url, model, text, elem, threshold) {
 
     if (cache.has(cacheKey)) {
         const result = cache.get(cacheKey);
-        highlightElement(elem, text, result.probability);
+        if (result > threshold) {
+            highlightElement(elem, text, result.probability);
+        }
         return Promise.resolve(result);
     }
 
