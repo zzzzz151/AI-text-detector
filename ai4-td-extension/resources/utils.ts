@@ -112,7 +112,7 @@ function analysePage(model) {
 
             for (let i = 0; i < results.length; i++) {
                 sumCharacters += results[i].length;
-                weightedSum += results[i].weight;
+                weightedSum += results[i].length * results[i].probability;
             }
 
             let weightedAvg = sumCharacters > 0 ? weightedSum / sumCharacters : 0;
@@ -125,53 +125,97 @@ function analysePage(model) {
         });
 }
 
+const cache = new Map();
+const MAX_CACHE_SIZE = 100;
+
+/**
+ * Returns a hash code from a string
+ * @param  {String} str The string to hash.
+ * @return {Number}    A 32bit integer
+ * @see http://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/
+ */
+function hashCode(str) {
+    let hash = 0;
+    for (let i = 0, len = str.length; i < len; i++) {
+        let chr = str.charCodeAt(i);
+        hash = (hash << 5) - hash + chr;
+        hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
+}
+
+function generateCacheKey(model, text) {
+    const hash = hashCode(text)
+    return `${model}-${hash}`;
+}
+
+function highlightElement(elem, text, probability) {
+    let newText = text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // ignore special chars
+    newText = newText.replace(/\s+/g, '\\s+'); // replace whitespace with \s+ pattern, this matches even with many spaces or line breaks between words
+    let pattern = RegExp("\\b" + newText + "\\b");
+    let before = elem.innerHTML;
+
+    findAndReplaceDOMText(elem, {
+        find: pattern,
+        wrap: 'highlighted-text',
+        wrapAttributes: {
+            'probability': probability
+        },
+    });
+
+    if (elem.innerHTML == before) {
+        pattern = RegExp(newText);
+        findAndReplaceDOMText(elem, {
+            find: pattern,
+            wrap: 'highlighted-text',
+            wrapAttributes: {
+                'probability': probability
+            },
+        });
+    }
+}
+
 function analyseText(url, model, text, elem, threshold) {
+    const cacheKey = generateCacheKey(model, text);
+
+    if (cache.has(cacheKey)) {
+        const result = cache.get(cacheKey);
+        highlightElement(elem, text, result.probability);
+        return Promise.resolve(result);
+    }
+
     return new Promise((resolve, reject) => {
         callApi(url, { model, text })
             .then(data => {
-                if (data.probability_AI_generated < threshold) {
-                    console.log("Not AI (" + data.probability_AI_generated + "%): '" + text + "'");
+                const probability = data.probability_AI_generated  
+                if (probability < threshold) {
+                    console.log("Not AI (" + probability + "%): '" + text + "'");
                 } else {
-                    console.log("AI (" + data.probability_AI_generated + "%): '" + text + "'");
+                    console.log("AI (" + probability + "%): '" + text + "'");
 
-                    let newText = text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // ignore special chars
-                    newText = newText.replace(/\s+/g, '\\s+'); // replace whitespace with \s+ pattern, this matches even with many spaces or line breaks between words
-                    let pattern = RegExp("\\b" + newText + "\\b");
-                    let before = elem.innerHTML;
+                    highlightElement(elem, text, probability)
+                }
 
-                    findAndReplaceDOMText(elem, {
-                        find: pattern,
-                        wrap: 'highlighted-text',
-                        wrapAttributes: {
-                            'probability': data.probability_AI_generated
-                        },
-                    });
-
-                    if (elem.innerHTML == before) {
-                        pattern = RegExp(newText);
-                        findAndReplaceDOMText(elem, {
-                            find: pattern,
-                            wrap: 'highlighted-text',
-                            wrapAttributes: {
-                                'probability': data.probability_AI_generated
-                            },
-                        });
-                    }
-                }
-                if (data.probability_AI_generated >= 0)
-                {
-                    resolve({
-                        "length": text.length,
-                        "weight": text.length * data.probability_AI_generated
-                    });
-                }
-                else
-                {
-                    resolve({
-                        "length": text.length,
-                        "weight": 0
-                    });
-                }
+                let result;
+                if (probability >= 0) {
+                    result = {
+                      "length": text.length,
+                      "probability": probability
+                    };
+                  } else {
+                    result = {
+                      "length": text.length,
+                      "probability": 0
+                    };
+                  }
+          
+                  if (cache.size >= MAX_CACHE_SIZE) {
+                    const firstKey = cache.keys().next().value;
+                    cache.delete(firstKey);
+                  }
+          
+                  cache.set(cacheKey, result);
+                  resolve(result);
             })
             .catch(error => {
                 reject(error);
