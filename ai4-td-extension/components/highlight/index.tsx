@@ -1,6 +1,6 @@
 import type { PlasmoCSConfig } from "plasmo"
 import { useStorage } from "@plasmohq/storage/hook";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import SingleCard from "~components/single-card";
 import { ClickAwayListener } from "@mui/material";
 
@@ -109,10 +109,34 @@ function Highlight() {
       top: topPosition,
       left: leftPosition,
     };
-    
+
     setClickedElementPosition(position);
     setClickedElement(clickedElement);
-  };  
+
+    // Find the nearest scrollable ancestor
+    const scrollableDiv = findScrollableAncestor(clickedElement);
+    if (scrollableDiv) {
+      scrollableDiv.addEventListener('scroll', () => setClickedElement(null));
+    }; 
+  }
+
+  // Recursive function to find the nearest scrollable ancestor
+  function findScrollableAncestor(element, includeHidden = false, includeBody = false) {
+    var style = getComputedStyle(element);
+    var excludeStaticParent = style.position === "absolute";
+    var overflowRegex = includeHidden ? /(auto|scroll|hidden)/ : /(auto|scroll)/;
+
+    if (style.position === "fixed") return includeBody ? document.body : null;
+    for (var parent = element; (parent = parent.parentElement);) {
+        style = getComputedStyle(parent);
+        if (excludeStaticParent && style.position === "static") {
+            continue;
+        }
+        if (overflowRegex.test(style.overflow + style.overflowY + style.overflowX)) return includeBody ? document.body : parent;
+    }
+
+    return includeBody ? document.body : null;
+}
 
   const handleClickAway = () => {
     setClickedElement(null);
