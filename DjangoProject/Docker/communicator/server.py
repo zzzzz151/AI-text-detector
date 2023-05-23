@@ -73,6 +73,7 @@ def handle_messages(client_socket, selector):
 	if not message_obj:
 		return
 
+	print(message_obj)
 	ID = message_obj.identification
 	message_type = message_obj.message_type
 	lm = message_obj.language_model
@@ -108,7 +109,8 @@ def predict(ID, text, lm_name):
 
 def add_lm(lm_name, client_socket):
 	log(f"Submitting {lm_name}")
-	lm_name_dictionary[lm_name] = (client_socket, lm_name + "_" + str(increment_and_return_ID()))
+	if lm_name:
+		lm_name_dictionary[lm_name] = (client_socket, lm_name + "_" + str(increment_and_return_ID()))
 
 
 

@@ -1,6 +1,7 @@
 import subprocess
 import docker
 import os
+import asyncio
 
 service_name = "communicator"
 
@@ -33,7 +34,7 @@ def build_image(compose_file_path:str, build_args:dict):
         command.append("--build-arg")
         command.append(f"{env_name}={env_value}")
 
-    subprocess.Popen(command)
+    subprocess.run(command)
 def run_image(compose_file_path:str, service_name:str, container_name:str, extra_options:list):
     command = [
         "docker", "compose",
