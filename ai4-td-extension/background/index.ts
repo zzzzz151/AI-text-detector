@@ -32,7 +32,6 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 
 // Keyboard Shortcut Listener
 chrome.commands.onCommand.addListener(async (command) => {
-  console.log(1)
   if (command === "scan-selection") {
     const selectionText = await executeInCurrentTab({
       func: () => {
@@ -40,7 +39,6 @@ chrome.commands.onCommand.addListener(async (command) => {
         return selection.toString().trim();
       },
     });
-    console.log(selectionText)
     if (selectionText) {
       injectHighlight(selectionText);
     }
