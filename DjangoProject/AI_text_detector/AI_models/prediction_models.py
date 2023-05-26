@@ -65,8 +65,9 @@ def start_stored_LMs():
                 log(f"Starting {container_name}.")
 
             add_communicator(docker_compose_path, model_name)
-    except:
+    except Exception as e:
         log("Failed to access database. Have Django's migrations been applied?")
+        log(e)
 
 def startup():
     start_stored_LMs()
