@@ -6,13 +6,11 @@ def encode(text):
 	message_bytes = text.encode('UTF-8')
 	base64_bytes = base64.b64encode(message_bytes)
 	return base64_bytes
-	#return text.encode('utf-8')
 
 def decode(byte):
 	message_bytes = base64.b64decode(byte)
 	text = message_bytes.decode('UTF-8')
 	return text
-	#return byte.decode('utf-8')
 
 def log(text):
 	print(text)
@@ -101,8 +99,8 @@ class Message:
 					  'language_model': self.language_model, 'probability': self.probability}
 		return dictionary
 
-def create_connect_message(model_name)->Message:
-	return Message(None, 'connect', None, model_name, None)
+def create_connect_message(model_name, status="rejected")->Message:
+	return Message(None, 'connect', status, model_name, None)
 def create_predict_message(ID, model_name, text)->Message:
 	return Message(ID, 'predict', text, model_name, None)
 def create_probability_message(ID, model_name, prob)->Message:

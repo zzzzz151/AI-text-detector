@@ -6,12 +6,12 @@ import sys
 from datetime import datetime
 import requests
 
-import Docker.communicator.messages as m
+import Docker.messages as m
 from AI_text_detector.models import LM_Script, LM_API
-from Docker.docker_commands import start_communicator, add_communicator, delete_container, \
+from Docker.docker_commands import add_communicator, delete_container, \
     create_communicator_container_name, container_exists, container_is_running
 
-docker_path = '/DjangoProject/Docker/communicator/'
+docker_path = '/DjangoProject/Docker/'
 docker_compose_path = docker_path + 'docker-compose.yml'
 model_path = docker_path + 'LMs/'
 

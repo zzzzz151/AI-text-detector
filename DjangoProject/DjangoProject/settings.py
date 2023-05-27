@@ -29,7 +29,8 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
     "http://zzzzz151.pythonanywhere.com",
-    "zzzzz151.pythonanywhere.com"
+    "zzzzz151.pythonanywhere.com",
+    'api'
 ]
 
 LOGIN_URL = "login"
