@@ -35,9 +35,10 @@ services:
     volumes:
       - my-datavolume:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3306"]
+      test: [ "CMD", "curl", "-f", "http://localhost:3306" ]
       interval: 1s
-      retries: 100
+      timeout: 1s
+      retries: 20
 
   api:
     build: ./django
