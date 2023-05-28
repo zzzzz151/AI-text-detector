@@ -1,6 +1,6 @@
 cd DjangoProject\Docker\communicator
 
-docker compose down
+docker compose down -v
 
 
 docker compose pull
