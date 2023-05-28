@@ -1,5 +1,3 @@
-import random
-
 class LanguageModel:
     def __init__(self):
         print("RandomLM loaded")

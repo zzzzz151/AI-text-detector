@@ -84,7 +84,7 @@ class model_Upload(APIView):
             elif "API" in request.data or "api" in request.data:
                 process_model_API_submission(model_name, model_author, model_description, request)
 
-            log("Accepted model '" + model_name + "'")
+            log("Submitted model '" + model_name + "'")
         except Exception as e:
             log(e)
             log("Refused model '" + model_name + "'")
