@@ -34,7 +34,7 @@ To load the extension, in ai4-td-extension folder, run
 
 `npm run dev`
 
-Then, load unpacked extension in browser (with npm terminal running)
+The browser extension is compiled into ai4-td-extension/build/chrome-mv3-dev, load it as unpacked extension in the browser (with npm terminal running)
 
 To launch the backend, have Docker Desktop running and run run.bat in CMD with
 
