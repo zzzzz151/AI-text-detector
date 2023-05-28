@@ -25,3 +25,21 @@ With Mozilla's PDF viewer, it even works on PDFs!
 The extension has a thorough and intuitive UI that lets you select the model, highlighting colors, and other settings. It also has buttons that redirect the user to our Model Hub and to Mozilla's PDF Viewer, for easy navigation. Finally, the extension UI also has a text area for the user to write any text and analyse it.
 
 Users can also add their own AI text detector model to our system through our Model Hub, be it as a python script or as an API, making the model available to all users.
+
+# How to run
+
+To load the extension, in ai4-td-extension folder, run
+
+`npm install`
+
+`npm run dev`
+
+Then, load unpacked extension in browser (with npm terminal running)
+
+To launch the backend, have Docker Desktop running and run run.bat in CMD with
+
+`run`
+
+You can add models in our Model Hub at localhost:8000/model-hub
+
+
