@@ -38,7 +38,7 @@ services:
       test: [ "CMD", "curl", "-f", "http://localhost:3306" ]
       interval: 1s
       timeout: 1s
-      retries: 20
+      retries: 100
 
   api:
     build: ./django
