@@ -37,7 +37,7 @@ services:
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3306"]
       interval: 1s
-      retries: 40
+      retries: 100
 
   api:
     build: ./django
