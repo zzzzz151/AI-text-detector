@@ -26,6 +26,8 @@ The extension has a thorough and intuitive UI that lets you select the model, hi
 
 Users can also add their own AI text detector model to our system through our Model Hub, be it as a python script or as an API, making the model available to all users.
 
+# [Video](https://www.youtube.com/watch?v=QulxLQb4c70)
+
 # How to run
 
 To load the extension, in ai4-td-extension folder, run
