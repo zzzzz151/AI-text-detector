@@ -2630,6 +2630,31 @@ html.cl-loaded .home-content__main {
     position: relative;
 }
 
+.s-poster {
+    background: #ffffff;
+ }
+
+ .s-poster {
+    padding: 18rem 0 24rem;
+    position: relative;
+}
+
+.poster-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.s-video {
+    background: #ffffff;
+ }
+
+ .s-video, .s-documents {
+    padding: 18rem 0 24rem;
+    position: relative;
+}
+
+
 /* ===================================================================
  * # works
  *
