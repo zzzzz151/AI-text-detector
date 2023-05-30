@@ -2639,7 +2639,7 @@ html.cl-loaded .home-content__main {
     position: relative;
 }
 
-.poster-wrapper {
+.poster-wrapper, .video-wrapper {
     display: flex;
     align-items: center;
     justify-content: center;
