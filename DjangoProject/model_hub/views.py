@@ -30,7 +30,7 @@ def login(request):
         data = {'user_id': request.POST['email'], 'password': request.POST['password']}
         #url = reverse('authentication:login')
         url = "http://localhost:4003/authentication/login"
-        response = requests.post(request.build_absolute_uri(url), data)
+        response = requests.post(url, data)
         if response.status_code == 200:
             request.session['user'] = response.json().get('user')
             #request.session['LMs'] = get_all_LMs(user=response.json().get('user'))
@@ -54,7 +54,7 @@ def logout(request):
     print(request.POST)
     #url = reverse('authentication:logout')
     url = "http://localhost:4003/authentication/logout"
-    response = requests.post(request.build_absolute_uri(url))
+    response = requests.post(url)
     if response.status_code == 200:
         request.session.pop('user')
         return redirect('model-hub')
