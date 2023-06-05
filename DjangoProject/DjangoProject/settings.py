@@ -25,9 +25,6 @@ SECRET_KEY = 'django-insecure-18_@mf^u2q2c2iig!8$m1=u=m7afuovl79)f=*(zzxy9zmj6ra
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-#SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-#FORCE_SCRIPT_NAME = 'http://mednat.ieeta.pt:4003'
-
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",

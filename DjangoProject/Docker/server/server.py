@@ -114,7 +114,7 @@ def add_lm(lm_name, client_socket):
 
 def remove_lm(lm_name):
 	try:
-		url = "http://api:8000/api/v1/models"
+		url = "http://api:4003/api/v1/models"
 		payload = {
 			"name": lm_name
 		}
