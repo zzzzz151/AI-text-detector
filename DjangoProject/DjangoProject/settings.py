@@ -38,8 +38,8 @@ ALLOWED_HOSTS = [
     'https://bioinformatics.ua.pt'
 ]
 
-LOGIN_URL = "aidetector/login"
-LOGIN_REDIRECT_URL = "aidetector/model-hub"
+LOGIN_URL = "login"
+LOGIN_REDIRECT_URL = "model-hub"
 
 
 # Application definition
