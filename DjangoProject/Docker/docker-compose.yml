@@ -5,8 +5,8 @@ services:
       dockerfile: communicator/Dockerfile
     command: sh -c "python3 ./communicator.py"
     environment:
-      LISTEN_HOST: server
-      LISTEN_PORT: 5555
+      - LISTEN_HOST=server
+      - LISTEN_PORT=5555
 
   server:
     build:
@@ -15,8 +15,8 @@ services:
     command: sh -c "python3 ./server.py"
     container_name: server
     environment:
-      SEND_HOST: server
-      SEND_PORT: 5555
+      - SEND_HOST=server
+      - SEND_PORT=5555
     ports:
       - '5555:5555'
     volumes:
@@ -45,8 +45,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     working_dir: /DjangoProject
     environment:
-      SEND_HOST: server
-      SEND_PORT: 5555
+      - SEND_HOST=server
+      - SEND_PORT=5555
     ports:
       - "4003:4003"
       - "4004:8001"
