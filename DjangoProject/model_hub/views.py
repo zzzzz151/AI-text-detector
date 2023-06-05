@@ -43,7 +43,6 @@ def register(request):
         url = request.build_absolute_uri(url)
         if "8484" in url:
             url = url.replace("8484", "4003")
-        raise Exception(url)
         response = requests.post(url, data, timeout=3)
         if response.status_code == 201:
             return redirect('login')
