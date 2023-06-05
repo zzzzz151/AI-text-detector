@@ -1,6 +1,6 @@
-FROM xela10001/ai-text-detector-communicator:0.0.4
+FROM xela10001/ai-text-detector-communicator-nvidia:latest
 ENV PYTHONBUFFERED=1
-ARG LM_NAME
+ARG LM_NAME=chat-gpt-roberta
 COPY communicator/LMs/${LM_NAME}/lm_submission.py ./
 COPY communicator/LMs/${LM_NAME}/requirements.txt ./
 COPY communicator/communicator.py ./

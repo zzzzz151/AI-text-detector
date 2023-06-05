@@ -9,6 +9,7 @@ services:
     environment:
       LISTEN_HOST: server
       LISTEN_PORT: 5555
+      NVIDIA_VISIBLE_DEVICES: 0
 
   server:
     build:
@@ -54,7 +55,7 @@ services:
       - "4004:8001"
     container_name: django_container
     command:
-      sh -c "sleep 12; pip3 install -r requirements.txt; python manage.py migrate; python manage.py runserver 0.0.0.0:4003"
+      sh -c "sleep 20; pip3 install -r requirements.txt; python manage.py migrate; python manage.py runserver 0.0.0.0:4003"
     depends_on:
       - db
 
