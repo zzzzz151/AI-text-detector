@@ -40,8 +40,10 @@ def register(request):
     if request.POST:
         data = {'username': request.POST['username'], 'email': request.POST['email'], 'password': request.POST['password']}
         url = reverse('authentication:register') # url = "/authentication/register"
-        raise Exception(request.build_absolute_uri(url).replace("8484", "4003"))
-        response = requests.post(request.build_absolute_uri(url), data, timeout=3)
+        url = request.build_absolute_uri(url)
+        if "8484" in url:
+            url = url.replace("8484", "4003")
+        response = requests.post(url, data, timeout=3)
         if response.status_code == 201:
             return redirect('login')
     return render(request, "register.html")
