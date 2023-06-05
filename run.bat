@@ -1,6 +1,6 @@
 cd DjangoProject/Docker/communicator
 
-docker compose down -v
+docker-compose down -v --rmi all
 
 
 docker-compose pull

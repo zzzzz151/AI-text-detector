@@ -1,7 +1,7 @@
-*/communicator/LMs/
-**/communicator/LMs/
-*/communicator/LMs/*
-**/communicator/LMs/*
+#*/communicator/LMs/
+#**/communicator/LMs/
+#*/communicator/LMs/*
+#**/communicator/LMs/*
 
 .idea/
 *.pyc
