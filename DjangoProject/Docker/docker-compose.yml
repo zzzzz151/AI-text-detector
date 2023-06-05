@@ -1,7 +1,5 @@
 version: "3.3"
 
-#name: ai-text-detector
-
 services:
   communicator:
     build:
@@ -59,8 +57,6 @@ services:
       sh -c "sleep 12; pip3 install -r requirements.txt; python manage.py migrate; python manage.py runserver 0.0.0.0:4003"
     depends_on:
       - db
-    #  db:
-    #    condition: service_healthy
 
 volumes:
   my-datavolume:

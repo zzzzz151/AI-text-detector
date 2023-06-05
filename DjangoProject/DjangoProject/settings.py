@@ -25,14 +25,15 @@ SECRET_KEY = 'django-insecure-18_@mf^u2q2c2iig!8$m1=u=m7afuovl79)f=*(zzxy9zmj6ra
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
-    "193.136.175.107",
     "http://zzzzz151.pythonanywhere.com",
     "zzzzz151.pythonanywhere.com",
     'api',
-    'mednat.ieeta.pt'
+    'mednat.ieeta.pt:8484'
 ]
 
 LOGIN_URL = "login"
@@ -60,7 +61,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
     "http://127.0.0.1:8000",
     "http://localhost:3000",
-    "http://193.136.175.107:8000"
+    "http://mednat.ieeta.pt:8484"
 ]
 CORS_ALLOW_CREDENTIALS = True
 
