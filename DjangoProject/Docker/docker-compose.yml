@@ -1,3 +1,7 @@
+version: "3.3"
+
+#name: ai-text-detector
+
 services:
   communicator:
     build:
@@ -5,8 +9,8 @@ services:
       dockerfile: communicator/Dockerfile
     command: sh -c "python3 ./communicator.py"
     environment:
-      - LISTEN_HOST=server
-      - LISTEN_PORT=5555
+      LISTEN_HOST: server
+      LISTEN_PORT: 5555
 
   server:
     build:
@@ -15,8 +19,8 @@ services:
     command: sh -c "python3 ./server.py"
     container_name: server
     environment:
-      - SEND_HOST=server
-      - SEND_PORT=5555
+      SEND_HOST: server
+      SEND_PORT: 5555
     ports:
       - '5555:5555'
     volumes:
@@ -30,13 +34,13 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=password
       - MYSQL_DATABASE=ai
-    #volumes:
-      #- /var/lib/mysql:/var/lib/mysql
-    #healthcheck:
-    #  test: [ "CMD", "curl", "-f", "http://localhost:3306" ]
-    #  interval: 1s
-    #  timeout: 1s
-    #  retries: 100
+    volumes:
+      - my-datavolume:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:3306" ]
+      interval: 1s
+      timeout: 1s
+      retries: 100
 
   api:
     build: ./django
@@ -45,14 +49,18 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     working_dir: /DjangoProject
     environment:
-      - SEND_HOST=server
-      - SEND_PORT=5555
+      SEND_HOST: server
+      SEND_PORT: 5555
     ports:
-      - "4003:4003"
+      - "8000:8000"
       - "4004:8001"
     container_name: django_container
     command:
-      sh -c "sleep 12; pip3 install -r requirements.txt; python manage.py migrate; python manage.py runserver 0.0.0.0:4003"
+      sh -c "pip3 install -r requirements.txt; python manage.py migrate; python manage.py runserver 0.0.0.0:8000"
     depends_on:
       - db
-        #condition: service_healthy
+    #  db:
+    #    condition: service_healthy
+
+volumes:
+  my-datavolume:
