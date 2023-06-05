@@ -53,7 +53,7 @@ def register(request):
 def logout(request):
     print(request.POST)
     #url = reverse('authentication:logout')
-    url = "http://localhost:4003/authentication/logout"
+    url = "http://localhost:4003/aidetector/authentication/logout"
     response = requests.post(url)
     if response.status_code == 200:
         request.session.pop('user')
