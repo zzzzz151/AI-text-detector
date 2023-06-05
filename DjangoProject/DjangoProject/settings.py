@@ -34,7 +34,8 @@ ALLOWED_HOSTS = [
     'mednat.ieeta.pt',
     'mednat.ieeta.pt:8484',
     'mednat.ieeta.pt:4003',
-    'bioinformatics.ua.pt'
+    'bioinformatics.ua.pt',
+    'https://bioinformatics.ua.pt'
 ]
 
 LOGIN_URL = "login"
@@ -67,6 +68,18 @@ CORS_ALLOWED_ORIGINS = [
     "https://bioinformatics.ua.pt"
 ]
 CORS_ALLOW_CREDENTIALS = True
+
+
+# settings.py
+
+# Set the CSRF_COOKIE_DOMAIN to match the domain of your requests
+CSRF_COOKIE_DOMAIN = 'bioinformatics.ua.pt'
+
+# Add the correct origin to CSRF_TRUSTED_ORIGINS
+CSRF_TRUSTED_ORIGINS = [
+    'https://bioinformatics.ua.pt',
+]
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
