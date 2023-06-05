@@ -1,6 +1,4 @@
-version: "3.8"
-
-#name: ai-text-detector
+name: ai-text-detector
 
 services:
   communicator:
