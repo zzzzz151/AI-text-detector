@@ -52,10 +52,10 @@ services:
       SEND_HOST: server
       SEND_PORT: 5555
     ports:
-      - "193.136.175.104:8000:8000"
+      - "193.136.175.107:8000:8000"
     container_name: django_container
     command:
-      sh -c "pip3 install -r requirements.txt; python manage.py migrate; python manage.py runserver 193.136.175.104:8000"
+      sh -c "pip3 install -r requirements.txt; python manage.py migrate; python manage.py runserver 193.136.175.107:8000"
     depends_on:
       - db
 
