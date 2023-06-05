@@ -1,4 +1,6 @@
-name: ai-text-detector
+version: "3.3"
+
+#name: ai-text-detector
 
 services:
   communicator:
@@ -53,10 +55,12 @@ services:
       - "193.136.175.104:8000:8000"
     container_name: django_container
     command:
-      sh -c "pip3 install -r requirements.txt; python manage.py migrate; python manage.py runserver 0.0.0.0:8000"
+      sh -c "pip3 install -r requirements.txt; python manage.py migrate; python manage.py runserver 193.136.175.104:8000"
     depends_on:
-      db:
-        condition: service_healthy
+      - db
+
+      #db:
+        #condition: service_healthy
 
 volumes:
   my-datavolume:
