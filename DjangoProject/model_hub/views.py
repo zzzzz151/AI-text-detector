@@ -39,9 +39,8 @@ def login(request):
 def register(request):
     if request.POST:
         data = {'username': request.POST['username'], 'email': request.POST['email'], 'password': request.POST['password']}
-        url = reverse('authentication:register')
-        log(url)
-        raise Exception(url)
+        url = reverse('authentication:register') # url = "/authentication/register"
+        raise Exception(request.build_absolute_uri(url))
         response = requests.post(request.build_absolute_uri(url), data, timeout=3)
         if response.status_code == 201:
             return redirect('login')
