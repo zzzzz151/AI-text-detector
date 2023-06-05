@@ -24,7 +24,7 @@ services:
     ports:
       - '5555:5555'
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/app/docker.sock
 
   db:
     build: ./mysql
