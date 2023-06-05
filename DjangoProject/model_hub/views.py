@@ -43,7 +43,7 @@ def register(request):
         #url = reverse('authentication:register') # url = "/authentication/register"
         #url = request.build_absolute_uri(url) # url = http://mednat.ieeta.pt:8484/authentication/register
         #url2 = url.replace("8484", "4003") # url = http://mednat.ieeta.pt:4003/authentication/register
-        url = "http://localhost:4003/authentication/register"
+        url = "http://localhost:4003/aidetector/authentication/register"
         response = requests.post(url, data, timeout=3)
 
         if response.status_code == 201:
