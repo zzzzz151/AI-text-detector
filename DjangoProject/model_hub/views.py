@@ -32,7 +32,8 @@ def register(request):
     if request.POST:
         data = {'username': request.POST['username'], 'email': request.POST['email'], 'password': request.POST['password']}
         url = reverse('authentication:register')
-        response = requests.post(request.build_absolute_uri(url), data)
+        print(url)
+        response = requests.post(request.build_absolute_uri(url), data, timeout=3)
         if response.status_code == 201:
             return redirect('login')
     return render(request, "register.html")
