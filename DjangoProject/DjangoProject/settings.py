@@ -64,7 +64,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://mednat.ieeta.pt:8484",
     "http://mednat.ieeta.pt:4003",
-    "https://bioinformatics.ua.pt/aidetector"
+    "https://bioinformatics.ua.pt"
 ]
 CORS_ALLOW_CREDENTIALS = True
 
