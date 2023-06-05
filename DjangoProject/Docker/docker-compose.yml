@@ -1,4 +1,4 @@
-version: "3.3"
+version: "2.3"
 
 services:
   communicator:
@@ -6,6 +6,7 @@ services:
       context: .
       dockerfile: communicator/Dockerfile
     command: sh -c "python3 ./communicator.py"
+    runtime: nvidia
     environment:
       LISTEN_HOST: server
       LISTEN_PORT: 5555
