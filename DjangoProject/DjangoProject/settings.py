@@ -34,6 +34,7 @@ ALLOWED_HOSTS = [
     'mednat.ieeta.pt',
     'mednat.ieeta.pt:8484',
     'mednat.ieeta.pt:4003',
+    'bioinformatics.ua.pt'
 ]
 
 LOGIN_URL = "login"

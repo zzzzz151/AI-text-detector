@@ -44,7 +44,9 @@
       "contextMenus"
     ],
     "host_permissions": [
-      "https://*/*"
+      "https://*/*",
+      "*://developer.mozilla.org/*",
+      "*://mednat.ieeta.pt:8484/*"
     ],
     "commands": {
       "_execute_action": {

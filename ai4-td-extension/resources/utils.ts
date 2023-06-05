@@ -34,6 +34,8 @@ function callApi(url, bodyObject, type = 'application/json', method = 'POST') {
         options.body = type == 'application/json' ? convertToJSON(bodyObject) : bodyObject;
     };
 
+    console.log(url);
+
     return fetch(url, options)
         .then(response => {
             if (!response.ok) {
