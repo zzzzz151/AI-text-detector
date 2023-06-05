@@ -1,3 +1,6 @@
+import sys
+from datetime import datetime
+
 import requests
 from django.http import HttpResponse
 from django.template import loader
@@ -11,6 +14,11 @@ from rest_framework import permissions, status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+def log(msg):
+    strDateTimeNow = str(datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
+    print(strDateTimeNow + " " + str(msg))
+    sys.stdout.flush()
 
 def model_hub(request):
     user = request.session.get('user')
@@ -32,7 +40,7 @@ def register(request):
     if request.POST:
         data = {'username': request.POST['username'], 'email': request.POST['email'], 'password': request.POST['password']}
         url = reverse('authentication:register')
-        print(url)
+        log(url)
         response = requests.post(request.build_absolute_uri(url), data, timeout=3)
         if response.status_code == 201:
             return redirect('login')
