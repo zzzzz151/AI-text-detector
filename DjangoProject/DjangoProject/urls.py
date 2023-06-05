@@ -21,15 +21,15 @@ from authentication.views import *
 from model_hub.views import *
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api-auth/', include('rest_framework.urls')),
-    path('authentication/', include('authentication.urls', namespace='authentication')),
-    re_path(r'api/v1/?$', handle_text_request),
-    re_path(r'api/v1/models/?$', handle_models_request),
-    re_path(r'api/v1/my-model/?$', my_model_as_API),
-    re_path(r'api/v1/execute-code/?$', execute_code),
-    path('model-hub', model_hub, name="model-hub"),
-    path('login', login, name="login"),
-    path('register', register, name="register"),
-    path('logout', logout, name='logout')
+    path('aidetector/admin/', admin.site.urls),
+    path('aidetector/api-auth/', include('rest_framework.urls')),
+    path('aidetector/authentication/', include('authentication.urls', namespace='authentication')),
+    re_path(r'aidetector/api/v1/?$', handle_text_request),
+    re_path(r'aidetector/api/v1/models/?$', handle_models_request),
+    re_path(r'aidetector/api/v1/my-model/?$', my_model_as_API),
+    re_path(r'aidetector/api/v1/execute-code/?$', execute_code),
+    path('aidetector/model-hub', model_hub, name="model-hub"),
+    path('aidetector/login', login, name="login"),
+    path('aidetector/register', register, name="register"),
+    path('aidetector/logout', logout, name='logout')
 ]

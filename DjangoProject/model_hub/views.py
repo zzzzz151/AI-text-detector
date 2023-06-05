@@ -34,7 +34,7 @@ def login(request):
         if response.status_code == 200:
             request.session['user'] = response.json().get('user')
             #request.session['LMs'] = get_all_LMs(user=response.json().get('user'))
-            return redirect('model-hub')
+            return redirect('aidetector/model-hub')
     return render(request, "registration/login.html")
 
 def register(request):
@@ -57,7 +57,7 @@ def logout(request):
     response = requests.post(url)
     if response.status_code == 200:
         request.session.pop('user')
-        return redirect('model-hub')
+        return redirect('aidetector/model-hub')
     data = {"LMs" : get_all_LMs(user=user), 'user': user}
     return render(request, "model-hub.html", data)
 
