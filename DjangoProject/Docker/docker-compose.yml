@@ -1,5 +1,3 @@
-name: "ai-text-detector"
-
 services:
   communicator:
     build:
