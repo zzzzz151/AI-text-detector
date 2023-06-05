@@ -32,11 +32,11 @@ services:
       - MYSQL_DATABASE=ai
     #volumes:
       #- /var/lib/mysql:/var/lib/mysql
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:3306" ]
-      interval: 1s
-      timeout: 1s
-      retries: 100
+    #healthcheck:
+    #  test: [ "CMD", "curl", "-f", "http://localhost:3306" ]
+    #  interval: 1s
+    #  timeout: 1s
+    #  retries: 100
 
   api:
     build: ./django
