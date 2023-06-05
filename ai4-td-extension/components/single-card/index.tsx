@@ -15,9 +15,13 @@ function SingleCard(props) {
             outline: '0px',
             padding: '16px',
             fontSize: '14px',
-            width: "120px",
+            minWidth: "120px",
+            width: "max-content",
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
         }}>
-            <span>Probability is <span style={{fontWeight: 700}}>{probability}%</span></span>
+            <span>Text is <span style={{fontWeight: 700}}>{probability}%</span> AI generated</span>
         </Box>
     );
 }
