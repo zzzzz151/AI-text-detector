@@ -47,7 +47,7 @@ def register(request):
         response = requests.post(url, data, timeout=3)
 
         if response.status_code == 201:
-            return redirect('aidetector/login')
+            return redirect('login')
     return render(request, "register.html")
 
 def logout(request):
