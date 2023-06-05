@@ -31,7 +31,8 @@ ALLOWED_HOSTS = [
     "193.136.175.107",
     "http://zzzzz151.pythonanywhere.com",
     "zzzzz151.pythonanywhere.com",
-    'api'
+    'api',
+    'mednat.ieeta.pt'
 ]
 
 LOGIN_URL = "login"
