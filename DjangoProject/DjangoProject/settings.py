@@ -33,6 +33,7 @@ ALLOWED_HOSTS = [
     "http://zzzzz151.pythonanywhere.com",
     "zzzzz151.pythonanywhere.com",
     'api',
+    'mednat.ieeta.pt',
     'mednat.ieeta.pt:8484'
 ]
 
