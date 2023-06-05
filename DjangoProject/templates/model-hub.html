@@ -179,7 +179,7 @@
             <div id="apiDiv" class="d-none">
               <label for="id">API</label>
               <input type="text" class="form-control" id="api" placeholder="Your API endpoint/URL"
-                value="http://http://mednat.ieeta.pt:8484//api/v1/my-model">
+                value="http://mednat.ieeta.pt:8484/api/v1/my-model">
             </div>
           </div>
           <div class="modal-footer">
@@ -289,7 +289,7 @@
         }
         console.log("------------");
       
-        fetch("http://http://mednat.ieeta.pt:8484//api/v1/models",
+        fetch("http://mednat.ieeta.pt:8484/api/v1/models",
           {
             body: formData,
             method: "post"
@@ -318,7 +318,7 @@
       
       }
       function onRemoveLM() {
-        fetch("http://http://mednat.ieeta.pt:8484//api/v1/models",
+        fetch("http://mednat.ieeta.pt:8484/api/v1/models",
           {
             body: JSON.stringify({ name: lm_to_remove }),
             method: "delete"
