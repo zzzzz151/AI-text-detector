@@ -73,11 +73,11 @@ CORS_ALLOW_CREDENTIALS = True
 # settings.py
 
 # Set the CSRF_COOKIE_DOMAIN to match the domain of your requests
-CSRF_COOKIE_DOMAIN = 'bioinformatics.ua.pt/aidetector'
+CSRF_COOKIE_DOMAIN = 'bioinformatics.ua.pt'
 
 # Add the correct origin to CSRF_TRUSTED_ORIGINS
 CSRF_TRUSTED_ORIGINS = [
-    'https://bioinformatics.ua.pt/aidetector',
+    'https://bioinformatics.ua.pt',
 ]
 
 
