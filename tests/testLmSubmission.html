@@ -21,7 +21,7 @@
     <br />
     <br />
     <label for="api_url">Or submit LM as API</label>
-    <input type="text" id="api_url" name="api_url" style="width:500px" value="http://193.136.175.107:8000/api/v1/myLM">
+    <input type="text" id="api_url" name="api_url" style="width:500px" value="http://mednat.ieeta.pt:8484/api/v1/myLM">
     <br />
     <button type="button" class="btn btn-primary" onclick="submitLm('api')">Submit LM as API</button>
 
@@ -56,7 +56,7 @@
             }
             console.log("------------");
 
-            fetch("http://193.136.175.107:8000/api/v1/uploadLM",
+            fetch("http://mednat.ieeta.pt:8484/api/v1/uploadLM",
                 {
                     body: formData,
                     method: "post"

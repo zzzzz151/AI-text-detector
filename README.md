@@ -42,6 +42,6 @@ To launch the backend, have Docker Desktop running and run run.bat in CMD with
 
 `run`
 
-You can add models in our Model Hub at 193.136.175.107:8000/model-hub
+You can add models in our Model Hub at mednat.ieeta.pt:8484/model-hub
 
 
