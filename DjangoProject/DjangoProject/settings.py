@@ -38,8 +38,8 @@ ALLOWED_HOSTS = [
     'https://bioinformatics.ua.pt'
 ]
 
-LOGIN_URL = "login"
-LOGIN_REDIRECT_URL = "/model-hub"
+LOGIN_URL = "aidetector/login"
+LOGIN_REDIRECT_URL = "aidetector/model-hub"
 
 
 # Application definition
@@ -73,11 +73,11 @@ CORS_ALLOW_CREDENTIALS = True
 # settings.py
 
 # Set the CSRF_COOKIE_DOMAIN to match the domain of your requests
-CSRF_COOKIE_DOMAIN = 'bioinformatics.ua.pt'
+CSRF_COOKIE_DOMAIN = 'bioinformatics.ua.pt/aidetector'
 
 # Add the correct origin to CSRF_TRUSTED_ORIGINS
 CSRF_TRUSTED_ORIGINS = [
-    'https://bioinformatics.ua.pt',
+    'https://bioinformatics.ua.pt/aidetector',
 ]
 
 
