@@ -28,7 +28,8 @@ def model_hub(request):
 def login(request):
     if request.POST:
         data = {'user_id': request.POST['email'], 'password': request.POST['password']}
-        url = reverse('authentication:login')
+        #url = reverse('authentication:login')
+        url = "http://localhost:4003/authentication/login"
         response = requests.post(request.build_absolute_uri(url), data)
         if response.status_code == 200:
             request.session['user'] = response.json().get('user')
@@ -39,16 +40,11 @@ def login(request):
 def register(request):
     if request.POST:
         data = {'username': request.POST['username'], 'email': request.POST['email'], 'password': request.POST['password']}
-        url = reverse('authentication:register') # url = "/authentication/register"
-        url = request.build_absolute_uri(url) # url = http://mednat.ieeta.pt:8484/authentication/register
-        url2 = url.replace("8484", "4003") # url = http://mednat.ieeta.pt:4003/authentication/register
-        url3 = "http://localhost:4003/authentication/register"
-        urls = [url, url2, url3]
-        for u in urls:
-            try:
-                response = requests.post(u, data, timeout=3)
-            except:
-                log(f"Failed using {u}")
+        #url = reverse('authentication:register') # url = "/authentication/register"
+        #url = request.build_absolute_uri(url) # url = http://mednat.ieeta.pt:8484/authentication/register
+        #url2 = url.replace("8484", "4003") # url = http://mednat.ieeta.pt:4003/authentication/register
+        url = "http://localhost:4003/authentication/register"
+        response = requests.post(url, data, timeout=3)
 
         if response.status_code == 201:
             return redirect('login')
@@ -56,7 +52,8 @@ def register(request):
 
 def logout(request):
     print(request.POST)
-    url = reverse('authentication:logout')
+    #url = reverse('authentication:logout')
+    url = "http://localhost:4003/authentication/logout"
     response = requests.post(request.build_absolute_uri(url))
     if response.status_code == 200:
         request.session.pop('user')
