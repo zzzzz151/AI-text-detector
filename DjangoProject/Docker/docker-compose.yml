@@ -30,8 +30,8 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=password
       - MYSQL_DATABASE=ai
-    volumes:
-      - /var/lib/mysql:/var/lib/mysql
+    #volumes:
+      #- /var/lib/mysql:/var/lib/mysql
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:3306" ]
       interval: 1s
@@ -48,14 +48,11 @@ services:
       SEND_HOST: server
       SEND_PORT: 5555
     ports:
-      - "4003:8000"
+      - "4003:4003"
       - "4004:8001"
     container_name: django_container
     command:
-      sh -c "sleep 20; pip3 install -r requirements.txt; python manage.py migrate; python manage.py runserver 0.0.0.0:8000"
+      sh -c "sleep 12; pip3 install -r requirements.txt; python manage.py migrate; python manage.py runserver 0.0.0.0:4003"
     depends_on:
       - db
         #condition: service_healthy
-
-volumes:
-  my-datavolume:
