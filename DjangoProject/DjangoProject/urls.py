@@ -29,7 +29,7 @@ urlpatterns = [
     re_path(r'api/v1/my-model/?$', my_model_as_API),
     re_path(r'api/v1/execute-code/?$', execute_code),
     path('model-hub', model_hub, name="model-hub"),
-    path('login', login, name="login"),
-    path('register', register, name="register"),
+    path('aidetector/login', login, name="login"),
+    path('aidetector/register', register, name="register"),
     path('logout', logout, name='logout')
 ]
