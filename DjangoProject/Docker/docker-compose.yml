@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.8"
 
 #name: ai-text-detector
 
@@ -52,16 +52,14 @@ services:
       SEND_HOST: server
       SEND_PORT: 5555
     ports:
-      - "4003:8000"
+      - "8000:8000"
       - "4004:8001"
     container_name: django_container
     command:
       sh -c "pip3 install -r requirements.txt; python manage.py migrate; python manage.py runserver 0.0.0.0:8000"
     depends_on:
-      - db
-
-      #db:
-        #condition: service_healthy
+      db:
+        condition: service_healthy
 
 volumes:
   my-datavolume:
