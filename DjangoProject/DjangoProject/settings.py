@@ -28,6 +28,10 @@ DEBUG = True
 #SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 #FORCE_SCRIPT_NAME = 'http://mednat.ieeta.pt:4003'
 
+DEFAULT_RETRY_DELAY = 1  # Time delay between retries in seconds
+
+# Set the default timeout for HTTP connections
+DEFAULT_TIMEOUT = 3  # Timeout in seconds
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
