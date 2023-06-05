@@ -29,7 +29,7 @@ def login(request):
     if request.POST:
         data = {'user_id': request.POST['email'], 'password': request.POST['password']}
         #url = reverse('authentication:login')
-        url = "http://localhost:4003/authentication/login"
+        url = "http://localhost:4003/aidetector/authentication/login"
         response = requests.post(url, data)
         if response.status_code == 200:
             request.session['user'] = response.json().get('user')
