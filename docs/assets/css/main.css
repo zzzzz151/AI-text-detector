@@ -2519,7 +2519,7 @@ html.cl-loaded .home-content__main {
 }
 
 .document-thumbnail::after {
-    right: 100px;
+    right: calc(50% - 48px);
 }
 
 @keyframes fadeIn {
@@ -2640,9 +2640,31 @@ html.cl-loaded .home-content__main {
 }
 
 .poster-wrapper, .video-wrapper {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
+}
+
+.poster-wrapper:hover::after {
+    opacity: 1;
+    animation: fadeIn .2s;
+}
+
+.poster-wrapper::after {
+    right: 20px;
+}
+
+.poster-wrapper::after {
+    font-family: "bootstrap-icons";
+    content: "\f30a";
+    position: absolute;
+    font-size: 48px;
+    top: 2px;
+    background-color: transparent;
+    border-radius: 2px;
+    opacity: 0;
 }
 
 .s-video {
