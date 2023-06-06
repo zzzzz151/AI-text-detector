@@ -1,8 +1,8 @@
 import "~/components/buttons/styles.css"
 function AllSettingsButton() {
     function handleClick() {
-        chrome.runtime.openOptionsPage();
-      }
+        // chrome.runtime.openOptionsPage();
+    }
 
     return (
         <a className="all-settings-wrapper" onClick={handleClick}>
